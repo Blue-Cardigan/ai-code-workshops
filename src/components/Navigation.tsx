@@ -1,12 +1,36 @@
 import React from 'react';
-import { Brain, Menu, X, FileText } from 'lucide-react';
+import { Menu, X, FileText } from 'lucide-react';
 
 interface NavigationProps {
-  onNavigateToBrochure?: () => void;
+  onNavigateToBrochure?: (anchor?: string) => void;
 }
 
 const Navigation = ({ onNavigateToBrochure }: NavigationProps) => {
   const [isOpen, setIsOpen] = React.useState(false);
+  const [isVisible, setIsVisible] = React.useState(true);
+  const [lastScrollY, setLastScrollY] = React.useState(0);
+
+  React.useEffect(() => {
+    const controlNavbar = () => {
+      if (typeof window !== 'undefined') {
+        if (window.scrollY > lastScrollY && window.scrollY > 100) {
+          // Scrolling down and past 100px
+          setIsVisible(false);
+        } else {
+          // Scrolling up
+          setIsVisible(true);
+        }
+        setLastScrollY(window.scrollY);
+      }
+    };
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('scroll', controlNavbar);
+      return () => {
+        window.removeEventListener('scroll', controlNavbar);
+      };
+    }
+  }, [lastScrollY]);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -14,10 +38,6 @@ const Navigation = ({ onNavigateToBrochure }: NavigationProps) => {
       element.scrollIntoView({ behavior: 'smooth' });
     }
     setIsOpen(false); // Close mobile menu after clicking
-  };
-
-  const handleGetStarted = () => {
-    scrollToSection('workshops');
   };
 
   const handleBrochureClick = () => {
@@ -28,54 +48,60 @@ const Navigation = ({ onNavigateToBrochure }: NavigationProps) => {
   };
 
   return (
-    <nav className="bg-white border-b border-gray-100 sticky top-0 z-50">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+    <nav 
+      className={`bg-white/70 backdrop-blur-sm border-b border-gray-100 fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ${
+        isVisible ? 'translate-y-0' : '-translate-y-full'
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-20">
           {/* Logo */}
-          <div className="flex items-center space-x-3 cursor-pointer" onClick={() => scrollToSection('home')}>
-            <div className="w-8 h-8 bg-gradient-to-r from-pink-500 to-purple-500 rounded-md flex items-center justify-center">
-              <Brain className="h-5 w-5 text-white" />
-            </div>
-            <span className="text-xl font-semibold text-gray-900">AI Code Academy</span>
+          <div className="flex items-center cursor-pointer" onClick={() => scrollToSection('home')}>
+            <img 
+              src="//images.squarespace-cdn.com/content/v1/5ba26f9d89c1720405dcfae2/1539074391576-C311VHNSYIBWQ5VGT9DK/coefficient-logo-and-name-v1.png?format=1500w"
+              alt="Coefficient"
+              className="h-8 w-auto"
+            />
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-12">
             <button 
               onClick={() => scrollToSection('home')} 
-              className="text-gray-600 hover:text-gray-900 font-medium transition-colors"
+              className="font-bold transition-colors text-sm tracking-wide uppercase"
+              style={{ color: '#ff6f68' }}
             >
-              Home
+              HOME
             </button>
             <button 
               onClick={() => scrollToSection('workshops')} 
-              className="text-gray-600 hover:text-gray-900 font-medium transition-colors"
+              className="font-bold transition-colors text-sm tracking-wide uppercase"
+              style={{ color: '#ff6f68' }}
             >
-              Workshops
+              WORKSHOPS
             </button>
             <button 
               onClick={() => scrollToSection('tracks')} 
-              className="text-gray-600 hover:text-gray-900 font-medium transition-colors"
+              className="font-bold transition-colors text-sm tracking-wide uppercase border-b-2 border-transparent"
+              style={{ color: '#ff6f68' }}
             >
-              Learning Tracks
+              LEARNING TRACKS
             </button>
             {onNavigateToBrochure && (
               <button 
                 onClick={handleBrochureClick}
-                className="flex items-center gap-1 text-gray-600 hover:text-gray-900 font-medium transition-colors"
+                className="flex items-center gap-1 font-bold transition-colors text-sm tracking-wide uppercase"
+                style={{ color: '#ff6f68' }}
               >
-                <FileText size={16} />
-                Brochure
+                <FileText size={14} />
+                BROCHURE
               </button>
             )}
             <button 
-              onClick={() => scrollToSection('about')} 
-              className="text-gray-600 hover:text-gray-900 font-medium transition-colors"
+              className="font-bold transition-colors text-sm tracking-wide uppercase"
+              style={{ color: '#ff6f68' }}
             >
-              About
-            </button>
-            <button onClick={handleGetStarted} className="btn-primary">
-              Get Started
+              CONTACT US
             </button>
           </div>
 
@@ -93,45 +119,44 @@ const Navigation = ({ onNavigateToBrochure }: NavigationProps) => {
         {/* Mobile Navigation */}
         {isOpen && (
           <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-gray-100">
+            <div className="px-2 pt-2 pb-3 space-y-1 bg-white/95 backdrop-blur-sm border-t border-gray-100">
               <button 
                 onClick={() => scrollToSection('home')} 
-                className="block w-full text-left px-3 py-2 text-gray-600 hover:text-gray-900 font-medium"
+                className="block w-full text-left px-3 py-3 font-bold text-sm tracking-wide uppercase"
+                style={{ color: '#ff6f68' }}
               >
-                Home
+                HOME
               </button>
               <button 
                 onClick={() => scrollToSection('workshops')} 
-                className="block w-full text-left px-3 py-2 text-gray-600 hover:text-gray-900 font-medium"
+                className="block w-full text-left px-3 py-3 font-bold text-sm tracking-wide uppercase"
+                style={{ color: '#ff6f68' }}
               >
-                Workshops
+                WORKSHOPS
               </button>
               <button 
                 onClick={() => scrollToSection('tracks')} 
-                className="block w-full text-left px-3 py-2 text-gray-600 hover:text-gray-900 font-medium"
+                className="block w-full text-left px-3 py-3 font-bold text-sm tracking-wide uppercase"
+                style={{ color: '#ff6f68' }}
               >
-                Learning Tracks
+                LEARNING TRACKS
               </button>
               {onNavigateToBrochure && (
                 <button 
                   onClick={handleBrochureClick}
-                  className="flex items-center gap-1 w-full text-left px-3 py-2 text-gray-600 hover:text-gray-900 font-medium"
+                  className="flex items-center gap-1 w-full text-left px-3 py-3 font-bold text-sm tracking-wide uppercase"
+                  style={{ color: '#ff6f68' }}
                 >
-                  <FileText size={16} />
-                  Brochure
+                  <FileText size={14} />
+                  BROCHURE
                 </button>
               )}
               <button 
-                onClick={() => scrollToSection('about')} 
-                className="block w-full text-left px-3 py-2 text-gray-600 hover:text-gray-900 font-medium"
+                className="block w-full text-left px-3 py-3 font-bold text-sm tracking-wide uppercase"
+                style={{ color: '#ff6f68' }}
               >
-                About
+                CONTACT US
               </button>
-              <div className="px-3 py-2">
-                <button onClick={handleGetStarted} className="btn-primary w-full">
-                  Get Started
-                </button>
-              </div>
             </div>
           </div>
         )}

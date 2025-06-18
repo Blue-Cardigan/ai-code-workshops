@@ -1,18 +1,56 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800;900&family=Lato:wght@300;400;700;900&family=Kameron:wght@400;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   html {
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Lato', Arial, sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    line-height: 1.6em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Raleway', Arial, sans-serif;
+    font-weight: 900;
+    letter-spacing: 1px;
+    line-height: 1.3em;
+  }
+
+  h1 {
+    font-size: 37px;
+    line-height: 1.2em;
+  }
+
+  h2 {
+    font-size: 30px;
+    line-height: 1.5em;
+    color: #635d5d;
+  }
+
+  h3 {
+    font-size: 25px;
+    line-height: 1.4em;
+  }
+
+  body {
+    font-family: 'Lato', Arial, sans-serif;
+    font-weight: 400;
+    font-size: 20px;
+    letter-spacing: 0.5px;
+    line-height: 1.6em;
+    color: #000;
   }
 }
 
 @layer components {
   .btn-primary {
-    background: #ea4c89;
-    @apply text-white px-6 py-3 rounded-lg font-medium hover:bg-pink-600 transition-colors duration-200 border border-transparent;
+    background: #ffc861;
+    @apply text-white px-6 py-3 rounded-lg font-medium hover:opacity-90 transition-opacity duration-200 border border-transparent;
   }
   
   .btn-secondary {
@@ -28,18 +66,25 @@
   }
   
   .bg-gradient-coral {
-    background: #ea4c89;
+    background: #ff6f68;
   }
   
   .bg-gradient-purple {
-    background: #8b5cf6;
+    background: #ffc861;
   }
   
   .bg-gradient-main {
-    background: linear-gradient(135deg, #ea4c89 0%, #8b5cf6 100%);
+    background: linear-gradient(135deg, #ff6f68 0%, #ffc861 100%);
   }
   
   .organic-blob {
     border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+  }
+
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 }

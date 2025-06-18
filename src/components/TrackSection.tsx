@@ -1,5 +1,10 @@
 import React from 'react';
-import { ArrowRight, Users, Target, Briefcase, Database, Code, Zap } from 'lucide-react';
+import { ArrowRight, Users, Database, Code } from 'lucide-react';
+import Button from './Button';
+
+interface TrackSectionProps {
+  onNavigateToAssessment?: () => void;
+}
 
 interface Track {
   id: number;
@@ -38,33 +43,6 @@ const tracks: Track[] = [
     icon: <Database className="h-6 w-6" />,
     color: "red",
     audience: "ML engineers, data scientists"
-  },
-  {
-    id: 4,
-    title: "Frontend Focus Track",
-    description: "Build modern frontends with AI assistance and best practices",
-    workshops: ["Intro to Vibe Coding", "From Playground to Production", "Cursor + Claude + GitHub"],
-    icon: <Zap className="h-6 w-6" />,
-    color: "purple",
-    audience: "Frontend developers, UI/UX designers"
-  },
-  {
-    id: 5,
-    title: "Backend Focus Track",
-    description: "Master backend development with AI tools and DevOps practices",
-    workshops: ["Git & GitHub for Beginners", "Testing in the Age of Copilot", "Cursor + Claude + GitHub", "Secure by Design"],
-    icon: <Target className="h-6 w-6" />,
-    color: "coral",
-    audience: "Backend developers, DevOps engineers"
-  },
-  {
-    id: 6,
-    title: "PromptOps / AI PM Focus",
-    description: "Product management and operations for AI-powered products",
-    workshops: ["Prompt Engineering for Power Users", "PromptOps", "AI Debugging"],
-    icon: <Briefcase className="h-6 w-6" />,
-    color: "yellow",
-    audience: "Product managers, AI operations teams"
   }
 ];
 
@@ -104,39 +82,31 @@ const getTrackColors = (color: string) => {
   return colors[color as keyof typeof colors] || colors.blue;
 };
 
-const TrackSection = () => {
-  const [enrolledTracks, setEnrolledTracks] = React.useState<number[]>([]);
-
-  const handleStartTrack = (track: Track) => {
-    if (enrolledTracks.includes(track.id)) {
-      alert(`📚 Continue ${track.title}\n\nYou're already enrolled in this track. Redirecting to your progress...`);
-    } else {
-      setEnrolledTracks([...enrolledTracks, track.id]);
-      alert(`🚀 Starting ${track.title}!\n\n✅ Enrolled successfully\n🎯 Target audience: ${track.audience}\n📋 Workshops included: ${track.workshops.length}\n\nYou can now access all workshops in this track!`);
-    }
-  };
+const TrackSection = ({ onNavigateToAssessment }: TrackSectionProps) => {
+  const [, ] = React.useState<number[]>([]);
 
   const handleTakeAssessment = () => {
-    // Simulate a skill assessment
-    const questions = [
-      "What's your current coding experience level?",
-      "Which tools do you currently use?",
-      "What are your learning goals?",
-      "Do you have any AI development experience?"
-    ];
-    
-    alert(`🎯 Skill Assessment\n\nThis assessment will help us recommend the perfect learning track for you.\n\nQuestions include:\n${questions.map((q, i) => `${i + 1}. ${q}`).join('\n')}\n\nStarting assessment...`);
+    if (onNavigateToAssessment) {
+      onNavigateToAssessment();
+    } else {
+      // Fallback for when no navigation function is provided
+      const questions = [
+        "What's your current coding experience level?",
+        "Which tools do you currently use?",
+        "What are your learning goals?",
+        "Do you have any AI development experience?"
+      ];
+      
+      alert(`🎯 Skill Assessment\n\nThis assessment will help us recommend the perfect learning track for you.\n\nQuestions include:\n${questions.map((q, i) => `${i + 1}. ${q}`).join('\n')}\n\nStarting assessment...`);
+    }
   };
 
-  const handleBrowseWorkshops = () => {
-    const workshopsSection = document.getElementById('workshops');
-    if (workshopsSection) {
-      workshopsSection.scrollIntoView({ behavior: 'smooth' });
-    }
+  const handleScheduleCall = () => {
+    window.open('https://calendly.com/johnsandall/20-minute-discovery-call-clone?month=2025-06', '_blank');
   };
 
   return (
-    <section id="tracks" className="py-20 bg-white">
+    <section id="tracks" className="py-20" style={{ backgroundColor: '#fcf7f7' }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-16">
@@ -153,7 +123,6 @@ const TrackSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
           {tracks.map((track) => {
             const colors = getTrackColors(track.color);
-            const isEnrolled = enrolledTracks.includes(track.id);
             
             return (
               <div
@@ -164,15 +133,6 @@ const TrackSection = () => {
                 <div className={`inline-flex items-center justify-center w-12 h-12 ${colors.icon} rounded-lg mb-4`}>
                   {track.icon}
                 </div>
-
-                {/* Enrollment Status */}
-                {isEnrolled && (
-                  <div className="mb-3">
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700 border border-green-200">
-                      ✅ Enrolled
-                    </span>
-                  </div>
-                )}
 
                 {/* Track Header */}
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">
@@ -204,28 +164,6 @@ const TrackSection = () => {
                   </div>
                 </div>
 
-                {/* Progress Indicator */}
-                <div className="mb-4">
-                  <div className="flex items-center justify-between text-xs text-gray-500 mb-2">
-                    <span>Progress</span>
-                    <span>{track.workshops.length} workshops</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-1.5">
-                    <div 
-                      className={`${isEnrolled ? 'bg-green-500' : 'bg-gray-300'} h-1.5 rounded-full transition-all duration-500`}
-                      style={{ width: isEnrolled ? '25%' : '0%' }}
-                    ></div>
-                  </div>
-                </div>
-
-                {/* CTA Button */}
-                <button 
-                  onClick={() => handleStartTrack(track)}
-                  className="w-full bg-gray-900 hover:bg-gray-800 text-white px-4 py-3 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2"
-                >
-                  <span>{isEnrolled ? 'Continue Track' : 'Start Track'}</span>
-                  <ArrowRight className="h-4 w-4" />
-                </button>
               </div>
             );
           })}
@@ -235,25 +173,25 @@ const TrackSection = () => {
         <div className="text-center">
           <div className="bg-gray-50 rounded-2xl p-8 max-w-2xl mx-auto">
             <h3 className="text-2xl font-semibold text-gray-900 mb-4">
-              Not sure which track is right for you?
+              Not sure which track is right for your team?
             </h3>
             <p className="text-gray-600 mb-6">
-              Take our quick assessment to get personalized recommendations based on your current skills and goals.
+              Take our quick assessment to get personalised recommendations based on your current skills and goals.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <button 
+              <Button 
                 onClick={handleTakeAssessment}
-                className="btn-primary flex items-center space-x-2"
+                className="flex items-center space-x-2"
               >
                 <span>Take Assessment</span>
                 <ArrowRight className="h-4 w-4" />
-              </button>
-              <button 
-                onClick={handleBrowseWorkshops}
-                className="btn-secondary"
+              </Button>
+              <Button 
+                onClick={handleScheduleCall}
+                variant="secondary"
               >
-                Browse All Workshops
-              </button>
+                Schedule a call
+              </Button>
             </div>
           </div>
         </div>

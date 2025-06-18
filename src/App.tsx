@@ -6,20 +6,40 @@ import WorkshopGrid from './components/WorkshopGrid';
 import TrackSection from './components/TrackSection';
 import Footer from './components/Footer';
 import Brochure from './components/Brochure';
+import Assessment from './components/Assessment';
 
 function App() {
-  const [currentView, setCurrentView] = useState<'home' | 'brochure'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'brochure' | 'assessment'>('home');
+  const [brochureAnchor, setBrochureAnchor] = useState<string | undefined>();
+
+  const handleNavigateToBrochure = (anchor?: string) => {
+    setBrochureAnchor(anchor);
+    setCurrentView('brochure');
+  };
+
+  const handleNavigateToAssessment = () => {
+    setCurrentView('assessment');
+  };
+
+  const handleBackToHome = () => {
+    setBrochureAnchor(undefined);
+    setCurrentView('home');
+  };
 
   if (currentView === 'brochure') {
-    return <Brochure onBackToHome={() => setCurrentView('home')} />;
+    return <Brochure onBackToHome={handleBackToHome} anchor={brochureAnchor} />;
+  }
+
+  if (currentView === 'assessment') {
+    return <Assessment onBackToHome={handleBackToHome} />;
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navigation onNavigateToBrochure={() => setCurrentView('brochure')} />
+    <div className="min-h-screen" style={{ backgroundColor: '#ffffff' }}>
+      <Navigation onNavigateToBrochure={handleNavigateToBrochure} />
       <Hero />
-      <WorkshopGrid />
-      <TrackSection />
+      <WorkshopGrid onNavigateToBrochure={handleNavigateToBrochure} />
+      <TrackSection onNavigateToAssessment={handleNavigateToAssessment} />
       <Footer />
     </div>
   );

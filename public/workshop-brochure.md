@@ -80,12 +80,6 @@ This diagram shows each training pathway in the context of specialized learning 
 
 **ML Engineer to AI Dev Track** → Workshops 11 → 12 → 13
 
-**Frontend Focus** → Workshop 1 or 4 → 5 → 8
-
-**Backend Focus** → Workshop 3 → 6 → 8 → 10
-
-**PromptOps / AI PM Focus** → Workshops 2 → 7 → 13
-
 ## 3. WORKSHOPS
 
 ### Zero-to-One: Onboarding New Coders + Vibe Coders

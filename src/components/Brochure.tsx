@@ -7,9 +7,10 @@ import html2pdf from 'html2pdf.js';
 
 interface BrochureProps {
   onBackToHome?: () => void;
+  anchor?: string;
 }
 
-const Brochure = ({ onBackToHome }: BrochureProps) => {
+const Brochure = ({ onBackToHome, anchor }: BrochureProps) => {
   const brochureRef = useRef<HTMLDivElement>(null);
   const [markdownContent, setMarkdownContent] = useState<string>('');
   const [loading, setLoading] = useState(true);
@@ -33,6 +34,20 @@ const Brochure = ({ onBackToHome }: BrochureProps) => {
 
     loadMarkdownContent();
   }, []);
+
+  // Scroll to anchor when content is loaded and anchor is provided
+  useEffect(() => {
+    if (!loading && anchor && markdownContent) {
+      const timer = setTimeout(() => {
+        const element = document.getElementById(anchor);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100); // Small delay to ensure DOM is updated
+      
+      return () => clearTimeout(timer);
+    }
+  }, [loading, anchor, markdownContent]);
 
   const handleDownloadPDF = () => {
     const element = brochureRef.current;
