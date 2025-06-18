@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { Brain, Code, Users, ArrowRight, BookOpen, Target, Zap, Database } from 'lucide-react';
+import { useState } from 'react';
 import Navigation from './components/Navigation';
 import Hero from './components/Hero';
 import WorkshopGrid from './components/WorkshopGrid';

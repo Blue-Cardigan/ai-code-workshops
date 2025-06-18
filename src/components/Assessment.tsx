@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ArrowLeft, ArrowRight, CheckCircle, Users, Code, Database, Brain } from 'lucide-react';
+import { useState } from 'react';
+import { ArrowLeft, ArrowRight, CheckCircle, Users, Code, Database } from 'lucide-react';
 import Button from './Button';
 
 interface AssessmentProps {
