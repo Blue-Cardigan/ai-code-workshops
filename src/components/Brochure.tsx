@@ -207,10 +207,10 @@ const Brochure = ({ onBackToHome }: BrochureProps) => {
       {/* Brochure Content */}
       <div ref={brochureRef} className="max-w-5xl mx-auto px-4 bg-white rounded-lg shadow-sm">
         {/* Professional Header for PDF */}
-        <div className="bg-white p-8 border-b border-gray-200">
+        <div className="p-8 border-b border-gray-200" style={{ backgroundColor: '#fdf7f7' }}>
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-blue-600 rounded-lg flex items-center justify-center">
+              <div className="w-16 h-16 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#ff6f68' }}>
                 <Code className="text-white" size={32} />
               </div>
               <div>
@@ -237,7 +237,7 @@ const Brochure = ({ onBackToHome }: BrochureProps) => {
         </div>
 
         {/* Footer */}
-        <div className="p-8 bg-gray-50 border-t text-center">
+        <div className="p-8 border-t text-center" style={{ backgroundColor: '#fdf7f7' }}>
           <div className="flex items-center justify-center gap-4 mb-4">
             <Clock size={20} className="text-gray-500" />
             <span className="text-gray-600">All training sessions comprise 4 hours of instructor-led content</span>
