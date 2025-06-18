@@ -7,27 +7,29 @@ interface AssessmentProps {
 }
 
 interface AssessmentData {
+  teamSize: string;
   experience: string;
   tools: string[];
   goals: string[];
   timeCommitment: string;
-  learningStyle: string;
+  deliveryFormat: string;
   background: string;
 }
 
 const Assessment = ({ onBackToHome }: AssessmentProps) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [assessmentData, setAssessmentData] = useState<AssessmentData>({
+    teamSize: '',
     experience: '',
     tools: [],
     goals: [],
     timeCommitment: '',
-    learningStyle: '',
+    deliveryFormat: '',
     background: ''
   });
   const [showResults, setShowResults] = useState(false);
 
-  const totalSteps = 6;
+  const totalSteps = 7;
 
   const handleMultiSelect = (field: keyof AssessmentData, value: string) => {
     setAssessmentData(prev => ({
@@ -46,47 +48,54 @@ const Assessment = ({ onBackToHome }: AssessmentProps) => {
   };
 
   const getRecommendation = () => {
-    const { experience, goals, background } = assessmentData;
+    const { teamSize, experience, goals, background, timeCommitment, deliveryFormat } = assessmentData;
     
+    // Team Foundations Track - for teams with no/basic coding experience
     if (experience === 'none' || experience === 'basic') {
       return {
-        track: 'New to Coding Track',
+        track: 'Team Foundations Track',
         icon: <Users className="h-8 w-8" />,
-        description: 'Perfect for complete beginners and those new to programming',
+        description: 'For teams new to coding, unlikely to be heavy users of code. Perfect for product managers, business analysts, or innovation team members.',
         workshops: [
           'Intro to Vibe Coding: Build & Deploy Your First AI App',
           'Prompt Engineering for Power Users',
           'Git & GitHub for Beginners (w/ AI Helpers)'
         ],
-        reason: 'Based on your limited coding experience, this track will give you a solid foundation in AI-assisted development.'
+        reason: `Based on your team's limited coding experience, this track will provide foundational skills to understand AI-assisted development capabilities and opportunities for automation. With ${teamSize === 'large' ? 'a large team' : teamSize === 'medium' ? 'a medium-sized team' : 'a small team'}, we recommend ${deliveryFormat === 'on-site' ? 'on-site workshops' : deliveryFormat === 'virtual' ? 'virtual sessions' : 'a flexible delivery format'} to ensure everyone learns together.`,
+        format: deliveryFormat === 'on-site' ? 'On-site team workshops' : deliveryFormat === 'virtual' ? 'Virtual team sessions' : 'Flexible delivery options'
       };
     }
     
+    // ML Engineer to AI Dev Track - for data/ML teams
     if (background === 'data' || goals.includes('ml-ai')) {
       return {
         track: 'ML Engineer to AI Dev Track',
         icon: <Database className="h-8 w-8" />,
-        description: 'Transition from traditional ML to modern AI development practices',
+        description: 'Specialized workshops for data science and machine learning professionals transitioning to AI development.',
         workshops: [
           'AI-Assisted Notebooks: Coding Faster with GPT in Jupyter/Colab',
           'Fine-Tuning the Vibes: Training and Evaluating LLMs',
           'AI Debugging: Helping LLMs Help You'
         ],
-        reason: 'Your background in data/ML makes you perfect for this specialized track focusing on AI development.'
+        reason: `Your team's background in data/ML makes this specialized track ideal for advancing to modern AI development practices. The ${timeCommitment} commitment works well for ${teamSize === 'small' ? 'focused small group learning' : 'comprehensive team training'} with hands-on ML/AI engineering.`,
+        format: deliveryFormat === 'on-site' ? 'Intensive on-site workshops' : deliveryFormat === 'virtual' ? 'Interactive virtual labs' : 'Hybrid learning approach'
       };
     }
     
+    // AI-Augmented Engineer Track - for teams with some coding experience
     return {
       track: 'AI-Augmented Engineer Track',
       icon: <Code className="h-8 w-8" />,
-      description: 'Level up your development skills with AI-powered tools and workflows',
+      description: 'For teams with coding comfort looking to integrate AI tools into professional workflows and build production-ready applications.',
       workshops: [
         'Refactor Like a Pro: Clean Code with AI Pairing Tools',
+        'From Playground to Production: Shipping AI Projects',
         'Testing in the Age of Copilot',
         'Cursor + Claude + GitHub: Full Workflow Mastery',
         'CI/CD in a Vibe Coding World'
       ],
-      reason: 'Your development experience combined with your goals makes this track ideal for advancing your AI-assisted coding skills.'
+      reason: `Perfect for teams with ${experience === 'intermediate' ? 'intermediate' : experience === 'advanced' ? 'advanced' : 'mixed'} coding experience. This track provides professional AI-assisted development practices and production deployment skills. The ${timeCommitment} schedule and ${deliveryFormat} format will work well for your ${teamSize === 'large' ? 'large' : teamSize === 'medium' ? 'medium' : 'small'} team.`,
+      format: deliveryFormat === 'on-site' ? 'Collaborative on-site sessions' : deliveryFormat === 'virtual' ? 'Virtual team workshops' : 'Flexible team training'
     };
   };
 
@@ -106,12 +115,13 @@ const Assessment = ({ onBackToHome }: AssessmentProps) => {
 
   const canProceed = () => {
     switch (currentStep) {
-      case 1: return assessmentData.experience !== '';
-      case 2: return assessmentData.tools.length > 0;
-      case 3: return assessmentData.goals.length > 0;
-      case 4: return assessmentData.timeCommitment !== '';
-      case 5: return assessmentData.learningStyle !== '';
-      case 6: return assessmentData.background !== '';
+      case 1: return assessmentData.teamSize !== '';
+      case 2: return assessmentData.experience !== '';
+      case 3: return assessmentData.tools.length > 0;
+      case 4: return assessmentData.goals.length > 0;
+      case 5: return assessmentData.timeCommitment !== '';
+      case 6: return assessmentData.deliveryFormat !== '';
+      case 7: return assessmentData.background !== '';
       default: return false;
     }
   };
@@ -142,10 +152,10 @@ const Assessment = ({ onBackToHome }: AssessmentProps) => {
               <CheckCircle className="h-8 w-8 text-green-600" />
             </div>
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Assessment Complete!
+              Team Assessment Complete!
             </h2>
             <p className="text-xl text-gray-600">
-              Based on your responses, we recommend the following learning track:
+              Based on your team's needs, we recommend the following training approach:
             </p>
           </div>
 
@@ -172,6 +182,13 @@ const Assessment = ({ onBackToHome }: AssessmentProps) => {
               </p>
             </div>
 
+            <div className="mb-6">
+              <h4 className="text-lg font-medium text-gray-900 mb-3">Recommended Format:</h4>
+              <p className="text-gray-600">
+                {'format' in recommendation ? recommendation.format : 'Standard workshop format'}
+              </p>
+            </div>
+
             <div className="mb-8">
               <h4 className="text-lg font-medium text-gray-900 mb-4">Included Workshops:</h4>
               <div className="grid grid-cols-1 gap-3">
@@ -186,7 +203,7 @@ const Assessment = ({ onBackToHome }: AssessmentProps) => {
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Button className="flex items-center space-x-2">
-                <span>Enroll in Track</span>
+                <span>Schedule Team Training</span>
                 <ArrowRight className="h-4 w-4" />
               </Button>
               <Button variant="secondary" onClick={onBackToHome}>
@@ -197,8 +214,12 @@ const Assessment = ({ onBackToHome }: AssessmentProps) => {
 
           {/* Summary */}
           <div className="bg-gray-50 rounded-lg p-6">
-            <h4 className="text-lg font-medium text-gray-900 mb-4">Your Assessment Summary</h4>
+            <h4 className="text-lg font-medium text-gray-900 mb-4">Your Team Assessment Summary</h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+              <div>
+                <span className="font-medium text-gray-700">Team Size:</span>
+                <span className="ml-2 text-gray-600 capitalize">{assessmentData.teamSize}</span>
+              </div>
               <div>
                 <span className="font-medium text-gray-700">Experience Level:</span>
                 <span className="ml-2 text-gray-600 capitalize">{assessmentData.experience}</span>
@@ -208,12 +229,16 @@ const Assessment = ({ onBackToHome }: AssessmentProps) => {
                 <span className="ml-2 text-gray-600">{assessmentData.timeCommitment}</span>
               </div>
               <div>
-                <span className="font-medium text-gray-700">Learning Style:</span>
-                <span className="ml-2 text-gray-600">{assessmentData.learningStyle}</span>
+                <span className="font-medium text-gray-700">Delivery Format:</span>
+                <span className="ml-2 text-gray-600 capitalize">{assessmentData.deliveryFormat}</span>
               </div>
               <div>
                 <span className="font-medium text-gray-700">Background:</span>
                 <span className="ml-2 text-gray-600 capitalize">{assessmentData.background}</span>
+              </div>
+              <div>
+                <span className="font-medium text-gray-700">Goals:</span>
+                <span className="ml-2 text-gray-600">{assessmentData.goals.join(', ')}</span>
               </div>
             </div>
           </div>
@@ -228,17 +253,51 @@ const Assessment = ({ onBackToHome }: AssessmentProps) => {
         return (
           <div>
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              What's your current coding experience level?
+              What's the size of your team?
             </h2>
             <p className="text-gray-600 mb-8">
-              This helps us understand where to start your learning journey.
+              This helps us recommend the right training approach and format for your team.
             </p>
             <div className="space-y-3">
               {[
-                { value: 'none', label: 'No coding experience', desc: 'I\'ve never written code before' },
-                { value: 'basic', label: 'Basic (0-1 years)', desc: 'I\'ve done some tutorials or simple projects' },
-                { value: 'intermediate', label: 'Intermediate (1-3 years)', desc: 'I can build applications with guidance' },
-                { value: 'advanced', label: 'Advanced (3+ years)', desc: 'I\'m comfortable with multiple languages and frameworks' }
+                { value: 'individual', label: '1-2 people', desc: 'Individual or pair training' },
+                { value: 'small', label: '3-8 people', desc: 'Small team workshop' },
+                { value: 'medium', label: '9-20 people', desc: 'Medium team training session' },
+                { value: 'large', label: '20+ people', desc: 'Large group or department-wide training' }
+              ].map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => handleSingleSelect('teamSize', option.value)}
+                  className={`w-full text-left p-4 border rounded-lg transition-colors ${
+                    assessmentData.teamSize === option.value
+                      ? 'border-blue-500 bg-blue-50'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <div className="font-medium text-gray-900">{option.label}</div>
+                  <div className="text-sm text-gray-600">{option.desc}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+        );
+
+      case 2:
+        return (
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              What's your team's current coding experience level?
+            </h2>
+            <p className="text-gray-600 mb-8">
+              Select the level that best describes the majority of your team members.
+            </p>
+            <div className="space-y-3">
+              {[
+                { value: 'none', label: 'No coding experience', desc: 'Most team members have never written code before' },
+                { value: 'basic', label: 'Basic (0-1 years)', desc: 'Team has done some tutorials or simple projects' },
+                { value: 'intermediate', label: 'Intermediate (1-3 years)', desc: 'Team can build applications with guidance' },
+                { value: 'advanced', label: 'Advanced (3+ years)', desc: 'Team is comfortable with multiple languages and frameworks' },
+                { value: 'mixed', label: 'Mixed experience levels', desc: 'Team has a variety of experience levels' }
               ].map((option) => (
                 <button
                   key={option.value}
@@ -257,14 +316,14 @@ const Assessment = ({ onBackToHome }: AssessmentProps) => {
           </div>
         );
 
-      case 2:
+      case 3:
         return (
           <div>
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              Which tools do you currently use?
+              Which tools does your team currently use?
             </h2>
             <p className="text-gray-600 mb-8">
-              Select all that apply. This helps us tailor the content to your workflow.
+              Select all that apply. This helps us tailor the content to your team's existing workflow.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {[
@@ -287,23 +346,23 @@ const Assessment = ({ onBackToHome }: AssessmentProps) => {
           </div>
         );
 
-      case 3:
+      case 4:
         return (
           <div>
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              What are your learning goals?
+              What are your team's learning goals?
             </h2>
             <p className="text-gray-600 mb-8">
-              Select all that apply. What would you like to achieve?
+              Select all that apply. What would you like your team to achieve?
             </p>
             <div className="space-y-3">
               {[
-                { value: 'career-change', label: 'Career change to tech', desc: 'I want to transition into a tech role' },
-                { value: 'upskill', label: 'Upskill at current job', desc: 'Improve my coding abilities for my current position' },
+                { value: 'upskill', label: 'Upskill team for current roles', desc: 'Improve coding abilities for existing positions' },
                 { value: 'ai-tools', label: 'Learn AI-assisted coding', desc: 'Master tools like Copilot, Cursor, and ChatGPT for coding' },
                 { value: 'ml-ai', label: 'Build ML/AI applications', desc: 'Create machine learning and AI-powered applications' },
-                { value: 'automation', label: 'Automate workflows', desc: 'Use code to automate repetitive tasks' },
-                { value: 'side-projects', label: 'Build side projects', desc: 'Create personal projects and applications' }
+                { value: 'production', label: 'Ship production applications', desc: 'Build and deploy professional-grade applications' },
+                { value: 'automation', label: 'Automate workflows', desc: 'Use code to automate repetitive business tasks' },
+                { value: 'innovation', label: 'Drive innovation', desc: 'Enable team to build new products and features' }
               ].map((goal) => (
                 <button
                   key={goal.value}
@@ -322,21 +381,21 @@ const Assessment = ({ onBackToHome }: AssessmentProps) => {
           </div>
         );
 
-      case 4:
+      case 5:
         return (
           <div>
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              How much time can you commit to learning?
+              How much time can your team commit to training?
             </h2>
             <p className="text-gray-600 mb-8">
-              This helps us recommend the right pace for your learning journey.
+              This helps us recommend the right pace and format for your team's training.
             </p>
             <div className="space-y-3">
               {[
-                { value: '2-4 hours/week', label: '2-4 hours per week', desc: 'Light commitment, steady progress' },
-                { value: '5-10 hours/week', label: '5-10 hours per week', desc: 'Moderate commitment, good progress' },
-                { value: '10-20 hours/week', label: '10-20 hours per week', desc: 'High commitment, fast progress' },
-                { value: 'Intensive', label: 'Full-time intensive', desc: 'Maximum commitment, rapid skill development' }
+                { value: '2-4 hours/week', label: '2-4 hours per week', desc: 'Light commitment, spread over time' },
+                { value: '5-10 hours/week', label: '5-10 hours per week', desc: 'Moderate commitment, steady progress' },
+                { value: '1-2 days intensive', label: '1-2 day intensive workshop', desc: 'Concentrated learning in a short period' },
+                { value: '3-5 days intensive', label: '3-5 day intensive bootcamp', desc: 'Immersive training experience' }
               ].map((option) => (
                 <button
                   key={option.value}
@@ -355,57 +414,57 @@ const Assessment = ({ onBackToHome }: AssessmentProps) => {
           </div>
         );
 
-      case 5:
+      case 6:
         return (
           <div>
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              What's your preferred learning style?
+              What's your preferred training delivery format?
             </h2>
             <p className="text-gray-600 mb-8">
-              Understanding how you learn best helps us customize your experience.
+              Understanding your team's preferred learning approach helps us customize the experience.
             </p>
             <div className="space-y-3">
               {[
-                { value: 'hands-on', label: 'Hands-on coding', desc: 'I learn best by building projects and writing code' },
-                { value: 'structured', label: 'Structured lessons', desc: 'I prefer step-by-step guided instruction' },
-                { value: 'video', label: 'Video tutorials', desc: 'I learn well from watching demonstrations' },
-                { value: 'reading', label: 'Reading and documentation', desc: 'I like to read through materials and documentation' },
-                { value: 'collaborative', label: 'Collaborative learning', desc: 'I learn better in groups or with mentorship' }
-              ].map((style) => (
+                { value: 'on-site', label: 'On-site workshops', desc: 'In-person training at your location' },
+                { value: 'virtual', label: 'Virtual workshops', desc: 'Live online training sessions' },
+                { value: 'hybrid', label: 'Hybrid approach', desc: 'Combination of in-person and virtual' },
+                { value: 'self-paced', label: 'Self-paced online', desc: 'Team learns at their own pace with materials' },
+                { value: 'mentoring', label: 'One-on-one mentoring', desc: 'Individual coaching for team members' }
+              ].map((format) => (
                 <button
-                  key={style.value}
-                  onClick={() => handleSingleSelect('learningStyle', style.value)}
+                  key={format.value}
+                  onClick={() => handleSingleSelect('deliveryFormat', format.value)}
                   className={`w-full text-left p-4 border rounded-lg transition-colors ${
-                    assessmentData.learningStyle === style.value
+                    assessmentData.deliveryFormat === format.value
                       ? 'border-blue-500 bg-blue-50'
                       : 'border-gray-200 hover:border-gray-300'
                   }`}
                 >
-                  <div className="font-medium text-gray-900">{style.label}</div>
-                  <div className="text-sm text-gray-600">{style.desc}</div>
+                  <div className="font-medium text-gray-900">{format.label}</div>
+                  <div className="text-sm text-gray-600">{format.desc}</div>
                 </button>
               ))}
             </div>
           </div>
         );
 
-      case 6:
+      case 7:
         return (
           <div>
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              What's your professional background?
+              What's your team's professional background?
             </h2>
             <p className="text-gray-600 mb-8">
-              This helps us understand your context and recommend relevant applications.
+              This helps us understand your team's context and recommend relevant applications.
             </p>
             <div className="space-y-3">
               {[
-                { value: 'tech', label: 'Technology/Software', desc: 'Already working in tech or software development' },
-                { value: 'data', label: 'Data/Analytics/Research', desc: 'Working with data, research, or analytics' },
-                { value: 'business', label: 'Business/Finance/Consulting', desc: 'Business operations, finance, or consulting' },
-                { value: 'creative', label: 'Creative/Design/Marketing', desc: 'Creative fields, design, or marketing' },
-                { value: 'education', label: 'Education/Training', desc: 'Teaching, training, or educational roles' },
-                { value: 'other', label: 'Other/Student', desc: 'Different field or currently a student' }
+                { value: 'tech', label: 'Technology/Software', desc: 'Team already works in tech or software development' },
+                { value: 'data', label: 'Data/Analytics/Research', desc: 'Team works with data, research, or analytics' },
+                { value: 'business', label: 'Business/Finance/Consulting', desc: 'Business operations, finance, or consulting team' },
+                { value: 'creative', label: 'Creative/Design/Marketing', desc: 'Creative fields, design, or marketing team' },
+                { value: 'operations', label: 'Operations/Manufacturing', desc: 'Operations, manufacturing, or process-focused team' },
+                { value: 'mixed', label: 'Mixed backgrounds', desc: 'Team has diverse professional backgrounds' }
               ].map((bg) => (
                 <button
                   key={bg.value}

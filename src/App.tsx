@@ -1,11 +1,14 @@
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import Navigation from './components/Navigation';
 import Hero from './components/Hero';
 import WorkshopGrid from './components/WorkshopGrid';
 import TrackSection from './components/TrackSection';
 import Footer from './components/Footer';
-import Brochure from './components/Brochure';
-import Assessment from './components/Assessment';
+import LoadingSpinner from './components/LoadingSpinner';
+
+// Lazy load heavy components
+const Brochure = lazy(() => import('./components/Brochure'));
+const Assessment = lazy(() => import('./components/Assessment'));
 
 function App() {
   const [currentView, setCurrentView] = useState<'home' | 'brochure' | 'assessment'>('home');
@@ -26,11 +29,19 @@ function App() {
   };
 
   if (currentView === 'brochure') {
-    return <Brochure onBackToHome={handleBackToHome} anchor={brochureAnchor} />;
+    return (
+      <Suspense fallback={<LoadingSpinner message="Loading brochure..." />}>
+        <Brochure onBackToHome={handleBackToHome} anchor={brochureAnchor} />
+      </Suspense>
+    );
   }
 
   if (currentView === 'assessment') {
-    return <Assessment onBackToHome={handleBackToHome} />;
+    return (
+      <Suspense fallback={<LoadingSpinner message="Loading assessment..." />}>
+        <Assessment onBackToHome={handleBackToHome} />
+      </Suspense>
+    );
   }
 
   return (

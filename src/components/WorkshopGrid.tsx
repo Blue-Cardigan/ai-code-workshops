@@ -243,7 +243,7 @@ const WorkshopGrid = ({ onNavigateToBrochure }: WorkshopGridProps) => {
                   return (
                     <div
                       key={workshop.id}
-                      className="bg-white rounded-lg border border-gray-200 hover:border-gray-300 hover:shadow-lg transition-all duration-300 cursor-pointer overflow-hidden group"
+                      className="bg-white rounded-lg border border-gray-200 hover:border-gray-300 hover:shadow-lg transition-all duration-300 cursor-pointer overflow-hidden group flex flex-col h-full"
                       onClick={() => handleWorkshopClick(workshop)}
                     >
                       {/* Card Header */}
@@ -266,34 +266,34 @@ const WorkshopGrid = ({ onNavigateToBrochure }: WorkshopGridProps) => {
                         </h4>
                       </div>
 
-                      {/* Card Content */}
-                      <div className="p-6">
+                      {/* Card Content - Flex grow to push footer down */}
+                      <div className="p-6 flex-grow">
                         <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">
                           {workshop.description}
                         </p>
 
                         {/* Details */}
                         <div className="space-y-3">
-                          <div className="flex items-start gap-2">
-                            <BookOpen className="h-4 w-4 text-gray-400 mt-0.5 flex-shrink-0" />
-                            <div>
-                              <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Prerequisites</span>
-                              <p className="text-sm text-gray-700">{workshop.prerequisites}</p>
+                          <div className="flex items-start gap-3">
+                            <BookOpen className="h-4 w-4 text-gray-400 mt-1 flex-shrink-0" />
+                            <div className="min-w-0">
+                              <span className="text-xs font-medium text-gray-500 uppercase tracking-wide block">Prerequisites</span>
+                              <p className="text-sm text-gray-700 leading-relaxed">{workshop.prerequisites}</p>
                             </div>
                           </div>
-                          <div className="flex items-start gap-2">
-                            <Users className="h-4 w-4 text-gray-400 mt-0.5 flex-shrink-0" />
-                            <div>
-                              <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Target Audience</span>
-                              <p className="text-sm text-gray-700">{workshop.audience}</p>
+                          <div className="flex items-start gap-3">
+                            <Users className="h-4 w-4 text-gray-400 mt-1 flex-shrink-0" />
+                            <div className="min-w-0">
+                              <span className="text-xs font-medium text-gray-500 uppercase tracking-wide block">Target Audience</span>
+                              <p className="text-sm text-gray-700 leading-relaxed">{workshop.audience}</p>
                             </div>
                           </div>
                         </div>
                       </div>
 
-                      {/* Card Footer */}
+                      {/* Card Footer - Always at bottom */}
                       <div 
-                        className="px-6 py-3 border-t border-gray-100 group-hover:bg-gray-50 transition-colors"
+                        className="px-6 py-3 border-t border-gray-100 group-hover:bg-gray-50 transition-colors mt-auto"
                       >
                         <div className="flex items-center justify-between">
                           <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">

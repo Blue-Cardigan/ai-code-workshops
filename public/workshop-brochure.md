@@ -74,7 +74,7 @@ Workflow Mastery                      AI-Era Engineers    LLMs
 
 This diagram shows each training pathway in the context of specialized learning tracks:
 
-**New to Coding Track** → Workshops 1 → 2 → 3
+**Team Foundations Track** → Workshops 1 → 2 → 3
 
 **AI-Augmented Engineer Track** → Workshops 4 → 6 → 8 → 9
 
