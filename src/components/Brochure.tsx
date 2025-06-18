@@ -1,8 +1,8 @@
 import { useRef, useState, useEffect } from 'react';
 import { Clock, Download, Code, ArrowLeft, AlertCircle } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
+import ReactMarkdown, { type Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-// @ts-ignore
+// @ts-expect-error - html2pdf.js doesn't have TypeScript definitions
 import html2pdf from 'html2pdf.js';
 
 interface BrochureProps {
@@ -269,7 +269,7 @@ const Brochure = ({ onBackToHome, anchor }: BrochureProps) => {
         {/* Markdown Content */}
         <div className="prose prose-lg max-w-none p-8">
           <ReactMarkdown 
-            components={customComponents}
+            components={customComponents as Components}
             remarkPlugins={[remarkGfm]}
           >
             {markdownContent}
