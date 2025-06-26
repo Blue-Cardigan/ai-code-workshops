@@ -129,10 +129,6 @@
     @apply bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-neutral-200/50 hover:shadow-xl transition-all duration-300;
   }
 
-  .client-logo {
-    @apply grayscale hover:grayscale-0 transition-all duration-300 opacity-70 hover:opacity-100;
-  }
-
   .gradient-border {
     @apply relative;
   }

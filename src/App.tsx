@@ -1,5 +1,4 @@
 import { useState, lazy, Suspense } from 'react';
-import Navigation from './components/Navigation';
 import Hero from './components/Hero';
 import FeaturedWorkshops from './components/FeaturedWorkshops';
 import { TestimonialCarousel, ClientCarousel, sampleTestimonials } from './components/Carousel';
@@ -7,7 +6,7 @@ import Footer from './components/Footer';
 import LoadingSpinner from './components/LoadingSpinner';
 import AllWorkshops from './components/AllWorkshops';
 import Questions from './components/Questions';
-import clientsData from '../clients.json';
+import clientsData from './lib/clients.json';
 
 // Lazy load heavy components
 const Brochure = lazy(() => import('./components/Brochure'));
@@ -50,7 +49,6 @@ function App() {
 
   return (
     <div className="min-h-screen bg-neutral-50">
-      <Navigation />
       <Hero onNavigateToQuestions={handleNavigateToQuestions} />
       <FeaturedWorkshops onNavigateToWorkshops={handleNavigateToWorkshops} />
       <ClientCarousel clients={clientsData.clients} />

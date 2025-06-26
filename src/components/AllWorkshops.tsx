@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Clock, Users, Star, Filter, Search, BookOpen, Target } from 'lucide-react';
+import { ArrowLeft, Filter, BookOpen, Target } from 'lucide-react';
 
 interface Workshop {
   id: number;
@@ -10,8 +10,6 @@ interface Workshop {
   level: 'beginner' | 'intermediate' | 'advanced' | 'expert';
   category: string;
   prerequisites: string;
-  students: number;
-  rating: number;
   image: string;
   outcome?: string;
 }
@@ -38,15 +36,13 @@ const allWorkshops: Workshop[] = [
     level: "beginner",
     category: "Zero-to-One",
     prerequisites: "None",
-    students: 250,
-    rating: 4.9,
     image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    outcome: "First app deployed live"
+    outcome: "Hello World AI app deployed live"
   },
   {
     id: 2,
     title: "Prompt Engineering for Power Users",
-    description: "Tool-agnostic prompting skills using Claude, ChatGPT, Gemini etc. Master advanced prompting techniques for maximum AI productivity.",
+    description: "Tool-agnostic prompting skills using Claude, ChatGPT, Gemini. Chain-of-thought prompting and role-based personas for maximum AI productivity.",
     outline: [
       "Tool-agnostic prompting skills using Claude, ChatGPT, Gemini",
       "Chain-of-thought prompting and role-based personas",
@@ -58,14 +54,12 @@ const allWorkshops: Workshop[] = [
     level: "beginner",
     category: "Zero-to-One",
     prerequisites: "No coding experience needed",
-    students: 180,
-    rating: 4.8,
     image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
   },
   {
     id: 3,
     title: "Git & GitHub for Beginners (w/ AI Helpers)",
-    description: "Version control fundamentals using AI-assisted tools. Learn collaborative development with intelligent commit assistance.",
+    description: "Version control fundamentals using AI-assisted tools. Learn collaborative development with intelligent commit assistance and GitHub workflows.",
     outline: [
       "Version control fundamentals using Cursor or GitHub Copilot",
       "Integrated commit assistance and pre-commit hooks",
@@ -77,8 +71,6 @@ const allWorkshops: Workshop[] = [
     level: "beginner",
     category: "Zero-to-One",
     prerequisites: "Optional follow-on from previous workshops",
-    students: 120,
-    rating: 4.7,
     image: "https://images.unsplash.com/photo-1556075798-4825dfaaf498?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
   },
 
@@ -98,8 +90,6 @@ const allWorkshops: Workshop[] = [
     level: "intermediate",
     category: "Vibe-to-Engineer",
     prerequisites: "Some coding comfort assumed (Python/JS)",
-    students: 180,
-    rating: 4.8,
     image: "https://images.unsplash.com/photo-1515378960530-7c0da6231fb1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
   },
   {
@@ -117,8 +107,6 @@ const allWorkshops: Workshop[] = [
     level: "intermediate",
     category: "Vibe-to-Engineer",
     prerequisites: "Basic Git + coding fluency required",
-    students: 160,
-    rating: 4.7,
     image: "https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
   },
   {
@@ -136,33 +124,11 @@ const allWorkshops: Workshop[] = [
     level: "intermediate",
     category: "Vibe-to-Engineer",
     prerequisites: "Python or JavaScript experience required",
-    students: 140,
-    rating: 4.6,
     image: "https://images.unsplash.com/photo-1504639725590-34d0984388bd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
   },
-  {
-    id: 7,
-    title: "PromptOps: Reusable Prompt Libraries and Debugging LLMs",
-    description: "Advanced prompt management and LLM debugging techniques for teams building production AI systems.",
-    outline: [
-      "Prompt chaining and evaluation tools (LM Studio, Flowise, Guidance)",
-      "Managing prompt versions in Git for teams",
-      "Building reusable prompt libraries",
-      "Debugging and optimizing LLM responses",
-      "Production prompt monitoring and analytics"
-    ],
-    duration: "4 hours",
-    level: "intermediate",
-    category: "Vibe-to-Engineer",
-    prerequisites: "Experience with LLM products",
-    students: 95,
-    rating: 4.5,
-    image: "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-  },
-
   // AI-Enhanced Software Engineering Best Practices
   {
-    id: 8,
+    id: 7,
     title: "Cursor + Claude + GitHub: Full Workflow Mastery",
     description: "End-to-end modern development workflow using AI-powered IDEs, model-assisted code review, testing, and deployment automation.",
     outline: [
@@ -174,14 +140,12 @@ const allWorkshops: Workshop[] = [
     ],
     duration: "4 hours",
     level: "advanced",
-    category: "AI-Enhanced Engineering",
+    category: "AI-Enhanced Software Engineering Best Practices",
     prerequisites: "For developers looking to level up",
-    students: 320,
-    rating: 4.9,
     image: "https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
   },
   {
-    id: 9,
+    id: 8,
     title: "CI/CD in a Vibe Coding World",
     description: "Integrate modern CI/CD pipelines with AI-powered development workflows for automated testing, deployment, and quality assurance.",
     outline: [
@@ -193,14 +157,12 @@ const allWorkshops: Workshop[] = [
     ],
     duration: "4 hours",
     level: "advanced",
-    category: "AI-Enhanced Engineering",
+    category: "AI-Enhanced Software Engineering Best Practices",
     prerequisites: "Comfort with Git required",
-    students: 185,
-    rating: 4.7,
-    image: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+    image: "https://images.unsplash.com/photo-1667372393119-3d4c48d07fc9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
   },
   {
-    id: 10,
+    id: 9,
     title: "Secure by Design: DevSecOps for AI-Era Engineers",
     description: "Security-first approach to AI development with automated security scanning, secrets management, and secure deployment practices.",
     outline: [
@@ -212,10 +174,8 @@ const allWorkshops: Workshop[] = [
     ],
     duration: "4 hours",
     level: "advanced",
-    category: "AI-Enhanced Engineering",
+    category: "AI-Enhanced Software Engineering Best Practices",
     prerequisites: "Deployment familiarity required",
-    students: 125,
-    rating: 4.6,
     image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
   },
 
@@ -235,8 +195,6 @@ const allWorkshops: Workshop[] = [
     level: "intermediate",
     category: "AI for Data & ML",
     prerequisites: "Great intro for data analysts or scientists",
-    students: 210,
-    rating: 4.8,
     image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
   },
   {
@@ -254,8 +212,6 @@ const allWorkshops: Workshop[] = [
     level: "expert",
     category: "AI for Data & ML",
     prerequisites: "ML background required",
-    students: 85,
-    rating: 4.9,
     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
   },
   {
@@ -273,15 +229,13 @@ const allWorkshops: Workshop[] = [
     level: "expert",
     category: "AI for Data & ML",
     prerequisites: "For anyone working with RAG/AI pipelines",
-    students: 75,
-    rating: 4.8,
     image: "https://images.unsplash.com/photo-1516321497487-e288fb19713f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
   }
 ];
 
 const AllWorkshops = ({ onBackToHome, targetWorkshopId }: AllWorkshopsProps) => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedLevel, setSelectedLevel] = useState<string>('all');
+  const [searchTerm] = useState('');
+  const [selectedLevel] = useState<string>('all');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [expandedWorkshop, setExpandedWorkshop] = useState<number | null>(targetWorkshopId || null);
 
@@ -325,85 +279,68 @@ const AllWorkshops = ({ onBackToHome, targetWorkshopId }: AllWorkshopsProps) => 
   ];
 
   return (
-    <div className="min-h-screen bg-neutral-50 pt-16">
+    <div className="min-h-screen bg-neutral-50">
       {/* Header */}
-      <div className="bg-white border-b border-neutral-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="pt-16 relative" style={{ backgroundColor: '#e53a42' }}>
+        {/* Grid overlay */}
+        <div 
+          className="absolute inset-0" 
+          style={{ 
+            backgroundImage: `
+              linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
+            `,
+            backgroundSize: '40px 40px'
+          }}
+        ></div>
+        
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <button
             onClick={onBackToHome}
-            className="flex items-center text-primary-600 hover:text-primary-700 mb-6 group"
+            className="flex items-center text-white hover:text-white/80 mb-6 group"
           >
             <ArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
             Back to Home
           </button>
           
           <div className="mb-8">
-            <h1 className="text-4xl font-bold text-primary-900 mb-4">All Workshops</h1>
-            <p className="text-xl text-neutral-600 max-w-3xl">
+            <h1 className="text-4xl font-bold text-white mb-4">All Workshops</h1>
+            <p className="text-xl text-white/90 max-w-3xl mb-3">
               Complete catalog of our AI development training programs. From absolute beginners to expert-level practitioners.
+            </p>
+            <p className="text-sm text-white/70 italic">
+              • All workshops last half a day
             </p>
           </div>
 
           {/* Categories Overview */}
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             {categories.map((category, index) => (
-              <div key={index} className="bg-neutral-50 rounded-xl p-4 border border-neutral-200">
+              <button
+                key={index}
+                onClick={() => setSelectedCategory(selectedCategory === category.name ? 'all' : category.name)}
+                className={`text-left p-4 rounded-xl border transition-all duration-200 hover:shadow-md ${
+                  selectedCategory === category.name
+                    ? 'bg-white border-primary-300 shadow-md ring-2 ring-primary-200'
+                    : 'bg-neutral-50 border-neutral-200 hover:bg-white hover:border-neutral-300'
+                }`}
+              >
                 <div className="flex items-center mb-2">
                   <div className={`w-3 h-3 ${category.color} rounded-full mr-2`} />
                   <h3 className="font-semibold text-neutral-900">{category.name}</h3>
                 </div>
                 <p className="text-sm text-neutral-600">{category.description}</p>
-              </div>
+              </button>
             ))}
-          </div>
-
-          {/* Search and Filters */}
-          <div className="flex flex-col lg:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 w-5 h-5" />
-              <input
-                type="text"
-                placeholder="Search workshops..."
-                className="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-            
-            <div className="flex gap-4">
-              <select
-                className="px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                value={selectedLevel}
-                onChange={(e) => setSelectedLevel(e.target.value)}
-              >
-                <option value="all">All Levels</option>
-                <option value="beginner">Beginner</option>
-                <option value="intermediate">Intermediate</option>
-                <option value="advanced">Advanced</option>
-                <option value="expert">Expert</option>
-              </select>
-              
-              <select
-                className="px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-              >
-                <option value="all">All Categories</option>
-                <option value="Zero-to-One">Zero-to-One</option>
-                <option value="Vibe-to-Engineer">Vibe-to-Engineer</option>
-                <option value="AI-Enhanced Engineering">AI-Enhanced Engineering</option>
-                <option value="AI for Data & ML">AI for Data & ML</option>
-              </select>
-            </div>
           </div>
         </div>
       </div>
 
       {/* Workshop Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="grid lg:grid-cols-2 gap-8 items-start">
           {filteredWorkshops.map((workshop) => (
-            <div key={workshop.id} id={`workshop-${workshop.id}`} className="card">
+            <div key={workshop.id} id={`workshop-${workshop.id}`} className="bg-white/95 backdrop-blur-sm rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 h-fit" style={{ borderColor: '#e53a42' }}>
               <div className="relative h-48 overflow-hidden">
                 <img 
                   src={workshop.image} 
@@ -419,32 +356,20 @@ const AllWorkshops = ({ onBackToHome, targetWorkshopId }: AllWorkshopsProps) => 
               </div>
 
               <div className="p-6">
-                <div className="flex items-start justify-between mb-3">
-                  <h3 className="text-xl font-bold text-neutral-900 flex-1 pr-4">
+                <div className="mb-3">
+                  <h3 className="text-xl font-bold text-neutral-900">
                     {workshop.title}
                   </h3>
-                  <div className="flex items-center space-x-1 flex-shrink-0">
-                    <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                    <span className="text-sm font-medium text-neutral-600">{workshop.rating}</span>
-                  </div>
                 </div>
 
-                <p className="text-neutral-600 mb-4">
+                <p className="text-neutral-600 mb-3">
                   {workshop.description}
                 </p>
 
-                <div className="grid grid-cols-3 gap-4 mb-4 text-sm text-neutral-500">
-                  <div className="flex items-center space-x-1">
-                    <Clock className="w-4 h-4" />
-                    <span>{workshop.duration}</span>
-                  </div>
-                  <div className="flex items-center space-x-1">
-                    <Users className="w-4 h-4" />
-                    <span>{workshop.students} students</span>
-                  </div>
+                <div className="mb-4 text-sm text-neutral-500">
                   <div className="flex items-center space-x-1">
                     <Target className="w-4 h-4" />
-                    <span className="truncate">{workshop.prerequisites}</span>
+                    <span>Prerequisites: {workshop.prerequisites}</span>
                   </div>
                 </div>
 
@@ -475,11 +400,11 @@ const AllWorkshops = ({ onBackToHome, targetWorkshopId }: AllWorkshopsProps) => 
                 <div className="flex gap-3">
                   <button 
                     onClick={() => setExpandedWorkshop(expandedWorkshop === workshop.id ? null : workshop.id)}
-                    className="btn-secondary flex-1"
+                    className="bg-white hover:bg-neutral-50 text-primary-700 px-6 py-3 rounded-lg font-medium transition-all duration-200 border border-primary-200 hover:border-primary-300 shadow-md hover:shadow-lg flex-1"
                   >
                     {expandedWorkshop === workshop.id ? 'Show Less' : 'View Details'}
                   </button>
-                  <button className="btn-primary">
+                  <button className="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl border border-transparent">
                     Enroll Now
                   </button>
                 </div>

@@ -102,7 +102,7 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
       }, 800);
       return () => clearTimeout(timeout);
     }
-  }, [isPromptComplete, currentStage, learningStages.length, showCompletionMessage]);
+  }, [isPromptComplete, currentStage, learningStages.length, showCompletionMessage, isAnimationSkipped]);
 
   return (
     <section id="home" className="relative min-h-screen overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50 pt-16">
@@ -117,17 +117,6 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
       <div className="absolute bottom-40 left-20 w-8 h-8 bg-green-400/20 rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
       
       <div className="relative z-10 min-h-screen flex items-center py-8">
-        {/* Skip Animation Button */}
-        {!showCompletionMessage && !isAnimationSkipped && promptText.length > 0 && (
-          <button
-            onClick={skipAnimation}
-            className="absolute top-8 right-8 z-20 flex items-center space-x-2 px-3 py-2 text-sm text-gray-500 hover:text-gray-700 bg-white/80 hover:bg-white/90 backdrop-blur-sm rounded-lg border border-gray-200/50 hover:border-gray-300/50 transition-all duration-200 shadow-sm hover:shadow-md group"
-          >
-            <SkipForward className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-            <span>Skip</span>
-          </button>
-        )}
-        
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <div className="grid lg:grid-cols-2 gap-10 items-center">
             
@@ -264,22 +253,36 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
           </div>
           
           {/* CTA Buttons */}
-          <div className={`mt-16 flex flex-col sm:flex-row gap-4 justify-center transition-opacity duration-500 ${
-            showCompletionMessage ? 'opacity-100' : 'opacity-0 pointer-events-none'
-          }`}>
-            <button 
-              onClick={onNavigateToQuestions}
-              className="btn-primary group flex items-center justify-center transform hover:scale-105 transition-all duration-200"
-            >
-              <MessageSquare className="w-5 h-5 mr-2" />
-              Get a Quote
-              <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-            </button>
-            <button className="btn-outline group flex items-center justify-center">
-              <Calendar className="w-5 h-5 mr-2" />
-              Book a Call
-              <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-            </button>
+          <div className="mt-16 flex flex-col items-center gap-6">
+            {/* Skip Animation Button */}
+            {!showCompletionMessage && !isAnimationSkipped && promptText.length > 0 && (
+              <button
+                onClick={skipAnimation}
+                className="flex items-center space-x-2 text-sm text-gray-500/70 hover:text-gray-700 transition-colors duration-200 group"
+              >
+                <SkipForward className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                <span>Skip animation</span>
+              </button>
+            )}
+            
+            {/* Main CTA Buttons */}
+            <div className={`flex flex-col sm:flex-row gap-4 justify-center transition-opacity duration-500 ${
+              showCompletionMessage ? 'opacity-100' : 'opacity-0 pointer-events-none'
+            }`}>
+              <button 
+                onClick={onNavigateToQuestions}
+                className="btn-primary group flex items-center justify-center transform hover:scale-105 transition-all duration-200"
+              >
+                <MessageSquare className="w-5 h-5 mr-2" />
+                Get a Quote
+                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+              </button>
+              <button className="btn-outline group flex items-center justify-center">
+                <Calendar className="w-5 h-5 mr-2" />
+                Book a Call
+                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
           </div>
         </div>
       </div>

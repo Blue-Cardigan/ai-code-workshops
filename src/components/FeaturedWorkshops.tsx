@@ -70,20 +70,31 @@ const FeaturedWorkshops = ({ onNavigateToWorkshops }: FeaturedWorkshopsProps) =>
 
   return (
     <section id="workshops" className="relative">
-      {/* Tilted background container with grid - extended beyond section bounds */}
+      {/* Tilted background container - extended beyond section bounds */}
       <div 
         className="absolute transform -rotate-3" 
         style={{ 
           backgroundColor: '#e53a42',
+          width: '150%',
+          height: '120%',
+          top: '-15%',
+          left: '-25%'
+        }}
+      ></div>
+      
+      {/* Straight grid overlay */}
+      <div 
+        className="absolute" 
+        style={{ 
           backgroundImage: `
             linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
             linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
           `,
           backgroundSize: '40px 40px',
-          width: '150%',
-          height: '120%',
-          top: '-15%',
-          left: '-25%'
+          width: '100%',
+          height: '130%',
+          top: '-20%',
+          left: '0'
         }}
       ></div>
       
@@ -113,6 +124,15 @@ const FeaturedWorkshops = ({ onNavigateToWorkshops }: FeaturedWorkshopsProps) =>
               Our goal is to create practical, hands-on courses that are enjoyable and immediately applicable. 
               </p>
             </div>
+            
+            {/* Logo */}
+            <div className="mt-8 max-w-lg flex justify-center">
+              <img 
+                src="/coeff-logo-no-text.png" 
+                alt="Coefficient" 
+                className="h-24 w-auto opacity-80"
+              />
+            </div>
           </div>
 
           {/* Right side - Workshop cards */}
@@ -139,44 +159,48 @@ const FeaturedWorkshops = ({ onNavigateToWorkshops }: FeaturedWorkshopsProps) =>
                   </div>
 
                   {/* Content */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getLevelColor(workshop.level)}`}>
-                        {workshop.level}
-                      </span>
-                      <div className="flex items-center text-xs text-neutral-500">
-                        <Clock className="w-3 h-3 mr-1" />
-                        <span>{workshop.duration}</span>
+                  <div className="flex-1 min-w-0 flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${getLevelColor(workshop.level)}`}>
+                          {workshop.level}
+                        </span>
+                        <div className="flex items-center text-xs text-neutral-500">
+                          <Clock className="w-3 h-3 mr-1" />
+                          <span>{workshop.duration}</span>
+                        </div>
                       </div>
+
+                      <h3 className="text-sm font-bold text-neutral-900 mb-2 line-clamp-2">
+                        {workshop.title}
+                      </h3>
+
+                      <p className="text-xs text-neutral-600 mb-3 line-clamp-2">
+                        {workshop.description}
+                      </p>
                     </div>
 
-                    <h3 className="text-sm font-bold text-neutral-900 mb-2 line-clamp-2">
-                      {workshop.title}
-                    </h3>
-
-                    <p className="text-xs text-neutral-600 mb-3 line-clamp-2">
-                      {workshop.description}
-                    </p>
-
-                    <button 
-                      onClick={() => handleLearnMore(workshop.id)}
-                      className="text-xs bg-neutral-900 text-white px-3 py-2 rounded-lg hover:bg-neutral-800 transition-colors group flex items-center"
-                    >
-                      Learn More
-                      <ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform" />
-                    </button>
+                    <div className="flex justify-end">
+                      <button 
+                        onClick={() => handleLearnMore(workshop.id)}
+                        className="text-xs bg-neutral-900 text-white px-3 py-2 rounded-lg hover:bg-neutral-800 transition-colors group flex items-center w-fit"
+                      >
+                        Learn More
+                        <ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
             ))}
 
             {/* View All Button */}
-            <div className="text-center pt-4">
+            <div className="flex justify-end pt-4">
               <button 
                 onClick={() => onNavigateToWorkshops?.(undefined)}
-                className="bg-white/20 text-white border border-white/30 px-6 py-3 rounded-lg hover:bg-white/30 transition-colors group inline-flex items-center text-sm font-medium"
+                className="text-white hover:text-white/80 transition-colors group inline-flex items-center text-sm font-medium"
               >
-                View All 13 Workshops
+                Browse All Workshops
                 <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </button>
             </div>

@@ -121,12 +121,12 @@ export const ClientCarousel = ({ clients }: ClientCarouselProps) => {
   return (
     <section className="section-padding bg-white">
       <div className="container-wide">
-        <div className="text-center mb-12">
+        <div className="text-center my-12">
           <h2 className="text-2xl md:text-3xl font-bold text-primary-900 mb-4">
             Trusted by Leading Companies
           </h2>
           <p className="text-lg text-neutral-600">
-            Join hundreds of organizations that have transformed their development practices
+            Join hundreds of organisations that have transformed their development practices
           </p>
         </div>
 
