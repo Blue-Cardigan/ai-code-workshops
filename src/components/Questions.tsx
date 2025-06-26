@@ -15,11 +15,11 @@ interface Question {
     id: string;
     text: string;
     value: number;
-    track?: 'beginner' | 'engineer' | 'ml';
+    track?: 'beginner' | 'engineer' | 'ml' | 'any';
   }[];
   conditional?: {
     dependsOn: number;
-    showWhen: string;
+    showWhen: string | string[];
   };
 }
 
@@ -43,11 +43,10 @@ const questions: Question[] = [
     title: "How many employees are in your company?",
     type: 'single',
     options: [
-      { id: '1-10', text: '1-10 employees', value: 0, track: 'beginner' },
-      { id: '11-50', text: '11-50 employees', value: 1, track: 'beginner' },
-      { id: '51-200', text: '51-200 employees', value: 2, track: 'engineer' },
-      { id: '201-1000', text: '201-1000 employees', value: 3, track: 'engineer' },
-      { id: '1000+', text: '1000+ employees', value: 4, track: 'ml' }
+      { id: '1-10', text: '1-10 employees', value: 0, track: 'any' },
+      { id: '11-50', text: '11-50 employees', value: 1, track: 'any' },
+      { id: '51-200', text: '51-200 employees', value: 2, track: 'any' },
+      { id: '201+', text: '201+ employees', value: 3, track: 'any' }
     ]
   },
   {
@@ -58,7 +57,7 @@ const questions: Question[] = [
       { id: 'non-tech-coding', text: 'Enabling non-technical people to code', value: 0, track: 'beginner' },
       { id: 'junior-skills', text: 'Upgrading junior developer skills', value: 1, track: 'engineer' },
       { id: 'senior-skills', text: 'Enhancing senior engineer capabilities', value: 2, track: 'engineer' },
-      { id: 'tool-implementation', text: 'Identifying and implementing best AI tools', value: 3, track: 'ml' }
+      { id: 'tool-implementation', text: 'Identifying and implementing best AI tools', value: 3, track: 'any' }
     ]
   },
   {
@@ -70,7 +69,7 @@ const questions: Question[] = [
       { id: 'junior-devs', text: 'Junior Developers', value: 1, track: 'engineer' },
       { id: 'senior-devs', text: 'Senior Developers', value: 2, track: 'engineer' },
       { id: 'data-team', text: 'Data Scientists/ML Engineers', value: 3, track: 'ml' },
-      { id: 'leadership', text: 'Technical Leadership', value: 4, track: 'ml' }
+      { id: 'leadership', text: 'Technical Leadership', value: 4, track: 'beginner' }
     ]
   },
   {
@@ -89,7 +88,7 @@ const questions: Question[] = [
     type: 'single',
     conditional: {
       dependsOn: 4,
-      showWhen: 'in-person'
+      showWhen: ['in-person', 'hybrid']
     },
     options: [
       { id: 'in-office', text: 'Training at your office', value: 0 },
@@ -184,7 +183,14 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
       selectedOptions.forEach(optionId => {
         const option = question.options?.find(opt => opt.id === optionId);
         if (option?.track) {
-          trackScores[option.track] += option.value;
+          if (option.track === 'any') {
+            // Options with 'any' track contribute to all tracks
+            trackScores.beginner += option.value;
+            trackScores.engineer += option.value;
+            trackScores.ml += option.value;
+          } else if (option.track in trackScores) {
+            trackScores[option.track as keyof typeof trackScores] += option.value;
+          }
         }
       });
     });
@@ -234,7 +240,12 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
     return questions.filter(q => {
       if (!q.conditional) return true;
       const dependentAnswer = answers[q.conditional.dependsOn]?.[0];
-      return dependentAnswer === q.conditional.showWhen;
+      const showWhen = q.conditional.showWhen;
+      
+      if (Array.isArray(showWhen)) {
+        return showWhen.includes(dependentAnswer);
+      }
+      return dependentAnswer === showWhen;
     });
   };
 
@@ -425,7 +436,7 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
             <Lightbulb className="h-6 w-6" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Skills Assessment</h1>
-          <p className="text-lg text-gray-600">Help us recommend the perfect learning track for you</p>
+          <p className="text-lg text-gray-600">Help us recommend the perfect learning track for your team</p>
         </div>
 
         <div className="bg-gray-50 rounded-2xl p-8 mb-8">
