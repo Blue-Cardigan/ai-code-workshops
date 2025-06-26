@@ -47,7 +47,7 @@ export const TestimonialCarousel = ({ testimonials }: TestimonialCarouselProps) 
 
         <div className="carousel-container relative">
           <div className="carousel-track" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
-            {testimonials.map((testimonial, index) => (
+            {testimonials.map((testimonial) => (
               <div key={testimonial.id} className="carousel-slide">
                 <div className="testimonial-card max-w-4xl mx-auto">
                   <div className="flex items-start space-x-4 mb-6">

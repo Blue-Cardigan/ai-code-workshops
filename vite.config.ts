@@ -17,8 +17,7 @@ export default defineConfig({
           'pdf': ['html2pdf.js', 'jspdf', 'html2canvas'],
           
           // Component chunks
-          'brochure': ['./src/components/Brochure.tsx'],
-          'assessment': ['./src/components/Assessment.tsx']
+          'brochure': ['./src/components/Brochure.tsx']
         }
       }
     },
