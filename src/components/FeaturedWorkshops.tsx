@@ -22,7 +22,7 @@ const featuredWorkshops: FeaturedWorkshop[] = [
     duration: "4 hours",
     level: "Beginner",
     image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    badge: "Most Popular"
+    badge: "Popular"
   },
   {
     id: 4,
@@ -57,7 +57,7 @@ const FeaturedWorkshops = ({ onNavigateToWorkshops }: FeaturedWorkshopsProps) =>
 
   const getBadgeColor = (badge: string) => {
     const colors = {
-      'Most Popular': 'bg-gradient-to-r from-green-500 to-green-600',
+      'Popular': 'bg-gradient-to-r from-green-500 to-green-600',
       'Staff Pick': 'bg-gradient-to-r from-purple-500 to-purple-600',
       'Best Seller': 'bg-gradient-to-r from-orange-500 to-orange-600'
     };

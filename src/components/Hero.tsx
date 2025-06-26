@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Calendar, MessageSquare, ArrowRight, Target, Users, Code, CheckCircle, Brain } from 'lucide-react';
+import { Calendar, MessageSquare, ArrowRight, Target, Code, CheckCircle, Brain } from 'lucide-react';
 
 interface HeroProps {
   onNavigateToQuestions?: () => void;
@@ -18,7 +18,7 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
   const learningStages = [
     {
       id: 1,
-      title: "Analyzing Team Skills",
+      title: "Analysing Team Skills",
       description: "Assessing current capabilities and experience levels",
       icon: <Brain className="w-5 h-5" />,
       color: "text-blue-600",
@@ -36,7 +36,7 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
     },
     {
       id: 3,
-      title: "Personalizing Curriculum",
+      title: "Personalising Curriculum",
       description: "Tailoring workshops to your team's specific needs",
       icon: <Code className="w-5 h-5" />,
       color: "text-purple-600",
@@ -234,34 +234,27 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
                   })}
                 </div>
 
-                {/* Completion Message */}
-                {showCompletionMessage && (
-                  <div className="mt-8 p-6 bg-gradient-to-r from-green-50 to-blue-50 rounded-xl border border-green-200 text-center animate-fade-in">
-                    <Users className="w-8 h-8 text-green-600 mx-auto mb-3" />
-                    <p className="text-gray-600 text-sm mb-6">
-                      Ready to discover your team's personalized learning path? 
-                    </p>
-                    
-                    {/* CTA Buttons */}
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                      <button 
-                        onClick={onNavigateToQuestions}
-                        className="btn-primary group flex items-center justify-center transform hover:scale-105 transition-all duration-200"
-                      >
-                        <MessageSquare className="w-5 h-5 mr-2" />
-                        Get a Quote
-                        <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                      </button>
-                      <button className="btn-outline group flex items-center justify-center">
-                        <Calendar className="w-5 h-5 mr-2" />
-                        Book a Call
-                        <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                      </button>
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
+          </div>
+          
+          {/* CTA Buttons */}
+          <div className={`mt-16 flex flex-col sm:flex-row gap-4 justify-center transition-opacity duration-500 ${
+            showCompletionMessage ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          }`}>
+            <button 
+              onClick={onNavigateToQuestions}
+              className="btn-primary group flex items-center justify-center transform hover:scale-105 transition-all duration-200"
+            >
+              <MessageSquare className="w-5 h-5 mr-2" />
+              Get a Quote
+              <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+            </button>
+            <button className="btn-outline group flex items-center justify-center">
+              <Calendar className="w-5 h-5 mr-2" />
+              Book a Call
+              <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+            </button>
           </div>
         </div>
       </div>
