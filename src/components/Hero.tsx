@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Calendar, MessageSquare, ArrowRight, Target, Code, CheckCircle, Brain } from 'lucide-react';
+import { Calendar, MessageSquare, ArrowRight, Target, Code, CheckCircle, Brain, SkipForward } from 'lucide-react';
 
 interface HeroProps {
   onNavigateToQuestions?: () => void;
@@ -12,6 +12,7 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
   const [currentStage, setCurrentStage] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
   const [showCompletionMessage, setShowCompletionMessage] = useState(false);
+  const [isAnimationSkipped, setIsAnimationSkipped] = useState(false);
   
   const fullPrompt = "Use AI to take my team to the next level";
   
@@ -45,8 +46,19 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
     }
   ];
 
+  const skipAnimation = () => {
+    setIsAnimationSkipped(true);
+    setPromptText(fullPrompt);
+    setIsPromptComplete(true);
+    setShowCursor(false);
+    setIsProcessing(false);
+    setCurrentStage(learningStages.length);
+    setShowCompletionMessage(true);
+  };
+
   // Typing animation for prompt
   useEffect(() => {
+    if (isAnimationSkipped) return;
     if (promptText.length < fullPrompt.length) {
       const timeout = setTimeout(() => {
         setPromptText(fullPrompt.substring(0, promptText.length + 1));
@@ -63,6 +75,7 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
 
   // Cursor blinking
   useEffect(() => {
+    if (isAnimationSkipped) return;
     if (!isPromptComplete) {
       const interval = setInterval(() => {
         setShowCursor(prev => !prev);
@@ -73,6 +86,7 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
 
   // Sequential stage animation
   useEffect(() => {
+    if (isAnimationSkipped) return;
     if (isPromptComplete && currentStage < learningStages.length) {
       const timeout = setTimeout(() => {
         setCurrentStage(prev => prev + 1);
@@ -103,6 +117,17 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
       <div className="absolute bottom-40 left-20 w-8 h-8 bg-green-400/20 rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
       
       <div className="relative z-10 min-h-screen flex items-center py-8">
+        {/* Skip Animation Button */}
+        {!showCompletionMessage && !isAnimationSkipped && promptText.length > 0 && (
+          <button
+            onClick={skipAnimation}
+            className="absolute top-8 right-8 z-20 flex items-center space-x-2 px-3 py-2 text-sm text-gray-500 hover:text-gray-700 bg-white/80 hover:bg-white/90 backdrop-blur-sm rounded-lg border border-gray-200/50 hover:border-gray-300/50 transition-all duration-200 shadow-sm hover:shadow-md group"
+          >
+            <SkipForward className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+            <span>Skip</span>
+          </button>
+        )}
+        
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <div className="grid lg:grid-cols-2 gap-10 items-center">
             

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, ArrowRight, CheckCircle, Code, Database, Users, Target, Clock, Lightbulb, Mail, Phone, Building } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CheckCircle, Code, Database, Users, Target, Clock, Lightbulb, Mail, Phone, Building, DollarSign } from 'lucide-react';
 import Button from './Button';
 import { supabase, type AssessmentSubmission } from '../lib/supabase';
 
@@ -30,6 +30,10 @@ interface AssessmentResult {
   workshops: string[];
   icon: React.ReactNode;
   color: string;
+  pricing: {
+    perPerson: number;
+    estimatedDays: number;
+  };
 }
 
 const questions: Question[] = [
@@ -105,7 +109,11 @@ const trackResults: Record<string, AssessmentResult> = {
     description: 'Perfect for complete beginners and those new to programming. Start your journey into AI-powered development with foundational skills.',
     workshops: ['Intro to Vibe Coding', 'Prompt Engineering for Power Users', 'Git & GitHub for Beginners'],
     icon: <Users className="h-8 w-8" />,
-    color: 'green'
+    color: 'green',
+    pricing: {
+      perPerson: 1200,
+      estimatedDays: 3
+    }
   },
   engineer: {
     track: 'engineer',
@@ -113,7 +121,11 @@ const trackResults: Record<string, AssessmentResult> = {
     description: 'Level up your development skills with AI-powered tools and workflows. Perfect for developers looking to boost productivity.',
     workshops: ['Refactor Like a Pro', 'Testing in the Age of Copilot', 'PromptOps', 'Cursor + Claude + GitHub'],
     icon: <Code className="h-8 w-8" />,
-    color: 'blue'
+    color: 'blue',
+    pricing: {
+      perPerson: 1800,
+      estimatedDays: 4
+    }
   },
   ml: {
     track: 'ml',
@@ -121,7 +133,11 @@ const trackResults: Record<string, AssessmentResult> = {
     description: 'Transition from traditional ML to modern AI development practices. Bridge the gap between data science and software development.',
     workshops: ['AI-Assisted Notebooks', 'Fine-Tuning the Vibes', 'AI Debugging'],
     icon: <Database className="h-8 w-8" />,
-    color: 'red'
+    color: 'red',
+    pricing: {
+      perPerson: 2200,
+      estimatedDays: 5
+    }
   }
 };
 
@@ -135,7 +151,8 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
     contact_name: '',
     email: '',
     phone: '',
-    additional_notes: ''
+    additional_notes: '',
+    team_size: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -296,6 +313,41 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
                 ))}
               </div>
             </div>
+
+            {/* Cost Calculation */}
+            {contactInfo.team_size && (
+              <div className="mt-6 bg-white p-6 rounded-lg border-2 border-green-200">
+                <div className="flex items-center mb-4">
+                  <DollarSign className="h-6 w-6 text-green-600 mr-2" />
+                  <h3 className="text-lg font-semibold text-gray-900">Investment Quote</h3>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700">Training Duration:</span>
+                    <span className="font-medium">{result.pricing.estimatedDays} days</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700">Team Size:</span>
+                    <span className="font-medium">{contactInfo.team_size} people</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700">Cost per person:</span>
+                    <span className="font-medium">${result.pricing.perPerson.toLocaleString()}</span>
+                  </div>
+                  <div className="border-t pt-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-lg font-semibold text-gray-900">Total Investment:</span>
+                      <span className="text-2xl font-bold text-green-600">
+                        ${(result.pricing.perPerson * parseInt(contactInfo.team_size)).toLocaleString()}
+                      </span>
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-600 mt-3">
+                    * Includes materials, instructor fees, and follow-up support. Volume discounts available for teams over 20 people.
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -316,7 +368,7 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
   const currentQ = filteredQuestions[currentQuestion];
   const currentAnswers = answers[currentQ.id] || [];
   const hasAnswered = currentQ.type === 'contact' 
-    ? contactInfo.company_name && contactInfo.contact_name && contactInfo.email
+    ? contactInfo.company_name && contactInfo.contact_name && contactInfo.email && contactInfo.team_size
     : currentAnswers.length > 0;
 
   return (
@@ -416,6 +468,20 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
                     onChange={(e) => setContactInfo({...contactInfo, phone: e.target.value})}
                     className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     placeholder="(555) 123-4567"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <Users className="h-4 w-4 inline mr-2" />
+                    Team Size *
+                  </label>
+                  <input
+                    type="number"
+                    value={contactInfo.team_size}
+                    onChange={(e) => setContactInfo({...contactInfo, team_size: e.target.value})}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                    placeholder="Number of people attending"
+                    min="1"
                   />
                 </div>
               </div>
