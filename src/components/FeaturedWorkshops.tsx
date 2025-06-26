@@ -69,18 +69,19 @@ const FeaturedWorkshops = ({ onNavigateToWorkshops }: FeaturedWorkshopsProps) =>
   };
 
   return (
-    <section id="workshops" className="relative">
-      {/* Tilted background container - extended beyond section bounds */}
-      <div 
-        className="absolute transform -rotate-3" 
-        style={{ 
-          backgroundColor: '#e53a42',
-          width: '150%',
-          height: '120%',
-          top: '-15%',
-          left: '-25%'
-        }}
-      ></div>
+    <div style={{ overflowX: 'clip' }}>
+      <section id="workshops" className="relative">
+        {/* Tilted background container - extended beyond section bounds */}
+        <div 
+          className="absolute transform -rotate-3" 
+          style={{ 
+            backgroundColor: '#e53a42',
+            width: '150%',
+            height: '120%',
+            top: '-15%',
+            left: '-25%'
+          }}
+        ></div>
       
       {/* Straight grid overlay */}
       <div 
@@ -109,7 +110,7 @@ const FeaturedWorkshops = ({ onNavigateToWorkshops }: FeaturedWorkshopsProps) =>
             
             <div className="text-xl md:text-2xl leading-relaxed font-bold space-y-4 max-w-lg opacity-80">
               <p>
-                Coefficient has been applying AI to business and government since 2016. We are 10 humans living in London, UK.
+                Coefficient has been applying AI to business and government since 2016.
               </p>
             </div>
               
@@ -208,6 +209,7 @@ const FeaturedWorkshops = ({ onNavigateToWorkshops }: FeaturedWorkshopsProps) =>
         </div>
       </div>
     </section>
+    </div>
   );
 };
 

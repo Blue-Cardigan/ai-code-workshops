@@ -181,7 +181,7 @@ const allWorkshops: Workshop[] = [
 
   // AI for Data & ML Engineers
   {
-    id: 11,
+    id: 10,
     title: "AI-Assisted Notebooks: Coding Faster with GPT in Jupyter",
     description: "Accelerate data analysis and visualization with AI assistance directly in Jupyter notebooks. Perfect introduction for data professionals.",
     outline: [
@@ -193,12 +193,12 @@ const allWorkshops: Workshop[] = [
     ],
     duration: "4 hours",
     level: "intermediate",
-    category: "AI for Data & ML",
+    category: "AI for Data & ML Engineers",
     prerequisites: "Great intro for data analysts or scientists",
     image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
   },
   {
-    id: 12,
+    id: 11,
     title: "Fine-Tuning the Vibes: Training and Evaluating LLMs",
     description: "Advanced machine learning techniques for training, fine-tuning, and evaluating large language models in production environments.",
     outline: [
@@ -210,12 +210,12 @@ const allWorkshops: Workshop[] = [
     ],
     duration: "4 hours",
     level: "expert",
-    category: "AI for Data & ML",
+    category: "AI for Data & ML Engineers",
     prerequisites: "ML background required",
     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
   },
   {
-    id: 13,
+    id: 12,
     title: "AI Debugging: Helping LLMs Help You",
     description: "Master the art of debugging AI systems, improving response quality, and building robust AI-powered applications.",
     outline: [
@@ -227,7 +227,7 @@ const allWorkshops: Workshop[] = [
     ],
     duration: "4 hours",
     level: "expert",
-    category: "AI for Data & ML",
+    category: "AI for Data & ML Engineers",
     prerequisites: "For anyone working with RAG/AI pipelines",
     image: "https://images.unsplash.com/photo-1516321497487-e288fb19713f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
   }
@@ -274,8 +274,8 @@ const AllWorkshops = ({ onBackToHome, targetWorkshopId }: AllWorkshopsProps) => 
   const categories = [
     { name: "Zero-to-One", description: "Onboarding New Coders + Vibe Coders", color: "bg-green-500" },
     { name: "Vibe-to-Engineer", description: "Professionalising Your AI-Assisted Coding", color: "bg-yellow-500" },
-    { name: "AI-Enhanced Engineering", description: "Software Engineering Best Practices", color: "bg-blue-500" },
-    { name: "AI for Data & ML", description: "AI for Data & ML Engineers", color: "bg-red-500" }
+    { name: "AI-Enhanced Software Engineering Best Practices", description: "Advanced AI-powered development workflows", color: "bg-blue-500" },
+    { name: "AI for Data & ML Engineers", description: "Specialized workshops for data science and ML", color: "bg-red-500" }
   ];
 
   return (

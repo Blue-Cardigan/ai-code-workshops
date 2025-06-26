@@ -31,7 +31,8 @@ interface AssessmentResult {
   icon: React.ReactNode;
   color: string;
   pricing: {
-    perPerson: number;
+    basePrice: number; // Price for up to 8 people
+    additionalPerPerson: number; // Additional cost per person beyond 8
     estimatedDays: number;
   };
 }
@@ -111,7 +112,8 @@ const trackResults: Record<string, AssessmentResult> = {
     icon: <Users className="h-8 w-8" />,
     color: 'green',
     pricing: {
-      perPerson: 1200,
+      basePrice: 7200, // £7,200 for up to 8 people
+      additionalPerPerson: 900, // £900 per additional person
       estimatedDays: 3
     }
   },
@@ -119,11 +121,12 @@ const trackResults: Record<string, AssessmentResult> = {
     track: 'engineer',
     title: 'AI-Augmented Engineer Track',
     description: 'Level up your development skills with AI-powered tools and workflows. Perfect for developers looking to boost productivity.',
-    workshops: ['Refactor Like a Pro', 'Testing in the Age of Copilot', 'PromptOps', 'Cursor + Claude + GitHub'],
+    workshops: ['Refactor Like a Pro', 'Testing in the Age of Copilot', 'From Playground to Production', 'Cursor + Claude + GitHub'],
     icon: <Code className="h-8 w-8" />,
     color: 'blue',
     pricing: {
-      perPerson: 1800,
+      basePrice: 10800, // £10,800 for up to 8 people
+      additionalPerPerson: 1350, // £1,350 per additional person
       estimatedDays: 4
     }
   },
@@ -135,7 +138,8 @@ const trackResults: Record<string, AssessmentResult> = {
     icon: <Database className="h-8 w-8" />,
     color: 'red',
     pricing: {
-      perPerson: 2200,
+      basePrice: 13200, // £13,200 for up to 8 people
+      additionalPerPerson: 1650, // £1,650 per additional person
       estimatedDays: 5
     }
   }
@@ -288,7 +292,7 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
               <CheckCircle className="h-8 w-8" />
             </div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Assessment Complete!</h1>
-            <p className="text-lg text-gray-600">Here's your personalized learning recommendation</p>
+            <p className="text-lg text-gray-600">Here's your personalised learning recommendation</p>
           </div>
 
           <div className={`p-8 rounded-2xl border-2 ${getColorClasses(result.color)} mb-8`}>
@@ -331,14 +335,25 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
                     <span className="font-medium">{contactInfo.team_size} people</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-700">Cost per person:</span>
-                    <span className="font-medium">${result.pricing.perPerson.toLocaleString()}</span>
+                    <span className="text-gray-700">Base price (up to 8 people):</span>
+                    <span className="font-medium">£{result.pricing.basePrice.toLocaleString()}</span>
                   </div>
+                  {parseInt(contactInfo.team_size) > 8 && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-700">Additional attendees ({parseInt(contactInfo.team_size) - 8} × £{result.pricing.additionalPerPerson.toLocaleString()}):</span>
+                      <span className="font-medium">£{((parseInt(contactInfo.team_size) - 8) * result.pricing.additionalPerPerson).toLocaleString()}</span>
+                    </div>
+                  )}
                   <div className="border-t pt-3">
                     <div className="flex justify-between items-center">
                       <span className="text-lg font-semibold text-gray-900">Total Investment:</span>
                       <span className="text-2xl font-bold text-green-600">
-                        ${(result.pricing.perPerson * parseInt(contactInfo.team_size)).toLocaleString()}
+                        £{(() => {
+                          const teamSize = parseInt(contactInfo.team_size);
+                          const basePrice = result.pricing.basePrice;
+                          const additionalCost = teamSize > 8 ? (teamSize - 8) * result.pricing.additionalPerPerson : 0;
+                          return (basePrice + additionalCost).toLocaleString();
+                        })()}
                       </span>
                     </div>
                   </div>
@@ -494,7 +509,7 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
                   onChange={(e) => setContactInfo({...contactInfo, additional_notes: e.target.value})}
                   rows={4}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                  placeholder="Any specific requirements, team size, or additional information..."
+                  placeholder="Anything else you'd like us to know?"
                 />
               </div>
               <p className="text-sm text-gray-500">* Required fields</p>

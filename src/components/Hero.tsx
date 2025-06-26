@@ -71,7 +71,7 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
         setIsProcessing(true);
       }, 1000);
     }
-  }, [promptText, fullPrompt, isPromptComplete]);
+  }, [promptText, fullPrompt, isPromptComplete, isAnimationSkipped]);
 
   // Cursor blinking
   useEffect(() => {
@@ -82,7 +82,7 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
       }, 500);
       return () => clearInterval(interval);
     }
-  }, [isPromptComplete]);
+  }, [isPromptComplete, isAnimationSkipped]);
 
   // Sequential stage animation
   useEffect(() => {
@@ -105,16 +105,25 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
   }, [isPromptComplete, currentStage, learningStages.length, showCompletionMessage, isAnimationSkipped]);
 
   return (
-    <section id="home" className="relative min-h-screen overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50 pt-16">
+    <section id="home" className="relative min-h-screen overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50 pt-16 pb-32">
       {/* Background Elements */}
       <div className="absolute inset-0 opacity-40" style={{
         backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e2e8f0' fill-opacity='0.3'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
       }} />
       
       {/* Floating Particles */}
-      <div className="absolute top-20 left-10 w-6 h-6 bg-blue-400/20 rounded-full animate-pulse" style={{ animationDelay: '0s' }} />
-      <div className="absolute top-40 right-20 w-4 h-4 bg-purple-400/20 rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
-      <div className="absolute bottom-40 left-20 w-8 h-8 bg-green-400/20 rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
+      <div className="absolute top-16 left-8 w-3 h-3 bg-blue-400/15 rounded-full animate-pulse" style={{ animationDelay: '0s' }} />
+      <div className="absolute top-32 right-16 w-2 h-2 bg-purple-400/25 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }} />
+      <div className="absolute top-48 left-1/4 w-5 h-5 bg-teal-400/20 rounded-full animate-pulse" style={{ animationDelay: '1.2s' }} />
+      <div className="absolute top-64 right-32 w-7 h-7 bg-indigo-400/15 rounded-full animate-pulse" style={{ animationDelay: '2.1s' }} />
+      <div className="absolute top-80 left-16 w-4 h-4 bg-pink-400/20 rounded-full animate-pulse" style={{ animationDelay: '1.8s' }} />
+      <div className="absolute bottom-64 right-8 w-6 h-6 bg-cyan-400/15 rounded-full animate-pulse" style={{ animationDelay: '0.7s' }} />
+      <div className="absolute bottom-48 left-32 w-8 h-8 bg-green-400/20 rounded-full animate-pulse" style={{ animationDelay: '2.5s' }} />
+      <div className="absolute bottom-32 right-1/3 w-3 h-3 bg-yellow-400/25 rounded-full animate-pulse" style={{ animationDelay: '1.5s' }} />
+      <div className="absolute bottom-16 left-1/2 w-5 h-5 bg-orange-400/20 rounded-full animate-pulse" style={{ animationDelay: '0.3s' }} />
+      <div className="absolute top-1/3 right-12 w-2 h-2 bg-violet-400/30 rounded-full animate-pulse" style={{ animationDelay: '2.8s' }} />
+      <div className="absolute top-2/3 left-12 w-6 h-6 bg-rose-400/15 rounded-full animate-pulse" style={{ animationDelay: '1.0s' }} />
+      <div className="absolute top-1/2 right-1/4 w-4 h-4 bg-emerald-400/20 rounded-full animate-pulse" style={{ animationDelay: '2.3s' }} />
       
       <div className="relative z-10 min-h-screen flex items-center py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
