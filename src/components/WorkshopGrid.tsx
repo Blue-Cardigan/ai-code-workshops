@@ -1,5 +1,5 @@
-import { Clock, Users, BookOpen, ArrowRight } from 'lucide-react';
-import Button from './Button';
+import React from 'react';
+import { Clock, BookOpen, ArrowRight } from 'lucide-react';
 
 interface Workshop {
   id: number;
@@ -11,11 +11,6 @@ interface Workshop {
   audience: string;
   category: string;
   color: string;
-  anchor: string; // For linking to brochure sections
-}
-
-interface WorkshopGridProps {
-  onNavigateToBrochure?: (anchor?: string) => void;
 }
 
 const workshops: Workshop[] = [
@@ -29,8 +24,7 @@ const workshops: Workshop[] = [
     prerequisites: "No prerequisites",
     audience: "Newbies, functional experts, innovation teams",
     category: "Zero-to-One",
-    color: "green",
-    anchor: "intro-to-vibe-coding-build--deploy-your-first-ai-app"
+    color: "green"
   },
   {
     id: 2,
@@ -41,8 +35,7 @@ const workshops: Workshop[] = [
     prerequisites: "No coding experience needed",
     audience: "Non-coders, analysts, professionals",
     category: "Zero-to-One",
-    color: "green",
-    anchor: "prompt-engineering-for-power-users"
+    color: "green"
   },
   {
     id: 3,
@@ -53,8 +46,7 @@ const workshops: Workshop[] = [
     prerequisites: "Optional follow-on from workshops 1 or 2",
     audience: "New developers",
     category: "Zero-to-One",
-    color: "green",
-    anchor: "git--github-for-beginners-w-ai-helpers"
+    color: "green"
   },
   // Vibe-to-Engineer
   {
@@ -66,8 +58,7 @@ const workshops: Workshop[] = [
     prerequisites: "Some coding comfort (Python/JS)",
     audience: "Product managers, analysts, junior devs",
     category: "Vibe-to-Engineer",
-    color: "yellow",
-    anchor: "refactor-like-a-pro-clean-code-with-ai-pairing-tools"
+    color: "yellow"
   },
   {
     id: 5,
@@ -78,8 +69,7 @@ const workshops: Workshop[] = [
     prerequisites: "Basic Git + coding fluency",
     audience: "Junior developers, product managers",
     category: "Vibe-to-Engineer",
-    color: "yellow",
-    anchor: "from-playground-to-production-shipping-ai-projects"
+    color: "yellow"
   },
   {
     id: 6,
@@ -90,8 +80,18 @@ const workshops: Workshop[] = [
     prerequisites: "Python or JS experience required",
     audience: "Developers",
     category: "Vibe-to-Engineer",
-    color: "yellow",
-    anchor: "testing-in-the-age-of-copilot"
+    color: "yellow"
+  },
+  {
+    id: 7,
+    title: "PromptOps: Reusable Prompt Libraries and Debugging LLMs",
+    description: "Prompt chaining, evaluation tools (LM Studio, Flowise, Guidance), and managing prompt versions in Git for teams building LLM-powered products.",
+    duration: "4 hours",
+    level: "intermediate",
+    prerequisites: "Experience with LLM products",
+    audience: "Teams building LLM products",
+    category: "Vibe-to-Engineer",
+    color: "yellow"
   },
   // AI-Enhanced Software Engineering
   {
@@ -103,8 +103,7 @@ const workshops: Workshop[] = [
     prerequisites: "Development experience",
     audience: "Mid-level devs, data scientists",
     category: "AI-Enhanced Engineering",
-    color: "blue",
-    anchor: "cursor--claude--github-full-workflow-mastery"
+    color: "blue"
   },
   {
     id: 9,
@@ -115,8 +114,7 @@ const workshops: Workshop[] = [
     prerequisites: "Comfort with Git",
     audience: "DevOps engineers, developers",
     category: "AI-Enhanced Engineering",
-    color: "blue",
-    anchor: "cicd-in-a-vibe-coding-world"
+    color: "blue"
   },
   {
     id: 10,
@@ -127,8 +125,7 @@ const workshops: Workshop[] = [
     prerequisites: "Deployment familiarity",
     audience: "DevOps engineers, security-focused devs",
     category: "AI-Enhanced Engineering",
-    color: "blue",
-    anchor: "secure-by-design-devsecops-for-ai-era-engineers"
+    color: "blue"
   },
   // AI for Data & ML Engineers
   {
@@ -140,8 +137,7 @@ const workshops: Workshop[] = [
     prerequisites: "Basic data analysis",
     audience: "Data analysts, scientists",
     category: "AI for Data & ML",
-    color: "red",
-    anchor: "ai-assisted-notebooks-coding-faster-with-gpt-in-jupyter"
+    color: "red"
   },
   {
     id: 12,
@@ -152,8 +148,7 @@ const workshops: Workshop[] = [
     prerequisites: "ML background required",
     audience: "ML engineers, researchers",
     category: "AI for Data & ML",
-    color: "red",
-    anchor: "fine-tuning-the-vibes-training-and-evaluating-llms"
+    color: "red"
   },
   {
     id: 13,
@@ -164,53 +159,48 @@ const workshops: Workshop[] = [
     prerequisites: "RAG/pipeline experience",
     audience: "AI engineers, ML engineers",
     category: "AI for Data & ML",
-    color: "red",
-    anchor: "ai-debugging-helping-llms-help-you"
+    color: "red"
   }
 ];
 
-const getCategoryColors = (color: string) => {
+const getLevelColor = (level: string) => {
   const colors = {
-    green: {
-      accent: '#ff6f68',
-      level: '#22c55e'
-    },
-    yellow: {
-      accent: '#ffc861',
-      level: '#f59e0b'
-    },
-    blue: {
-      accent: '#ff6f68',
-      level: '#3b82f6'
-    },
-    red: {
-      accent: '#ffc861',
-      level: '#ef4444'
-    }
+    beginner: 'bg-green-50 text-green-700 border-green-200',
+    intermediate: 'bg-yellow-50 text-yellow-700 border-yellow-200',
+    advanced: 'bg-blue-50 text-blue-700 border-blue-200',
+    expert: 'bg-red-50 text-red-700 border-red-200'
   };
-  return colors[color as keyof typeof colors] || colors.green;
+  return colors[level as keyof typeof colors] || 'bg-gray-50 text-gray-700 border-gray-200';
 };
 
-const WorkshopGrid = ({ onNavigateToBrochure }: WorkshopGridProps) => {
+const getCategoryColor = (color: string) => {
+  const colors = {
+    green: 'border-l-green-200',
+    yellow: 'border-l-yellow-200',
+    blue: 'border-l-blue-200',
+    red: 'border-l-red-200'
+  };
+  return colors[color as keyof typeof colors] || 'border-l-gray-200';
+};
+
+const WorkshopGrid = () => {
+  const [, setSelectedWorkshop] = React.useState<Workshop | null>(null);
+
   const categories = [
-    { name: "Zero-to-One", description: "Onboarding New Coders + Vibe Coders" },
-    { name: "Vibe-to-Engineer", description: "Professionalising Your AI-Assisted Coding" },
-    { name: "AI-Enhanced Engineering", description: "Software Engineering Best Practices" },
-    { name: "AI for Data & ML", description: "AI for Data & ML Engineers" }
+    { name: "Zero-to-One", description: "Onboarding New Coders + Vibe Coders", emoji: "🟢" },
+    { name: "Vibe-to-Engineer", description: "Professionalising Your AI-Assisted Coding", emoji: "🟡" },
+    { name: "AI-Enhanced Engineering", description: "Software Engineering Best Practices", emoji: "🔵" },
+    { name: "AI for Data & ML", description: "AI for Data & ML Engineers", emoji: "🔴" }
   ];
-  
 
-
-  const handleWorkshopClick = (workshop: Workshop) => {
-    if (onNavigateToBrochure) {
-      onNavigateToBrochure(workshop.anchor);
-    }
+  const handleLearnMore = (workshop: Workshop) => {
+    setSelectedWorkshop(workshop);
+    // In a real app, this would navigate to a detailed workshop page
+    alert(`🚀 Workshop: ${workshop.title}\n\n📋 Prerequisites: ${workshop.prerequisites}\n\n👥 Target Audience: ${workshop.audience}\n\n⏱️ Duration: ${workshop.duration}\n\n📞 Contact us to enroll in this workshop!`);
   };
 
-
-
   return (
-    <section id="workshops" className="py-20" style={{ backgroundColor: '#ffffff' }}>
+    <section id="workshops" className="py-20 bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-16">
@@ -218,7 +208,7 @@ const WorkshopGrid = ({ onNavigateToBrochure }: WorkshopGridProps) => {
             AI-Enhanced Development Workshops
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Structured 4-hour workshops with clear notes on prerequisites and target audience. 
+            Structured 4-hour workshops with clear notes on prerequisites and target audience.
             Can be delivered standalone or as part of structured learning tracks.
           </p>
         </div>
@@ -226,7 +216,7 @@ const WorkshopGrid = ({ onNavigateToBrochure }: WorkshopGridProps) => {
         {/* Category Sections */}
         {categories.map((category) => {
           const categoryWorkshops = workshops.filter(w => w.category === category.name);
-          
+
           return (
             <div key={category.name} className="mb-16">
               {/* Category Header */}
@@ -237,100 +227,51 @@ const WorkshopGrid = ({ onNavigateToBrochure }: WorkshopGridProps) => {
 
               {/* Workshop Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {categoryWorkshops.map((workshop) => {
-                  const colors = getCategoryColors(workshop.color);
-                  
-                  return (
-                    <div
-                      key={workshop.id}
-                      className="bg-white rounded-lg border border-gray-200 hover:border-gray-300 hover:shadow-lg transition-all duration-300 cursor-pointer overflow-hidden group flex flex-col h-full"
-                      onClick={() => handleWorkshopClick(workshop)}
-                    >
-                      {/* Card Header */}
-                      <div className="p-6 border-b border-gray-100">
-                        <div className="flex items-center justify-between mb-3">
-                          <span 
-                            className="px-3 py-1 rounded-full text-xs font-medium text-white"
-                            style={{ backgroundColor: colors.level }}
-                          >
-                            {workshop.level.toUpperCase()}
-                          </span>
-                          <div className="flex items-center text-gray-500 text-sm">
-                            <Clock className="h-4 w-4 mr-1" />
-                            {workshop.duration}
-                          </div>
-                        </div>
-
-                        <h4 className="text-lg font-semibold text-gray-900 leading-tight group-hover:text-gray-700 transition-colors">
-                          {workshop.title}
-                        </h4>
-                      </div>
-
-                      {/* Card Content - Flex grow to push footer down */}
-                      <div className="p-6 flex-grow">
-                        <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">
-                          {workshop.description}
-                        </p>
-
-                        {/* Details */}
-                        <div className="space-y-3">
-                          <div className="flex items-start gap-3">
-                            <BookOpen className="h-4 w-4 text-gray-400 mt-1 flex-shrink-0" />
-                            <div className="min-w-0">
-                              <span className="text-xs font-medium text-gray-500 uppercase tracking-wide block">Prerequisites</span>
-                              <p className="text-sm text-gray-700 leading-relaxed">{workshop.prerequisites}</p>
-                            </div>
-                          </div>
-                          <div className="flex items-start gap-3">
-                            <Users className="h-4 w-4 text-gray-400 mt-1 flex-shrink-0" />
-                            <div className="min-w-0">
-                              <span className="text-xs font-medium text-gray-500 uppercase tracking-wide block">Target Audience</span>
-                              <p className="text-sm text-gray-700 leading-relaxed">{workshop.audience}</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Card Footer - Always at bottom */}
-                      <div 
-                        className="px-6 py-3 border-t border-gray-100 group-hover:bg-gray-50 transition-colors mt-auto"
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                            {workshop.category}
-                          </span>
-                          <ArrowRight 
-                            className="h-4 w-4 text-gray-400 group-hover:text-gray-600 transition-colors" 
-                            style={{ color: colors.accent }}
-                          />
-                        </div>
+                {categoryWorkshops.map((workshop) => (
+                  <div
+                    key={workshop.id}
+                    className={`card p-6 ${getCategoryColor(workshop.color)} border-l-4 cursor-pointer`}
+                    onClick={() => handleLearnMore(workshop)}
+                  >
+                    {/* Workshop Header */}
+                    <div className="flex items-start justify-between mb-4">
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getLevelColor(workshop.level)}`}>
+                        {workshop.level}
+                      </span>
+                      <div className="flex items-center text-gray-500 text-sm">
+                        <Clock className="h-4 w-4 mr-1" />
+                        {workshop.duration}
                       </div>
                     </div>
-                  );
-                })}
+
+                    {/* Title */}
+                    <h4 className="text-lg font-semibold text-gray-900 mb-3 leading-snug">
+                      {workshop.title}
+                    </h4>
+
+                    {/* Description */}
+                    <p className="text-gray-600 text-sm mb-6 leading-relaxed">
+                      {workshop.description}
+                    </p>
+
+                    {/* CTA Button */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleLearnMore(workshop);
+                      }}
+                      className="w-full flex items-center justify-center space-x-2 text-pink-600 hover:text-pink-700 font-medium text-sm py-2 border border-pink-200 rounded-lg hover:bg-pink-50 transition-colors"
+                    >
+                      <BookOpen className="h-4 w-4" />
+                      <span>Learn More</span>
+                      <ArrowRight className="h-4 w-4" />
+                    </button>
+                  </div>
+                ))}
               </div>
             </div>
-            
           );
         })}
-
-        {/* CTA Section */}
-        <div className="border-t border-gray-200 py-12">
-          <div className="text-center">
-            <h3 className="text-2xl font-semibold text-gray-900 mb-4">
-              Ready to start your AI-powered coding journey?
-            </h3>
-            <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
-              Join thousands of developers who are already using AI to supercharge their coding skills.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                                          <Button className="flex items-center space-x-2">
-                <span>Book a workshop</span>
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );

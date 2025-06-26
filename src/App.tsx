@@ -1,30 +1,34 @@
 import { useState, lazy, Suspense } from 'react';
 import Navigation from './components/Navigation';
 import Hero from './components/Hero';
-import WorkshopGrid from './components/WorkshopGrid';
-import TrackSection from './components/TrackSection';
+import FeaturedWorkshops from './components/FeaturedWorkshops';
+import { TestimonialCarousel, ClientCarousel, sampleTestimonials } from './components/Carousel';
 import Footer from './components/Footer';
 import LoadingSpinner from './components/LoadingSpinner';
+import AllWorkshops from './components/AllWorkshops';
+import Questions from './components/Questions';
+import clientsData from '../clients.json';
 
 // Lazy load heavy components
 const Brochure = lazy(() => import('./components/Brochure'));
-const Assessment = lazy(() => import('./components/Assessment'));
 
 function App() {
-  const [currentView, setCurrentView] = useState<'home' | 'brochure' | 'assessment'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'brochure' | 'workshops' | 'questions'>('home');
   const [brochureAnchor, setBrochureAnchor] = useState<string | undefined>();
+  const [targetWorkshopId, setTargetWorkshopId] = useState<number | undefined>();
 
-  const handleNavigateToBrochure = (anchor?: string) => {
-    setBrochureAnchor(anchor);
-    setCurrentView('brochure');
+  const handleNavigateToWorkshops = (workshopId?: number) => {
+    setTargetWorkshopId(workshopId);
+    setCurrentView('workshops');
   };
 
-  const handleNavigateToAssessment = () => {
-    setCurrentView('assessment');
+  const handleNavigateToQuestions = () => {
+    setCurrentView('questions');
   };
 
   const handleBackToHome = () => {
     setBrochureAnchor(undefined);
+    setTargetWorkshopId(undefined);
     setCurrentView('home');
   };
 
@@ -36,20 +40,21 @@ function App() {
     );
   }
 
-  if (currentView === 'assessment') {
-    return (
-      <Suspense fallback={<LoadingSpinner message="Loading assessment..." />}>
-        <Assessment onBackToHome={handleBackToHome} />
-      </Suspense>
-    );
+  if (currentView === 'workshops') {
+    return <AllWorkshops onBackToHome={handleBackToHome} targetWorkshopId={targetWorkshopId} />;
+  }
+
+  if (currentView === 'questions') {
+    return <Questions onBackToHome={handleBackToHome} />;
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#ffffff' }}>
-      <Navigation onNavigateToBrochure={handleNavigateToBrochure} />
-      <Hero />
-      <WorkshopGrid onNavigateToBrochure={handleNavigateToBrochure} />
-      <TrackSection onNavigateToAssessment={handleNavigateToAssessment} />
+    <div className="min-h-screen bg-neutral-50">
+      <Navigation />
+      <Hero onNavigateToQuestions={handleNavigateToQuestions} />
+      <FeaturedWorkshops onNavigateToWorkshops={handleNavigateToWorkshops} />
+      <ClientCarousel clients={clientsData.clients} />
+      <TestimonialCarousel testimonials={sampleTestimonials} />
       <Footer />
     </div>
   );

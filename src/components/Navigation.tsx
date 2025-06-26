@@ -1,11 +1,8 @@
 import React from 'react';
-import { Menu, X, FileText } from 'lucide-react';
+import { Menu, X, Calendar, MessageSquare } from 'lucide-react';
 
-interface NavigationProps {
-  onNavigateToBrochure?: (anchor?: string) => void;
-}
 
-const Navigation = ({ onNavigateToBrochure }: NavigationProps) => {
+const Navigation = () => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [isVisible, setIsVisible] = React.useState(true);
   const [lastScrollY, setLastScrollY] = React.useState(0);
@@ -40,76 +37,58 @@ const Navigation = ({ onNavigateToBrochure }: NavigationProps) => {
     setIsOpen(false); // Close mobile menu after clicking
   };
 
-  const handleBrochureClick = () => {
-    if (onNavigateToBrochure) {
-      onNavigateToBrochure();
-    }
-    setIsOpen(false);
-  };
-
   return (
     <nav 
-      className={`bg-white/70 backdrop-blur-sm border-b border-gray-100 fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ${
+      className={`bg-white/95 backdrop-blur-md border-b border-neutral-200/50 fixed top-0 left-0 right-0 z-50 transition-all duration-300 shadow-sm ${
         isVisible ? 'translate-y-0' : '-translate-y-full'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
+        <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div className="flex items-center cursor-pointer" onClick={() => scrollToSection('home')}>
+          <div className="flex items-center cursor-pointer group" onClick={() => scrollToSection('home')}>
             <img 
               src="//images.squarespace-cdn.com/content/v1/5ba26f9d89c1720405dcfae2/1539074391576-C311VHNSYIBWQ5VGT9DK/coefficient-logo-and-name-v1.png?format=1500w"
               alt="Coefficient"
-              className="h-8 w-auto"
+              className="h-8 w-auto group-hover:scale-105 transition-transform duration-200"
             />
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-12">
+          <div className="hidden lg:flex items-center space-x-8">
             <button 
               onClick={() => scrollToSection('home')} 
-              className="font-bold transition-colors text-sm tracking-wide uppercase"
-              style={{ color: '#ff6f68' }}
+              className="text-neutral-700 hover:text-primary-600 font-medium transition-colors duration-200 relative group py-2"
             >
-              HOME
+              Home
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-600 group-hover:w-full transition-all duration-200"></span>
             </button>
             <button 
               onClick={() => scrollToSection('workshops')} 
-              className="font-bold transition-colors text-sm tracking-wide uppercase"
-              style={{ color: '#ff6f68' }}
+              className="text-neutral-700 hover:text-primary-600 font-medium transition-colors duration-200 relative group py-2"
             >
-              WORKSHOPS
+              Workshops
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-600 group-hover:w-full transition-all duration-200"></span>
             </button>
-            <button 
-              onClick={() => scrollToSection('tracks')} 
-              className="font-bold transition-colors text-sm tracking-wide uppercase border-b-2 border-transparent"
-              style={{ color: '#ff6f68' }}
-            >
-              LEARNING TRACKS
+          </div>
+
+          {/* CTA Buttons */}
+          <div className="hidden lg:flex items-center space-x-3">
+            <button className="btn-secondary group text-sm py-2 px-4 flex items-center">
+              <MessageSquare className="w-4 h-4 mr-2" />
+              Get Quote
             </button>
-            {onNavigateToBrochure && (
-              <button 
-                onClick={handleBrochureClick}
-                className="flex items-center gap-1 font-bold transition-colors text-sm tracking-wide uppercase"
-                style={{ color: '#ff6f68' }}
-              >
-                <FileText size={14} />
-                BROCHURE
-              </button>
-            )}
-            <button 
-              className="font-bold transition-colors text-sm tracking-wide uppercase"
-              style={{ color: '#ff6f68' }}
-            >
-              CONTACT US
+            <button className="btn-primary group text-sm py-2 px-4 flex items-center">
+              <Calendar className="w-4 h-4 mr-2" />
+              Book Call
             </button>
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden">
+          <div className="lg:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+              className="p-2 rounded-lg text-neutral-600 hover:text-primary-600 hover:bg-neutral-100 transition-colors duration-200"
             >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -118,45 +97,30 @@ const Navigation = ({ onNavigateToBrochure }: NavigationProps) => {
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 bg-white/95 backdrop-blur-sm border-t border-gray-100">
+          <div className="lg:hidden border-t border-neutral-200/50">
+            <div className="py-4 space-y-2 bg-white/95 backdrop-blur-sm">
               <button 
                 onClick={() => scrollToSection('home')} 
-                className="block w-full text-left px-3 py-3 font-bold text-sm tracking-wide uppercase"
-                style={{ color: '#ff6f68' }}
+                className="block w-full text-left px-4 py-3 text-neutral-700 hover:text-primary-600 hover:bg-neutral-50 font-medium transition-colors duration-200 rounded-lg"
               >
-                HOME
+                Home
               </button>
               <button 
                 onClick={() => scrollToSection('workshops')} 
-                className="block w-full text-left px-3 py-3 font-bold text-sm tracking-wide uppercase"
-                style={{ color: '#ff6f68' }}
+                className="block w-full text-left px-4 py-3 text-neutral-700 hover:text-primary-600 hover:bg-neutral-50 font-medium transition-colors duration-200 rounded-lg"
               >
-                WORKSHOPS
+                Workshops
               </button>
-              <button 
-                onClick={() => scrollToSection('tracks')} 
-                className="block w-full text-left px-3 py-3 font-bold text-sm tracking-wide uppercase"
-                style={{ color: '#ff6f68' }}
-              >
-                LEARNING TRACKS
-              </button>
-              {onNavigateToBrochure && (
-                <button 
-                  onClick={handleBrochureClick}
-                  className="flex items-center gap-1 w-full text-left px-3 py-3 font-bold text-sm tracking-wide uppercase"
-                  style={{ color: '#ff6f68' }}
-                >
-                  <FileText size={14} />
-                  BROCHURE
+              <div className="px-4 pt-4 space-y-3 border-t border-neutral-200/50 mt-4">
+                <button className="btn-secondary w-full flex items-center justify-center">
+                  <MessageSquare className="w-4 h-4 mr-2" />
+                  Get Quote
                 </button>
-              )}
-              <button 
-                className="block w-full text-left px-3 py-3 font-bold text-sm tracking-wide uppercase"
-                style={{ color: '#ff6f68' }}
-              >
-                CONTACT US
-              </button>
+                <button className="btn-primary w-full flex items-center justify-center">
+                  <Calendar className="w-4 h-4 mr-2" />
+                  Book Call
+                </button>
+              </div>
             </div>
           </div>
         )}

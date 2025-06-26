@@ -63,7 +63,7 @@ const Footer = () => {
                 <a href="#" className="text-gray-700 hover:text-gray-900 border-b border-gray-700 hover:border-gray-900 transition-colors">
                   Cyber Essential Plus Certification
                 </a>
-              </div>
+                </div>
               <div>
                 <a href="#" className="text-gray-700 hover:text-gray-900 border-b border-gray-700 hover:border-gray-900 transition-colors">
                   Carbon Reduction Plan
@@ -193,7 +193,7 @@ const Footer = () => {
               alt="Cyber Essentials Plus Certified" 
               className="h-16 object-contain"
             />
-          </div>
+            </div>
           
           {/* Copyright */}
           <div className="text-center text-gray-600 text-sm">
