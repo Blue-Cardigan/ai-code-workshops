@@ -394,11 +394,11 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
                 className="btn-secondary group flex items-center justify-center"
               >
                 <MessageSquare className="w-4 h-4 mr-2" />
-                Get Quote
+                Get a Quote
               </button>
               <button className="btn-primary group flex items-center justify-center">
                 <Calendar className="w-4 h-4 mr-2" />
-                Book Call
+                Book a Call
                 <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
