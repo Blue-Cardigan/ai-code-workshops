@@ -1,7 +1,7 @@
 import Analytics from 'analytics';
-// @ts-ignore - No types available for these analytics plugins
+// @ts-expect-error - No types available for these analytics plugins
 import googleAnalytics from '@analytics/google-analytics';
-// @ts-ignore - No types available for these analytics plugins  
+// @ts-expect-error - No types available for these analytics plugins  
 import segmentPlugin from '@analytics/segment';
 
 // Check if analytics should be enabled
@@ -30,9 +30,9 @@ const analytics = Analytics({
 // Conversion event types
 export interface ConversionEvent {
   event: string;
-  properties?: Record<string, any>;
+  properties?: Record<string, unknown>;
   userId?: string;
-  traits?: Record<string, any>;
+  traits?: Record<string, unknown>;
 }
 
 // Track conversion events (with dev mode protection)
@@ -49,7 +49,7 @@ export const trackConversion = (event: ConversionEvent) => {
 };
 
 // Identify users
-export const identifyUser = (userId: string, traits: Record<string, any>) => {
+export const identifyUser = (userId: string, traits: Record<string, unknown>) => {
   if (!shouldEnableAnalytics) {
     console.log('👤 Analytics identify (dev mode):', userId, traits);
     return;
@@ -59,7 +59,7 @@ export const identifyUser = (userId: string, traits: Record<string, any>) => {
 };
 
 // Page tracking
-export const trackPage = (name: string, properties?: Record<string, any>) => {
+export const trackPage = (name: string, properties?: Record<string, unknown>) => {
   if (!shouldEnableAnalytics) {
     console.log('📄 Analytics page (dev mode):', name, properties);
     return;
@@ -89,7 +89,6 @@ export const ConversionEvents = {
   
   // Engagement
   WORKSHOP_DETAILS_VIEWED: 'Workshop Details Viewed',
-  BROCHURE_DOWNLOADED: 'Brochure Downloaded',
   
   // Goal conversions
   LEAD_GENERATED: 'Lead Generated',
@@ -223,12 +222,6 @@ export const track = {
       },
     }),
 
-  brochureDownloaded: () =>
-    trackConversion({
-      event: ConversionEvents.BROCHURE_DOWNLOADED,
-      properties: { timestamp: new Date().toISOString() },
-    }),
-
   consultationRequested: (source: string) =>
     trackConversion({
       event: ConversionEvents.CONSULTATION_REQUESTED,
@@ -241,7 +234,6 @@ export const pages = {
   home: () => trackPage('Home'),
   workshops: () => trackPage('All Workshops'),
   assessment: () => trackPage('Skills Assessment'),
-  brochure: () => trackPage('Brochure'),
   questions: () => trackPage('Questions'),
 };
 

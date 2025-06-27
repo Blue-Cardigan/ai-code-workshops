@@ -15,9 +15,6 @@ export default defineConfig({
           // Feature chunks
           'markdown': ['react-markdown', 'remark-gfm'],
           'pdf': ['html2pdf.js', 'jspdf', 'html2canvas'],
-          
-          // Component chunks
-          'brochure': ['./src/components/Brochure.tsx']
         }
       }
     },

@@ -55,14 +55,12 @@ Currently supported:
 - `Workshop Details Viewed` - When workshop details are expanded
 - `Navigation Clicked` - Cross-section navigation
 - `Consultation Requested` - "Book a Call" clicks
-- `Brochure Downloaded` - PDF downloads
 
 ### Page Views
 
 - Home page visits
 - All workshops page
 - Skills assessment page
-- Brochure page
 
 ## Conversion Funnel
 
