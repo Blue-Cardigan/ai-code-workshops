@@ -201,6 +201,13 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
     )[0] as keyof typeof trackResults;
 
     const recommendedTrack = trackResults[bestTrack];
+    
+    // Calculate the actual quote value
+    const teamSize = parseInt(contactInfo.team_size) || 0;
+    const basePrice = recommendedTrack.pricing.basePrice;
+    const additionalCost = teamSize > 8 ? (teamSize - 8) * recommendedTrack.pricing.additionalPerPerson : 0;
+    const finalQuoteValue = basePrice + additionalCost;
+    
     setResult(recommendedTrack);
 
     // Submit to Supabase
@@ -217,7 +224,9 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
         email: contactInfo.email,
         phone: contactInfo.phone,
         additional_notes: contactInfo.additional_notes,
-        recommended_track: bestTrack
+        recommended_track: bestTrack,
+        team_size: contactInfo.team_size,
+        quote_value: finalQuoteValue
       };
 
       const { error } = await supabase

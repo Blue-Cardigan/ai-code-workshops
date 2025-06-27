@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Calendar, MessageSquare, ArrowRight, Target, Code, CheckCircle, Brain, SkipForward } from 'lucide-react';
+import Button from './Button';
 
 interface HeroProps {
   onNavigateToQuestions?: () => void;
@@ -62,14 +63,14 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
     if (promptText.length < fullPrompt.length) {
       const timeout = setTimeout(() => {
         setPromptText(fullPrompt.substring(0, promptText.length + 1));
-      }, 80);
+      }, 30);
       return () => clearTimeout(timeout);
     } else if (!isPromptComplete) {
       setTimeout(() => {
         setIsPromptComplete(true);
         setShowCursor(false);
         setIsProcessing(true);
-      }, 1000);
+      }, 500);
     }
   }, [promptText, fullPrompt, isPromptComplete, isAnimationSkipped]);
 
@@ -157,7 +158,7 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
                   </div>
                   <div className="text-white">
                     {promptText}
-                    {showCursor && <span className="animate-pulse bg-white w-2 h-5 inline-block ml-1" />}
+                    <span className={`bg-white w-2 h-5 inline-block ml-1 transition-opacity duration-75 ${showCursor ? 'opacity-100' : 'opacity-0'}`} />
                   </div>
                   
                   {isPromptComplete && (

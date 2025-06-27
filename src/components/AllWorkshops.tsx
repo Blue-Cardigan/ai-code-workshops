@@ -405,7 +405,7 @@ const AllWorkshops = ({ onBackToHome, targetWorkshopId }: AllWorkshopsProps) => 
                     {expandedWorkshop === workshop.id ? 'Show Less' : 'View Details'}
                   </button>
                   <button className="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl border border-transparent">
-                    Enroll Now
+                    Book a Call
                   </button>
                 </div>
               </div>

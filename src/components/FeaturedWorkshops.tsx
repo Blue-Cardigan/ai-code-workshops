@@ -1,4 +1,5 @@
 import { Clock, ArrowRight } from 'lucide-react';
+import Button from './Button';
 
 interface FeaturedWorkshop {
   id: number;
@@ -104,17 +105,17 @@ const FeaturedWorkshops = ({ onNavigateToWorkshops }: FeaturedWorkshopsProps) =>
           
           {/* Left side - Explanatory text */}
           <div className="text-white space-y-6">
-            <h2 className="text-4xl md:text-5xl font-bold leading-tight text-white">
+            <h2 className="text-6xl md:text-7xl font-bold leading-tight text-white">
               Made for Humans.
             </h2>
             
-            <div className="text-xl md:text-2xl leading-relaxed font-bold space-y-4 max-w-lg opacity-80">
+            <div className="text-2xl md:text-3xl leading-relaxed font-bold space-y-4 opacity-80">
               <p>
-                Coefficient has been applying AI to business and government since 2016.
+                Coefficient has been applying AI to business and government since 2017.
               </p>
             </div>
               
-            <div className="text-lg leading-relaxed space-y-4 max-w-lg">
+            <div className="text-xl leading-relaxed space-y-4">
               <p>
                 We created these workshops because we believe everyone should have access to cutting-edge tools 
                 that amplify human potential.
@@ -122,7 +123,7 @@ const FeaturedWorkshops = ({ onNavigateToWorkshops }: FeaturedWorkshopsProps) =>
               
               <p>
               Among us are developers and AI enthusiasts across levels, meaning we understand the challenges you face. 
-              Our goal is to create practical, hands-on courses that are enjoyable and immediately applicable. 
+              We provide practical, hands-on courses that are enjoyable and immediately applicable. 
               </p>
             </div>
             
@@ -137,73 +138,82 @@ const FeaturedWorkshops = ({ onNavigateToWorkshops }: FeaturedWorkshopsProps) =>
           </div>
 
           {/* Right side - Workshop cards */}
-          <div className="space-y-6">
+          <div className="space-y-8">
             {featuredWorkshops.map((workshop, index) => (
-              <div 
+              <button 
                 key={workshop.id} 
-                className="bg-white/95 backdrop-blur-sm rounded-xl p-4 group hover:bg-white hover:scale-105 transition-all duration-300 relative overflow-hidden shadow-lg"
+                onClick={() => handleLearnMore(workshop.id)}
+                className="w-full bg-white/95 backdrop-blur-sm rounded-2xl p-6 group hover:bg-white hover:scale-[1.02] hover:shadow-2xl transition-all duration-300 relative overflow-hidden shadow-xl border border-white/20 cursor-pointer text-left"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                <div className="flex gap-4">
-                  {/* Compact image */}
-                  <div className="relative w-20 h-20 flex-shrink-0 overflow-hidden rounded-lg">
+                {/* Badge positioned absolutely */}
+                {workshop.badge && (
+                  <div className={`absolute top-4 right-4 ${getBadgeColor(workshop.badge)} text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg z-10`}>
+                    {workshop.badge}
+                  </div>
+                )}
+
+                <div className="flex gap-6">
+                  {/* Enhanced image */}
+                  <div className="relative w-32 h-32 flex-shrink-0 overflow-hidden rounded-xl shadow-lg">
                     <img 
                       src={workshop.image} 
                       alt={workshop.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
-                    {workshop.badge && (
-                      <div className={`absolute -top-1 -right-1 ${getBadgeColor(workshop.badge)} text-white px-2 py-1 rounded-full text-xs font-medium`}>
-                        {workshop.badge}
-                      </div>
-                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
 
                   {/* Content */}
                   <div className="flex-1 min-w-0 flex flex-col justify-between">
                     <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${getLevelColor(workshop.level)}`}>
+                      <div className="flex items-center gap-3 mb-3">
+                        <span className={`px-3 py-1 rounded-full text-sm font-semibold ${getLevelColor(workshop.level)}`}>
                           {workshop.level}
                         </span>
-                        <div className="flex items-center text-xs text-neutral-500">
-                          <Clock className="w-3 h-3 mr-1" />
-                          <span>{workshop.duration}</span>
+                        <div className="flex items-center text-sm text-neutral-500 bg-neutral-100 px-3 py-1 rounded-full">
+                          <Clock className="w-4 h-4 mr-2" />
+                          <span className="font-medium">{workshop.duration}</span>
                         </div>
                       </div>
 
-                      <h3 className="text-sm font-bold text-neutral-900 mb-2 line-clamp-2">
-                        {workshop.title}
-                      </h3>
+                      <div className="relative h-20 mb-3 overflow-hidden">
+                        {/* Title - visible by default, hidden on hover */}
+                        <h3 className="absolute inset-0 text-lg font-bold text-neutral-900 leading-tight transition-all duration-300 transform group-hover:opacity-0 group-hover:-translate-y-2">
+                          {workshop.title}
+                        </h3>
 
-                      <p className="text-xs text-neutral-600 mb-3 line-clamp-2">
-                        {workshop.description}
-                      </p>
+                        {/* Description - hidden by default, visible on hover */}
+                        <p className="absolute inset-0 text-sm text-neutral-600 leading-relaxed opacity-0 translate-y-2 transition-all duration-300 transform group-hover:opacity-100 group-hover:translate-y-0 line-clamp-4">
+                          {workshop.description}
+                        </p>
+                      </div>
                     </div>
 
-                    <div className="flex justify-end">
-                      <button 
-                        onClick={() => handleLearnMore(workshop.id)}
-                        className="text-xs bg-neutral-900 text-white px-3 py-2 rounded-lg hover:bg-neutral-800 transition-colors group flex items-center w-fit"
-                      >
-                        Learn More
-                        <ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform" />
-                      </button>
-                    </div>
                   </div>
                 </div>
-              </div>
+
+                {/* Subtle hover effect overlay */}
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl" />
+
+                {/* Click indicator */}
+                <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <ArrowRight className="w-5 h-5 text-neutral-600" />
+                </div>
+              </button>
             ))}
 
-            {/* View All Button */}
-            <div className="flex justify-end pt-4">
-              <button 
+            {/* Enhanced View All Button */}
+            <div className="flex justify-center pb-6">
+              <Button 
                 onClick={() => onNavigateToWorkshops?.(undefined)}
-                className="text-white hover:text-white/80 transition-colors group inline-flex items-center text-sm font-medium"
+                variant="secondary"
+                size="lg"
+                className="inline-flex items-center group shadow-lg hover:shadow-xl transform hover:-translate-y-1"
               >
                 Browse All Workshops
-                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-              </button>
+                <ArrowRight className="w-5 h-5 ml-3 group-hover:translate-x-1 transition-transform" />
+              </Button>
             </div>
           </div>
         </div>

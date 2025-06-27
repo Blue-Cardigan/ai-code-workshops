@@ -23,5 +23,7 @@ export interface AssessmentSubmission {
   email: string
   phone?: string
   additional_notes?: string
-  recommended_track: string
+  recommended_track: string 
+  team_size?: string
+  quote_value?: number
 } 
