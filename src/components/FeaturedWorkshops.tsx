@@ -19,7 +19,7 @@ const featuredWorkshops: FeaturedWorkshop[] = [
   {
     id: 1,
     title: "Intro to Vibe Coding: Build & Deploy Your First AI App",
-    description: "Use Lovable + Cursor to scaffold and deploy a simple app with AI-assisted code generation. Perfect for beginners who want to start their AI development journey.",
+    description: "Scaffold and deploy a simple app with AI-assisted code generation, and write scripts and extensions to automate your workflows. Perfect for beginners who want to do new things.",
     duration: "4 hours",
     level: "Beginner",
     image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
@@ -28,7 +28,7 @@ const featuredWorkshops: FeaturedWorkshop[] = [
   {
     id: 4,
     title: "Refactor Like a Pro: Clean Code with AI Pairing Tools",
-    description: "Master refactoring principles with LLM copilots like CodeRabbit. Learn DRY principles, abstraction, and professional code quality standards.",
+    description: "Master good practices with LLM copilots like Cursor and Claude Code. Implement ambitious features that adhere to professional code quality standards.",
     duration: "4 hours", 
     level: "Intermediate",
     image: "https://images.unsplash.com/photo-1515378960530-7c0da6231fb1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
@@ -122,12 +122,11 @@ const FeaturedWorkshops = ({ onNavigateToWorkshops }: FeaturedWorkshopsProps) =>
               
             <div className="text-xl leading-relaxed space-y-4">
               <p>
-                We created these workshops because we believe everyone should have access to cutting-edge tools 
-                that amplify human potential.
+                We created these workshops because we believe in using these tools to amplify, not replace, the workforce.
               </p>
               
               <p>
-              Among us are developers and AI enthusiasts across levels, meaning we understand the challenges you face. 
+              Among us are developers and AI users across levels and roles, meaning we understand the challenges you face. 
               We provide practical, hands-on courses that are enjoyable and immediately applicable. 
               </p>
             </div>

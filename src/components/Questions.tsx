@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, ArrowRight, CheckCircle, Code, Database, Users, Target, Clock, Lightbulb, Mail, Phone, Building, DollarSign } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CheckCircle, Code, Database, Users, Target, Clock, Lightbulb, Mail, Phone, Building, PoundSterlingIcon } from 'lucide-react';
 import Button from './Button';
 import { supabase, type AssessmentSubmission } from '../lib/supabase';
 import { track } from '../lib/analytics';
@@ -32,8 +32,32 @@ interface AssessmentResult {
   icon: React.ReactNode;
   color: string;
   pricing: {
-    basePrice: number; // Price for up to 8 people
-    additionalPerPerson: number; // Additional cost per person beyond 8
+    remote: {
+      basePrice: number; // Price for up to 8 people
+      additionalPerPerson: number; // Additional cost per person beyond 8
+    };
+    ourLocation: {
+      basePrice: number;
+      additionalPerPerson: number;
+    };
+    theirOffice: {
+      basePrice: number;
+      additionalPerPerson: number;
+      travelSurcharge: number; // Fixed travel cost
+    };
+    hybrid: {
+      basePrice: number;
+      additionalPerPerson: number;
+    };
+  };
+  deliveryMode?: keyof AssessmentResult['pricing'];
+  deliveryLabel?: string;
+  finalQuoteValue?: number;
+  pricingBreakdown?: {
+    basePrice: number;
+    additionalCost: number;
+    travelSurcharge: number;
+    teamSize: number;
   };
 }
 
@@ -111,8 +135,23 @@ const trackResults: Record<string, AssessmentResult> = {
     icon: <Users className="h-8 w-8" />,
     color: 'green',
     pricing: {
-      basePrice: 7200, // £7,200 for up to 8 people
-      additionalPerPerson: 900, // £900 per additional person
+      remote: {
+        basePrice: 5400, // £5,400 for up to 8 people (25% discount for remote)
+        additionalPerPerson: 675, // £675 per additional person
+      },
+      ourLocation: {
+        basePrice: 7200, // £7,200 for up to 8 people (base price)
+        additionalPerPerson: 900, // £900 per additional person
+      },
+      theirOffice: {
+        basePrice: 7200, // £7,200 for up to 8 people
+        additionalPerPerson: 900, // £900 per additional person
+        travelSurcharge: 1500, // £1,500 travel surcharge
+      },
+      hybrid: {
+        basePrice: 6300, // £6,300 for up to 8 people (blend of remote/in-person)
+        additionalPerPerson: 787, // £787 per additional person
+      }
     }
   },
   engineer: {
@@ -123,20 +162,50 @@ const trackResults: Record<string, AssessmentResult> = {
     icon: <Code className="h-8 w-8" />,
     color: 'blue',
     pricing: {
-      basePrice: 10800, // £10,800 for up to 8 people
-      additionalPerPerson: 1350, // £1,350 per additional person
+      remote: {
+        basePrice: 8100, // £8,100 for up to 8 people (25% discount for remote)
+        additionalPerPerson: 1012, // £1,012 per additional person
+      },
+      ourLocation: {
+        basePrice: 10800, // £10,800 for up to 8 people (base price)
+        additionalPerPerson: 1350, // £1,350 per additional person
+      },
+      theirOffice: {
+        basePrice: 10800, // £10,800 for up to 8 people
+        additionalPerPerson: 1350, // £1,350 per additional person
+        travelSurcharge: 2000, // £2,000 travel surcharge
+      },
+      hybrid: {
+        basePrice: 9450, // £9,450 for up to 8 people (blend of remote/in-person)
+        additionalPerPerson: 1181, // £1,181 per additional person
+      }
     }
   },
   ml: {
     track: 'ml',
     title: 'ML Engineer to AI Dev Track',
     description: 'Transition from traditional ML to modern AI development practices. Bridge the gap between data science and software development.',
-    workshops: ['AI-Assisted Notebooks', 'Fine-Tuning the Vibes', 'AI Debugging'],
+    workshops: ['AI-Assisted Notebooks', 'Fine-Tuning the Vibes', 'AI Debugging', 'MLOps with AI Tools'],
     icon: <Database className="h-8 w-8" />,
     color: 'red',
     pricing: {
-      basePrice: 13200, // £13,200 for up to 8 people
-      additionalPerPerson: 1650, // £1,650 per additional person
+      remote: {
+        basePrice: 9900, // £9,900 for up to 8 people (25% discount for remote)
+        additionalPerPerson: 1237, // £1,237 per additional person
+      },
+      ourLocation: {
+        basePrice: 13200, // £13,200 for up to 8 people (base price)
+        additionalPerPerson: 1650, // £1,650 per additional person
+      },
+      theirOffice: {
+        basePrice: 13200, // £13,200 for up to 8 people
+        additionalPerPerson: 1650, // £1,650 per additional person
+        travelSurcharge: 2500, // £2,500 travel surcharge
+      },
+      hybrid: {
+        basePrice: 11550, // £11,550 for up to 8 people (blend of remote/in-person)
+        additionalPerPerson: 1443, // £1,443 per additional person
+      }
     }
   }
 };
@@ -217,13 +286,52 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
 
     const recommendedTrack = trackResults[bestTrack];
     
+    // Determine delivery mode and pricing
+    const trainingPreference = answers[4]?.[0] || 'remote';
+    const hostingPreference = answers[5]?.[0] || 'our-location';
+    
+    let deliveryMode: keyof typeof recommendedTrack.pricing;
+    let deliveryLabel: string;
+    
+    if (trainingPreference === 'remote') {
+      deliveryMode = 'remote';
+      deliveryLabel = 'Remote/Virtual Training';
+    } else if (trainingPreference === 'hybrid') {
+      deliveryMode = 'hybrid';
+      deliveryLabel = 'Hybrid Training (Remote + In-Person)';
+    } else if (trainingPreference === 'in-person') {
+      if (hostingPreference === 'in-office') {
+        deliveryMode = 'theirOffice';
+        deliveryLabel = 'In-Person Training at Your Office';
+      } else {
+        deliveryMode = 'ourLocation';
+        deliveryLabel = 'In-Person Training at Our Location';
+      }
+    } else {
+      deliveryMode = 'ourLocation';
+      deliveryLabel = 'In-Person Training at Our Location';
+    }
+    
     // Calculate the actual quote value
     const teamSize = parseInt(contactInfo.team_size) || 0;
-    const basePrice = recommendedTrack.pricing.basePrice;
-    const additionalCost = teamSize > 8 ? (teamSize - 8) * recommendedTrack.pricing.additionalPerPerson : 0;
-    const finalQuoteValue = basePrice + additionalCost;
+    const pricingTier = recommendedTrack.pricing[deliveryMode];
+    const basePrice = pricingTier.basePrice;
+    const additionalCost = teamSize > 8 ? (teamSize - 8) * pricingTier.additionalPerPerson : 0;
+    const travelSurcharge = (deliveryMode === 'theirOffice' && 'travelSurcharge' in pricingTier) ? pricingTier.travelSurcharge : 0;
+    const finalQuoteValue = basePrice + additionalCost + travelSurcharge;
     
-    setResult(recommendedTrack);
+    setResult({
+      ...recommendedTrack,
+      deliveryMode,
+      deliveryLabel,
+      finalQuoteValue,
+      pricingBreakdown: {
+        basePrice,
+        additionalCost,
+        travelSurcharge,
+        teamSize
+      }
+    });
 
     // Track assessment completion
     track.assessmentCompleted(bestTrack, questions.length);
@@ -359,28 +467,36 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
             </div>
 
             <div className="mt-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">Recommended Workshops:</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                Recommended Workshops ({result.workshops.length} sessions):
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {result.workshops.map((workshop, index) => (
-                  <div key={index} className="flex items-center bg-white p-3 rounded-lg">
+                  <div key={index} className="flex items-center bg-white p-3 rounded-lg border border-gray-200">
                     <CheckCircle className="h-5 w-5 text-green-500 mr-3 flex-shrink-0" />
-                    <span className="text-gray-800">{workshop}</span>
+                    <div>
+                      <span className="text-gray-800 font-medium">{workshop}</span>
+                      <div className="text-sm text-gray-500">Half day (4 hours)</div>
+                    </div>
                   </div>
                 ))}
               </div>
+              <p className="text-sm text-gray-600 mt-3">
+                Each workshop is designed as a half-day intensive session with hands-on exercises and real-world applications.
+              </p>
             </div>
 
             {/* Cost Calculation */}
-            {contactInfo.team_size && (
+            {contactInfo.team_size && result.pricingBreakdown && (
               <div className="mt-6 bg-white p-6 rounded-lg border-2 border-green-200">
                 <div className="flex items-center mb-4">
-                  <DollarSign className="h-6 w-6 text-green-600 mr-2" />
+                  <PoundSterlingIcon className="h-6 w-6 text-green-600 mr-2" />
                   <h3 className="text-lg font-semibold text-gray-900">Investment Quote</h3>
                 </div>
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-700">Training Duration:</span>
-                    <span className="font-medium">Half day (4 hours) per workshop</span>
+                    <span className="text-gray-700">Delivery Method:</span>
+                    <span className="font-medium">{result.deliveryLabel}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-700">Team Size:</span>
@@ -388,24 +504,25 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-700">Base price (up to 8 people):</span>
-                    <span className="font-medium">£{result.pricing.basePrice.toLocaleString()}</span>
+                    <span className="font-medium">£{result.pricingBreakdown.basePrice.toLocaleString()}</span>
                   </div>
-                  {parseInt(contactInfo.team_size) > 8 && (
+                  {result.pricingBreakdown.additionalCost > 0 && (
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-700">Additional attendees ({parseInt(contactInfo.team_size) - 8} × £{result.pricing.additionalPerPerson.toLocaleString()}):</span>
-                      <span className="font-medium">£{((parseInt(contactInfo.team_size) - 8) * result.pricing.additionalPerPerson).toLocaleString()}</span>
+                      <span className="text-gray-700">Additional attendees ({result.pricingBreakdown.teamSize - 8} people):</span>
+                      <span className="font-medium">£{result.pricingBreakdown.additionalCost.toLocaleString()}</span>
+                    </div>
+                  )}
+                  {result.pricingBreakdown.travelSurcharge > 0 && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-700">Travel & logistics surcharge:</span>
+                      <span className="font-medium">£{result.pricingBreakdown.travelSurcharge.toLocaleString()}</span>
                     </div>
                   )}
                   <div className="border-t pt-3">
                     <div className="flex justify-between items-center">
                       <span className="text-lg font-semibold text-gray-900">Total Investment:</span>
                       <span className="text-2xl font-bold text-green-600">
-                        £{(() => {
-                          const teamSize = parseInt(contactInfo.team_size);
-                          const basePrice = result.pricing.basePrice;
-                          const additionalCost = teamSize > 8 ? (teamSize - 8) * result.pricing.additionalPerPerson : 0;
-                          return (basePrice + additionalCost).toLocaleString();
-                        })()}
+                        £{result.finalQuoteValue?.toLocaleString()}
                       </span>
                     </div>
                   </div>

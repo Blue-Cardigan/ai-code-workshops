@@ -25,13 +25,14 @@ const allWorkshops: Workshop[] = [
   {
     id: 1,
     title: "Intro to Vibe Coding: Build & Deploy Your First AI App",
-    description: "Use Lovable + Cursor to scaffold and deploy a simple app with AI-assisted code generation. Perfect for beginners who want to start their AI development journey.",
+    description: "Scaffold and deploy a simple app with AI-assisted code generation, and write scripts and extensions to automate your workflows. Perfect for beginners who want to start their AI development journey.",
     outline: [
-      "Use Lovable + Cursor to scaffold and deploy a simple app with AI-assisted code generation",
+      "Use Lovable + Cursor + Vercel to scaffold and deploy a simple app with AI-assisted code generation",
       "Learn prompt→code→debug loop and version control basics",
       "GitHub fundamentals and deployment via Vercel",
-      "Understanding AI coding assistants and their capabilities",
-      "Building confidence in technology experimentation"
+      "Automate document processing and browser usage with scripts and extensions",
+      "Understand AI coding assistants and their capabilities",
+      "Build confidence in technology experimentation"
     ],
     duration: "4 hours",
     level: "beginner",
@@ -39,23 +40,6 @@ const allWorkshops: Workshop[] = [
     prerequisites: "None",
     image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     outcome: "Hello World AI app deployed live"
-  },
-  {
-    id: 2,
-    title: "Prompt Engineering for Power Users",
-    description: "Tool-agnostic prompting skills using Claude, ChatGPT, Gemini. Chain-of-thought prompting and role-based personas for maximum AI productivity.",
-    outline: [
-      "Tool-agnostic prompting skills using Claude, ChatGPT, Gemini",
-      "Chain-of-thought prompting and role-based personas",
-      "Structured output generation and prompt optimization",
-      "Context management and conversation strategies",
-      "Optional add-on tracks for legal, HR, finance, product applications"
-    ],
-    duration: "4 hours",
-    level: "beginner",
-    category: "Zero-to-One",
-    prerequisites: "No coding experience needed",
-    image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
   },
   {
     id: 3,
@@ -78,12 +62,11 @@ const allWorkshops: Workshop[] = [
   // Vibe-to-Engineer: Professionalising Your AI-Assisted Coding
   {
     id: 4,
-    title: "Refactor Like a Pro: Clean Code with AI Pairing Tools",
-    description: "Master refactoring principles with LLM copilots like CodeRabbit. Learn DRY principles, abstraction, and professional code quality standards.",
+    title: "Develop Like a Pro: Clean Code with AI Pairing Tools",
+    description: "Master good practices with LLM copilots like Cursor and Claude Code. Implement ambitious features that adhere to professional code quality standards.",
     outline: [
-      "Refactoring principles with LLM copilots like CodeRabbit",
-      "DRY principles, abstraction, and code organization",
-      "Automated linting, commenting, and documentation",
+      "Fluently use LLM copilots like Cursor & CodeRabbit",
+      "Automated linting, commenting, and documentation using Cursor Rules",
       "Real examples and team collaboration exercises",
       "Code review processes with AI assistance"
     ],
@@ -95,13 +78,13 @@ const allWorkshops: Workshop[] = [
   },
   {
     id: 5,
-    title: "From Playground to Production: Shipping AI Projects",
+    title: "From Playground to Production: CI/CD and Cursor Rules",
     description: "Learn to deploy AI applications professionally with proper infrastructure, monitoring, and best practices for production environments.",
     outline: [
       "App scaffolding and project structure best practices",
-      "Deployment patterns: Vercel, Streamlit, Hugging Face",
+      "Deployment patterns: Vercel, Streamlit, AWS",
       "Infrastructure-as-code basics and environment management",
-      "Optional stacks: React+Firebase, Django+GCP, or FastAPI+Railway",
+      "Optional stacks e.g React+Firebase, Django+GCP, or FastAPI+Railway",
       "Monitoring and maintenance of AI-powered applications"
     ],
     duration: "4 hours",
@@ -186,7 +169,7 @@ const allWorkshops: Workshop[] = [
     title: "AI-Assisted Notebooks: Coding Faster with GPT in Jupyter",
     description: "Accelerate data analysis and visualization with AI assistance directly in Jupyter notebooks. Perfect introduction for data professionals.",
     outline: [
-      "Clean, explore, and visualize data with GPT integration",
+      "Clean, explore, and visualise data with GPT integration",
       "Jupyter AI extensions and productivity enhancements",
       "Optional tools: CoCalc, Cursor, advanced notebook environments",
       "Automated data analysis and insight generation",

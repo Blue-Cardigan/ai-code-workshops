@@ -5,6 +5,7 @@ import { TestimonialCarousel, ClientCarousel, sampleTestimonials } from './compo
 import Footer from './components/Footer';
 import AllWorkshops from './components/AllWorkshops';
 import Questions from './components/Questions';
+import ScrollIndicator from './components/ScrollIndicator';
 import clientsData from './lib/clients.json';
 import { pages, track } from './lib/analytics';
 
@@ -58,6 +59,7 @@ function App() {
       <ClientCarousel clients={clientsData.clients} />
       <TestimonialCarousel testimonials={sampleTestimonials} />
       <Footer />
+      <ScrollIndicator className="bottom-2" />
     </div>
   );
 }

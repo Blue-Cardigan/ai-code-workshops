@@ -10,18 +10,17 @@ This document provides an overview of the proposed framework for AI-Powered Codi
 
 **Courses (4hrs per workshop):**
 • Intro to Vibe Coding: Build & Deploy Your First AI App
-• Prompt Engineering for Power Users
 • Git & GitHub for Beginners (w/ AI Helpers)
+• Automations: Build extensions and useful scripts in moments
 
 ### Profile 2: Analysts & Junior Developers
 
 **Description:** Some coding comfort in Python/JavaScript and basic understanding of development concepts. Attendees may have experience with data analysis or basic scripting but limited formal software engineering training. Goal is to provide skills to build production-ready applications with AI assistance.
 
 **Workshops (4hrs each):**
-• Refactor Like a Pro: Clean Code with AI Pairing Tools
-• From Playground to Production: Shipping AI Projects
+• Develop Like a Pro: Clean Code with AI Pairing Tools
+• From Playground to Production: CI/CD and Cursor Rules
 • Testing in the Age of Copilot
-• PromptOps: Reusable Prompt Libraries and Debugging LLMs
 • AI-Assisted Notebooks: Coding Faster with GPT in Jupyter
 
 ### Profile 3: Mid-Level Developers & Data Scientists
