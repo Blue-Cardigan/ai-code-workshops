@@ -23,11 +23,11 @@ const featuredWorkshops: FeaturedWorkshop[] = [
     duration: "4 hours",
     level: "Beginner",
     image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    badge: "Popular"
+    badge: "Best Seller"
   },
   {
     id: 4,
-    title: "Refactor Like a Pro: Clean Code with AI Pairing Tools",
+    title: "Develop Like a Pro: Clean Code with AI Pairing Tools",
     description: "Master good practices with LLM copilots like Cursor and Claude Code. Implement ambitious features that adhere to professional code quality standards.",
     duration: "4 hours", 
     level: "Intermediate",
@@ -41,7 +41,7 @@ const featuredWorkshops: FeaturedWorkshop[] = [
     duration: "4 hours",
     level: "Advanced", 
     image: "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    badge: "Best Seller"
+    badge: ""
   }
 ];
 

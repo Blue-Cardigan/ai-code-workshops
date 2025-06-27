@@ -158,7 +158,7 @@ const trackResults: Record<string, AssessmentResult> = {
     track: 'engineer',
     title: 'AI-Augmented Engineer Track',
     description: 'Level up your development skills with AI-powered tools and workflows. Perfect for developers looking to boost productivity.',
-    workshops: ['Refactor Like a Pro', 'Testing in the Age of Copilot', 'From Playground to Production', 'Cursor + Claude + GitHub'],
+    workshops: ['Develop Like a Pro', 'Testing in the Age of Copilot', 'From Playground to Production', 'Cursor + Claude + GitHub'],
     icon: <Code className="h-8 w-8" />,
     color: 'blue',
     pricing: {

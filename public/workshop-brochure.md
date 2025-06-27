@@ -49,7 +49,7 @@ Your First AI App
 ### Profile 2: Analysts & Junior Developers
 
 ```
-Refactor Like a Pro → From Playground → Testing in the → PromptOps: Reusable
+Develop Like a Pro → From Playground → Testing in the → PromptOps: Reusable
 Clean Code with      to Production:     Age of Copilot   Prompt Libraries
 AI Pairing Tools     Shipping AI Projects                & Debugging LLMs
                             ↓
@@ -124,7 +124,7 @@ _For non-coders, analysts, or non-tech professionals — informal tone, "playful
 
 _For product managers, analysts, and junior devs learning best practice._
 
-#### **Refactor Like a Pro: Clean Code with AI Pairing Tools**
+#### **Develop Like a Pro: Clean Code with AI Pairing Tools**
 
 **Pre-requisites:** Some coding comfort assumed (Python/JS).
 
