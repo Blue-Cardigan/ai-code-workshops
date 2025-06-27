@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Calendar, MessageSquare, ArrowRight, Target, Code, CheckCircle, Brain, SkipForward } from 'lucide-react';
-import Button from './Button';
 
 interface HeroProps {
   onNavigateToQuestions?: () => void;

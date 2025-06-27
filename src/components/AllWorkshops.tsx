@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeft, Filter, BookOpen, Target } from 'lucide-react';
+import { track } from '../lib/analytics';
 
 interface Workshop {
   id: number;
@@ -247,6 +248,12 @@ const AllWorkshops = ({ onBackToHome, targetWorkshopId }: AllWorkshopsProps) => 
         if (element) {
           element.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
+        
+        // Track workshop view
+        const workshop = allWorkshops.find(w => w.id === targetWorkshopId);
+        if (workshop) {
+          track.workshopViewed(workshop.id, workshop.title);
+        }
       }, 100);
       return () => clearTimeout(timer);
     }
@@ -399,12 +406,21 @@ const AllWorkshops = ({ onBackToHome, targetWorkshopId }: AllWorkshopsProps) => 
 
                 <div className="flex gap-3">
                   <button 
-                    onClick={() => setExpandedWorkshop(expandedWorkshop === workshop.id ? null : workshop.id)}
+                    onClick={() => {
+                      const newState = expandedWorkshop === workshop.id ? null : workshop.id;
+                      setExpandedWorkshop(newState);
+                      if (newState === workshop.id) {
+                        track.workshopDetailsViewed(workshop.id, workshop.title, workshop.level);
+                      }
+                    }}
                     className="bg-white hover:bg-neutral-50 text-primary-700 px-6 py-3 rounded-lg font-medium transition-all duration-200 border border-primary-200 hover:border-primary-300 shadow-md hover:shadow-lg flex-1"
                   >
                     {expandedWorkshop === workshop.id ? 'Show Less' : 'View Details'}
                   </button>
-                  <button className="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl border border-transparent">
+                  <button 
+                    onClick={() => track.consultationRequested('workshop-details')}
+                    className="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl border border-transparent"
+                  >
                     Book a Call
                   </button>
                 </div>

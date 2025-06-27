@@ -1,4 +1,4 @@
-import { useState, lazy, Suspense } from 'react';
+import { useState, lazy, Suspense, useEffect } from 'react';
 import Hero from './components/Hero';
 import FeaturedWorkshops from './components/FeaturedWorkshops';
 import { TestimonialCarousel, ClientCarousel, sampleTestimonials } from './components/Carousel';
@@ -7,6 +7,7 @@ import LoadingSpinner from './components/LoadingSpinner';
 import AllWorkshops from './components/AllWorkshops';
 import Questions from './components/Questions';
 import clientsData from './lib/clients.json';
+import { pages, track } from './lib/analytics';
 
 // Lazy load heavy components
 const Brochure = lazy(() => import('./components/Brochure'));
@@ -16,13 +17,33 @@ function App() {
   const [brochureAnchor, setBrochureAnchor] = useState<string | undefined>();
   const [targetWorkshopId, setTargetWorkshopId] = useState<number | undefined>();
 
+  // Track page views when view changes
+  useEffect(() => {
+    switch (currentView) {
+      case 'home':
+        pages.home();
+        break;
+      case 'brochure':
+        pages.brochure();
+        break;
+      case 'workshops':
+        pages.workshops();
+        break;
+      case 'questions':
+        pages.assessment();
+        break;
+    }
+  }, [currentView]);
+
   const handleNavigateToWorkshops = (workshopId?: number) => {
     setTargetWorkshopId(workshopId);
     setCurrentView('workshops');
+    track.navigationClicked('workshops', currentView);
   };
 
   const handleNavigateToQuestions = () => {
     setCurrentView('questions');
+    track.heroCtaClick('assessment');
   };
 
   const handleBackToHome = () => {

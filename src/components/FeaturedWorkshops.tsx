@@ -1,5 +1,5 @@
 import { Clock, ArrowRight } from 'lucide-react';
-import Button from './Button';
+import { track } from '../lib/analytics';
 
 interface FeaturedWorkshop {
   id: number;
@@ -66,6 +66,10 @@ const FeaturedWorkshops = ({ onNavigateToWorkshops }: FeaturedWorkshopsProps) =>
   };
 
   const handleLearnMore = (workshopId: number) => {
+    const workshop = featuredWorkshops.find(w => w.id === workshopId);
+    if (workshop) {
+      track.workshopInterest(workshopId, workshop.title, 'featured');
+    }
     onNavigateToWorkshops?.(workshopId);
   };
 
@@ -128,7 +132,7 @@ const FeaturedWorkshops = ({ onNavigateToWorkshops }: FeaturedWorkshopsProps) =>
             </div>
             
             {/* Logo */}
-            <div className="mt-8 max-w-lg flex justify-center">
+            <div className="mt-8 flex justify-center">
               <img 
                 src="/coeff-logo-no-text.png" 
                 alt="Coefficient" 
@@ -203,17 +207,15 @@ const FeaturedWorkshops = ({ onNavigateToWorkshops }: FeaturedWorkshopsProps) =>
               </button>
             ))}
 
-            {/* Enhanced View All Button */}
-            <div className="flex justify-center pb-6">
-              <Button 
+            {/* Browse All Workshops Link */}
+            <div className="flex justify-end pb-6">
+              <button 
                 onClick={() => onNavigateToWorkshops?.(undefined)}
-                variant="secondary"
-                size="lg"
-                className="inline-flex items-center group shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                className="inline-flex items-center text-white hover:text-white/80 transition-colors group"
               >
-                Browse All Workshops
-                <ArrowRight className="w-5 h-5 ml-3 group-hover:translate-x-1 transition-transform" />
-              </Button>
+                <span className="text-lg font-medium">Browse All Workshops</span>
+                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+              </button>
             </div>
           </div>
         </div>

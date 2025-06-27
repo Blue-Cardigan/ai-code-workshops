@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft, ArrowRight, CheckCircle, Code, Database, Users, Target, Clock, Lightbulb, Mail, Phone, Building, DollarSign } from 'lucide-react';
 import Button from './Button';
 import { supabase, type AssessmentSubmission } from '../lib/supabase';
+import { track } from '../lib/analytics';
 
 interface AssessmentProps {
   onBackToHome: () => void;
@@ -33,7 +34,6 @@ interface AssessmentResult {
   pricing: {
     basePrice: number; // Price for up to 8 people
     additionalPerPerson: number; // Additional cost per person beyond 8
-    estimatedDays: number;
   };
 }
 
@@ -113,7 +113,6 @@ const trackResults: Record<string, AssessmentResult> = {
     pricing: {
       basePrice: 7200, // £7,200 for up to 8 people
       additionalPerPerson: 900, // £900 per additional person
-      estimatedDays: 3
     }
   },
   engineer: {
@@ -126,7 +125,6 @@ const trackResults: Record<string, AssessmentResult> = {
     pricing: {
       basePrice: 10800, // £10,800 for up to 8 people
       additionalPerPerson: 1350, // £1,350 per additional person
-      estimatedDays: 4
     }
   },
   ml: {
@@ -139,7 +137,6 @@ const trackResults: Record<string, AssessmentResult> = {
     pricing: {
       basePrice: 13200, // £13,200 for up to 8 people
       additionalPerPerson: 1650, // £1,650 per additional person
-      estimatedDays: 5
     }
   }
 };
@@ -158,18 +155,36 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
     team_size: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasTrackedStart, setHasTrackedStart] = useState(false);
+
+  // Track assessment start
+  useEffect(() => {
+    if (!hasTrackedStart) {
+      track.assessmentStarted();
+      setHasTrackedStart(true);
+    }
+  }, [hasTrackedStart]);
 
   const handleAnswer = (questionId: number, optionId: string, type: 'single' | 'multiple') => {
+    const question = questions.find(q => q.id === questionId);
+    
     setAnswers(prev => {
-      if (type === 'single') {
-        return { ...prev, [questionId]: [optionId] };
-      } else {
-        const currentAnswers = prev[questionId] || [];
-        const newAnswers = currentAnswers.includes(optionId)
-          ? currentAnswers.filter(id => id !== optionId)
-          : [...currentAnswers, optionId];
-        return { ...prev, [questionId]: newAnswers };
+      const newAnswers = type === 'single' 
+        ? { ...prev, [questionId]: [optionId] }
+        : {
+            ...prev, 
+            [questionId]: (prev[questionId] || []).includes(optionId)
+              ? (prev[questionId] || []).filter(id => id !== optionId)
+              : [...(prev[questionId] || []), optionId]
+          };
+
+      // Track the answer
+      if (question) {
+        const answerValue = type === 'single' ? optionId : newAnswers[questionId];
+        track.assessmentQuestionAnswered(questionId, answerValue, question.title);
       }
+
+      return newAnswers;
     });
   };
 
@@ -210,6 +225,13 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
     
     setResult(recommendedTrack);
 
+    // Track assessment completion
+    track.assessmentCompleted(bestTrack, questions.length);
+
+    // Track quote generation
+    const companySize = answers[1]?.[0] || '';
+    track.quoteGenerated(bestTrack, teamSize, finalQuoteValue, companySize);
+
     // Submit to Supabase
     try {
       setIsSubmitting(true);
@@ -235,6 +257,16 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
 
       if (error) {
         console.error('Error submitting assessment:', error);
+      } else {
+        // Track successful contact form submission (main conversion)
+        track.contactFormSubmitted({
+          company_name: contactInfo.company_name,
+          contact_name: contactInfo.contact_name,
+          email: contactInfo.email,
+          team_size: contactInfo.team_size,
+          recommended_track: bestTrack,
+          quote_value: finalQuoteValue,
+        });
       }
     } catch (error) {
       console.error('Error submitting assessment:', error);
@@ -348,7 +380,7 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
                     <span className="text-gray-700">Training Duration:</span>
-                    <span className="font-medium">{result.pricing.estimatedDays} days</span>
+                    <span className="font-medium">Half day (4 hours) per workshop</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-700">Team Size:</span>

@@ -10,7 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@analytics/google-analytics": "^1.1.0",
+    "@analytics/segment": "^2.1.0",
     "@supabase/supabase-js": "^2.50.2",
+    "analytics": "^0.8.16",
     "html2canvas": "^1.4.1",
     "html2pdf.js": "^0.10.3",
     "jspdf": "^3.0.1",
