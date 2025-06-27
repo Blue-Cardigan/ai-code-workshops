@@ -105,14 +105,15 @@ const FeaturedWorkshops = ({ onNavigateToWorkshops }: FeaturedWorkshopsProps) =>
       ></div>
       
       <div className="relative z-10 container-wide">
-        <div className="grid lg:grid-cols-2 gap-16 items-center min-h-[80vh]">
+        {/* Main heading spanning full width */}
+        <h2 className="text-7xl md:text-8xl font-bold leading-tight text-white mb-12 pt-8 text-left">
+          Made for Humans.
+        </h2>
+        
+        <div className="grid lg:grid-cols-2 gap-12 items-start min-h-[60vh]">
           
           {/* Left side - Explanatory text */}
           <div className="text-white space-y-6">
-            <h2 className="text-6xl md:text-7xl font-bold leading-tight text-white">
-              Made for Humans.
-            </h2>
-            
             <div className="text-2xl md:text-3xl leading-relaxed font-bold space-y-4 opacity-80">
               <p>
                 Coefficient has been applying AI to business and government since 2017.
@@ -142,24 +143,24 @@ const FeaturedWorkshops = ({ onNavigateToWorkshops }: FeaturedWorkshopsProps) =>
           </div>
 
           {/* Right side - Workshop cards */}
-          <div className="space-y-8">
+          <div className="space-y-4">
             {featuredWorkshops.map((workshop, index) => (
               <button 
                 key={workshop.id} 
                 onClick={() => handleLearnMore(workshop.id)}
-                className="w-full bg-white/95 backdrop-blur-sm rounded-2xl p-6 group hover:bg-white hover:scale-[1.02] hover:shadow-2xl transition-all duration-300 relative overflow-hidden shadow-xl border border-white/20 cursor-pointer text-left"
+                className="w-full bg-white/95 backdrop-blur-sm rounded-xl px-4 pt-4 pb-2 group hover:bg-white hover:scale-[1.01] hover:shadow-xl transition-all duration-300 relative overflow-hidden shadow-lg border border-white/20 cursor-pointer text-left"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 {/* Badge positioned absolutely */}
                 {workshop.badge && (
-                  <div className={`absolute top-4 right-4 ${getBadgeColor(workshop.badge)} text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg z-10`}>
+                  <div className={`absolute top-3 right-3 ${getBadgeColor(workshop.badge)} text-white px-2 py-1 rounded-full text-xs font-semibold shadow-lg z-10`}>
                     {workshop.badge}
                   </div>
                 )}
 
-                <div className="flex gap-6">
+                <div className="flex gap-4">
                   {/* Enhanced image */}
-                  <div className="relative w-32 h-32 flex-shrink-0 overflow-hidden rounded-xl shadow-lg">
+                  <div className="relative w-20 h-20 flex-shrink-0 overflow-hidden rounded-lg shadow-md">
                     <img 
                       src={workshop.image} 
                       alt={workshop.title}
@@ -171,24 +172,26 @@ const FeaturedWorkshops = ({ onNavigateToWorkshops }: FeaturedWorkshopsProps) =>
                   {/* Content */}
                   <div className="flex-1 min-w-0 flex flex-col justify-between">
                     <div>
-                      <div className="flex items-center gap-3 mb-3">
-                        <span className={`px-3 py-1 rounded-full text-sm font-semibold ${getLevelColor(workshop.level)}`}>
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getLevelColor(workshop.level)}`}>
                           {workshop.level}
                         </span>
-                        <div className="flex items-center text-sm text-neutral-500 bg-neutral-100 px-3 py-1 rounded-full">
-                          <Clock className="w-4 h-4 mr-2" />
+                        <div className="flex items-center text-xs text-neutral-500 bg-neutral-100 px-2 py-1 rounded-full">
+                          <Clock className="w-3 h-3 mr-1" />
                           <span className="font-medium">{workshop.duration}</span>
                         </div>
                       </div>
 
-                      <div className="relative h-20 mb-3 overflow-hidden">
+                      <div className="relative h-16 mb-2 overflow-hidden">
                         {/* Title - visible by default, hidden on hover */}
-                        <h3 className="absolute inset-0 text-lg font-bold text-neutral-900 leading-tight transition-all duration-300 transform group-hover:opacity-0 group-hover:-translate-y-2">
-                          {workshop.title}
-                        </h3>
+                        <div className="absolute inset-0 flex items-start justify-between transition-all duration-300 transform group-hover:opacity-0 group-hover:-translate-y-2">
+                          <h3 className="text-base font-bold text-neutral-900 leading-tight flex-1 pr-2">
+                            {workshop.title}
+                          </h3>
+                        </div>
 
                         {/* Description - hidden by default, visible on hover */}
-                        <p className="absolute inset-0 text-sm text-neutral-600 leading-relaxed opacity-0 translate-y-2 transition-all duration-300 transform group-hover:opacity-100 group-hover:translate-y-0 line-clamp-4">
+                        <p className="absolute inset-0 text-xs text-neutral-600 leading-snug opacity-0 translate-y-2 transition-all duration-300 transform group-hover:opacity-100 group-hover:translate-y-0 line-clamp-4">
                           {workshop.description}
                         </p>
                       </div>
@@ -198,12 +201,7 @@ const FeaturedWorkshops = ({ onNavigateToWorkshops }: FeaturedWorkshopsProps) =>
                 </div>
 
                 {/* Subtle hover effect overlay */}
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl" />
-
-                {/* Click indicator */}
-                <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <ArrowRight className="w-5 h-5 text-neutral-600" />
-                </div>
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
               </button>
             ))}
 

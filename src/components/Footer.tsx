@@ -1,17 +1,6 @@
-import React from 'react';
 import { Mail, Github, Twitter, Linkedin, Facebook, Instagram } from 'lucide-react';
-import Button from './Button';
 
 const Footer = () => {
-  const [email, setEmail] = React.useState('');
-
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email) {
-      alert(`🎉 Successfully subscribed!\n\nEmail: ${email}\n\nThank you for subscribing to Coefficient updates.`);
-      setEmail('');
-    }
-  };
 
   const handleSocialClick = (platform: string) => {
     alert(`🔗 Redirecting to ${platform}...`);
@@ -20,7 +9,7 @@ const Footer = () => {
   return (
     <footer className="bg-white py-16" id="about">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           
           {/* Links Column */}
           <div>
@@ -70,30 +59,6 @@ const Footer = () => {
                 </a>
               </div>
             </div>
-          </div>
-
-          {/* Subscribe Column */}
-          <div className="text-center">
-            <h3 className="text-3xl font-bold text-gray-900 mb-8">Subscribe</h3>
-            <p className="text-gray-700 mb-8 leading-relaxed">
-              Sign up with your email address to receive news and updates.
-            </p>
-            <form onSubmit={handleNewsletterSubmit} className="space-y-4">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email Address"
-                required
-                className="w-full px-4 py-3 border border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-gray-500"
-              />
-              <Button type="submit">
-                SIGN UP
-              </Button>
-            </form>
-            <p className="text-sm text-gray-600 mt-4">
-              We respect your privacy.
-            </p>
           </div>
 
           {/* Contact Column */}

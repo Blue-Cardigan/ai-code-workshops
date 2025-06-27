@@ -14,7 +14,7 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
   const [showCompletionMessage, setShowCompletionMessage] = useState(false);
   const [isAnimationSkipped, setIsAnimationSkipped] = useState(false);
   
-  const fullPrompt = "Use AI to take my team to the next level";
+  const fullPrompt = "Use AI to take my team to the next level.";
   
   const learningStages = [
     {
@@ -52,7 +52,7 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
     setIsPromptComplete(true);
     setShowCursor(false);
     setIsProcessing(false);
-    setCurrentStage(learningStages.length);
+    setCurrentStage(learningStages.length + 1);
     setShowCompletionMessage(true);
   };
 
@@ -87,7 +87,7 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
   // Sequential stage animation
   useEffect(() => {
     if (isAnimationSkipped) return;
-    if (isPromptComplete && currentStage < learningStages.length) {
+    if (isPromptComplete && currentStage <= learningStages.length) {
       const timeout = setTimeout(() => {
         setCurrentStage(prev => prev + 1);
         if (currentStage === 0) {
@@ -95,8 +95,8 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
         }
       }, currentStage === 0 ? 1500 : 1200);
       return () => clearTimeout(timeout);
-    } else if (isPromptComplete && currentStage === learningStages.length && !showCompletionMessage) {
-      // Show completion message with delay after stages complete
+    } else if (isPromptComplete && currentStage > learningStages.length && !showCompletionMessage) {
+      // Show completion message with delay after all stages complete
       const timeout = setTimeout(() => {
         setShowCompletionMessage(true);
       }, 800);
