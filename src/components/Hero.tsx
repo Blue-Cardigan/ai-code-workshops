@@ -162,7 +162,7 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
                   
                   {isPromptComplete && (
                     <div className="text-green-400 mt-4">
-                      ✓ Prompt received - Analyzing requirements...
+                      ✓ Prompt received - Analysing requirements...
                     </div>
                   )}
                   
@@ -183,81 +183,71 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
             </div>
 
             {/* Right Column - Learning Journey Visualization */}
-            <div className="relative">
-              {/* Background Glow */}
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-3xl blur-3xl" />
-              
-              <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-white/20">
-
-                {/* Learning Stages */}
-                <div className="space-y-6">
-                  {learningStages.map((stage, index) => {
-                    const isVisible = currentStage > index;
-                    const isActive = currentStage === index + 1;
+            <div className="space-y-4">
+              {learningStages.map((stage, index) => {
+                const isVisible = currentStage > index;
+                const isActive = currentStage === index + 1;
+                
+                return (
+                  <div key={stage.id} className="relative">
+                    {/* Connecting Line */}
+                    {index < learningStages.length - 1 && isVisible && currentStage >= index + 2 && (
+                      <div className="absolute left-8 top-12 w-0.5 h-10 bg-gradient-to-b from-gray-400 to-gray-200" />
+                    )}
                     
-                    return (
-                      <div key={stage.id} className="relative">
-                        {/* Connecting Line */}
-                        {index < learningStages.length - 1 && (
-                          <div className="absolute left-6 top-12 w-px h-16 bg-gradient-to-b from-gray-300 to-transparent" />
-                        )}
-                        
-                                                 {/* Stage Card */}
-                         <div 
-                           className={
-                             `flex items-start space-x-4 p-4 rounded-xl border-2 transition-all duration-700 transform ` +
-                             (isVisible 
-                               ? `${stage.bgColor} ${stage.borderColor} translate-x-0 opacity-100 ` 
-                               : 'bg-gray-50 border-gray-200 translate-x-8 opacity-30 ') +
-                             (isActive ? 'scale-105 shadow-lg' : '')
-                           }
-                         >
-                          {/* Icon */}
-                          <div className={`
-                            flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500
-                            ${isVisible ? stage.bgColor : 'bg-gray-100'}
-                            ${isVisible ? 'ring-2 ring-white shadow-md' : ''}
-                          `}>
-                            <div className={isVisible ? stage.color : 'text-gray-400'}>
-                              {stage.icon}
-                            </div>
-                          </div>
-                          
-                          {/* Content */}
-                          <div className="flex-1 min-w-0">
-                            <h4 className={`
-                              font-semibold transition-colors duration-500
-                              ${isVisible ? 'text-gray-900' : 'text-gray-500'}
-                            `}>
-                              {stage.title}
-                            </h4>
-                            <p className={`
-                              text-sm mt-1 transition-colors duration-500
-                              ${isVisible ? 'text-gray-600' : 'text-gray-400'}
-                            `}>
-                              {stage.description}
-                            </p>
-                          </div>
-                          
-                          {/* Status Indicator */}
-                          {isVisible && (
-                            <div className="flex-shrink-0">
-                              {isActive ? (
-                                <div className="w-6 h-6 border-2 border-blue-600 rounded-full flex items-center justify-center">
-                                  <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse" />
-                                </div>
-                              ) : (
-                                <CheckCircle className="w-6 h-6 text-green-600" />
-                              )}
-                            </div>
-                          )}
+                    {/* Stage Card */}
+                    <div 
+                      className={
+                        `flex items-center space-x-3 p-3 rounded-lg border transition-all duration-700 transform ` +
+                        (isVisible 
+                          ? `${stage.bgColor} ${stage.borderColor} translate-x-0 opacity-100 ` 
+                          : 'bg-gray-50 border-gray-200 translate-x-6 opacity-30 ') +
+                        (isActive ? 'scale-105 shadow-md' : '')
+                      }
+                    >
+                      {/* Icon */}
+                      <div className={`
+                        flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500
+                        ${isVisible ? stage.bgColor : 'bg-gray-100'}
+                        ${isVisible ? 'ring-1 ring-white/50' : ''}
+                      `}>
+                        <div className={isVisible ? stage.color : 'text-gray-400'}>
+                          {stage.icon}
                         </div>
                       </div>
-                    );
-                  })}
-                </div>
-
-              </div>
+                      
+                      {/* Content */}
+                      <div className="flex-1 min-w-0">
+                        <h4 className={`
+                          font-semibold text-base transition-colors duration-500
+                          ${isVisible ? 'text-gray-900' : 'text-gray-500'}
+                        `}>
+                          {stage.title}
+                        </h4>
+                        <p className={`
+                          text-sm mt-1 transition-colors duration-500
+                          ${isVisible ? 'text-gray-600' : 'text-gray-400'}
+                        `}>
+                          {stage.description}
+                        </p>
+                      </div>
+                      
+                      {/* Status Indicator */}
+                      {isVisible && (
+                        <div className="flex-shrink-0">
+                          {isActive ? (
+                            <div className="w-5 h-5 border-2 border-blue-600 rounded-full flex items-center justify-center">
+                              <div className="w-1.5 h-1.5 bg-blue-600 rounded-full animate-pulse" />
+                            </div>
+                          ) : (
+                            <CheckCircle className="w-5 h-5 text-green-600" />
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
           
