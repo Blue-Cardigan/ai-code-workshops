@@ -45,7 +45,7 @@ function App() {
   };
 
   if (currentView === 'workshops') {
-    return <AllWorkshops onBackToHome={handleBackToHome} targetWorkshopId={targetWorkshopId} />;
+    return <AllWorkshops onBackToHome={handleBackToHome} onNavigateToQuestions={handleNavigateToQuestions} targetWorkshopId={targetWorkshopId} />;
   }
 
   if (currentView === 'questions') {

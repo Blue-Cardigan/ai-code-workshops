@@ -36,11 +36,11 @@ export const TestimonialCarousel = ({ testimonials }: TestimonialCarouselProps) 
   return (
     <section className="section-padding bg-neutral-50">
       <div className="container-narrow">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-primary-900 mb-4">
+        <div className="text-center my-32">
+          <h2 className="text-3xl md:text-4xl font-bold text-primary-900 mb-6">
             What Our Students Say
           </h2>
-          <p className="text-xl text-neutral-600">
+          <p className="text-xl text-neutral-600 leading-relaxed">
             Real feedback from professionals who transformed their careers
           </p>
         </div>
@@ -49,32 +49,32 @@ export const TestimonialCarousel = ({ testimonials }: TestimonialCarouselProps) 
           <div className="carousel-track" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
             {testimonials.map((testimonial) => (
               <div key={testimonial.id} className="carousel-slide">
-                <div className="testimonial-card max-w-4xl mx-auto">
-                  <div className="flex items-start space-x-4 mb-6">
-                    <Quote className="w-8 h-8 text-primary-500 flex-shrink-0 mt-1" />
-                    <p className="text-lg text-neutral-700 leading-relaxed italic">
+                <div className="testimonial-card max-w-4xl mx-auto p-12">
+                  <div className="flex items-start space-x-6 mb-10">
+                    <Quote className="w-10 h-10 text-primary-500 flex-shrink-0 mt-2" />
+                    <p className="text-xl text-neutral-700 leading-relaxed italic">
                       "{testimonial.content}"
                     </p>
                   </div>
                   
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-6">
                       <img 
                         src={testimonial.avatar} 
                         alt={testimonial.name}
-                        className="w-12 h-12 rounded-full object-cover"
+                        className="w-16 h-16 rounded-full object-cover"
                       />
                       <div>
-                        <h4 className="font-semibold text-neutral-900">{testimonial.name}</h4>
-                        <p className="text-neutral-600">{testimonial.role} at {testimonial.company}</p>
+                        <h4 className="font-semibold text-neutral-900 text-lg">{testimonial.name}</h4>
+                        <p className="text-neutral-600 text-base mt-1">{testimonial.role} at {testimonial.company}</p>
                       </div>
                     </div>
                     
-                    <div className="flex items-center space-x-1">
+                    <div className="flex items-center space-x-2">
                       {[...Array(5)].map((_, i) => (
                         <Star 
                           key={i} 
-                          className={`w-5 h-5 ${i < testimonial.rating ? 'text-yellow-400 fill-current' : 'text-neutral-300'}`}
+                          className={`w-6 h-6 ${i < testimonial.rating ? 'text-yellow-400 fill-current' : 'text-neutral-300'}`}
                         />
                       ))}
                     </div>
@@ -87,25 +87,25 @@ export const TestimonialCarousel = ({ testimonials }: TestimonialCarouselProps) 
           {/* Navigation Buttons */}
           <button 
             onClick={prevSlide}
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-neutral-600 hover:text-primary-600 p-3 rounded-full shadow-lg transition-all duration-200"
+            className="absolute left-6 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-neutral-600 hover:text-primary-600 p-4 rounded-full shadow-lg transition-all duration-200"
           >
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="w-7 h-7" />
           </button>
           
           <button 
             onClick={nextSlide}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-neutral-600 hover:text-primary-600 p-3 rounded-full shadow-lg transition-all duration-200"
+            className="absolute right-6 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-neutral-600 hover:text-primary-600 p-4 rounded-full shadow-lg transition-all duration-200"
           >
-            <ChevronRight className="w-6 h-6" />
+            <ChevronRight className="w-7 h-7" />
           </button>
 
           {/* Dots Indicator */}
-          <div className="flex justify-center mt-8 space-x-2">
+          <div className="flex justify-center mt-12 space-x-3">
             {testimonials.map((_, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentIndex(index)}
-                className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                className={`w-4 h-4 rounded-full transition-all duration-200 ${
                   index === currentIndex ? 'bg-primary-500' : 'bg-neutral-300'
                 }`}
               />
@@ -119,36 +119,36 @@ export const TestimonialCarousel = ({ testimonials }: TestimonialCarouselProps) 
 
 export const ClientCarousel = ({ clients }: ClientCarouselProps) => {
   return (
-    <section className="section-padding bg-white">
+    <section className="section-padding bg-white py-32">
       <div className="container-wide">
-        <div className="text-center my-12">
-          <h2 className="text-2xl md:text-3xl font-bold text-primary-900 mb-4">
+        <div className="text-center my-32">
+          <h2 className="text-3xl md:text-4xl font-bold text-primary-900 mb-6">
             Trusted by Leading Companies
           </h2>
-          <p className="text-lg text-neutral-600">
+          <p className="text-xl text-neutral-600 leading-relaxed">
             Join hundreds of organisations that have transformed their development practices
           </p>
         </div>
 
-        <div className="relative overflow-hidden">
+        <div className="relative overflow-hidden py-8">
           <div className="flex animate-slide-infinite">
             {/* First set */}
             {clients.map((client, index) => (
-              <div key={`first-${index}`} className="flex-shrink-0 mx-8">
+              <div key={`first-${index}`} className="flex-shrink-0 mx-12">
                 <img 
                   src={client} 
                   alt={`Client ${index + 1}`}
-                  className="h-12 w-auto client-logo"
+                  className="h-16 w-auto client-logo"
                 />
               </div>
             ))}
             {/* Duplicate for seamless loop */}
             {clients.map((client, index) => (
-              <div key={`second-${index}`} className="flex-shrink-0 mx-8">
+              <div key={`second-${index}`} className="flex-shrink-0 mx-12">
                 <img 
                   src={client} 
                   alt={`Client ${index + 1}`}
-                  className="h-12 w-auto client-logo"
+                  className="h-16 w-auto client-logo"
                 />
               </div>
             ))}

@@ -43,7 +43,7 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
     {
       id: 1,
       title: "Analysing Team Skills",
-      description: "Assessing current capabilities and experience levels",
+      description: "The right workshops for your team - total beginners, juniors, and senior devs",
       icon: <Brain className="w-5 h-5" />,
       color: "text-blue-600",
       bgColor: "bg-blue-50",
@@ -52,7 +52,7 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
     {
       id: 2,
       title: "Identifying Biggest Wins",
-      description: "Finding opportunities for AI-enhanced development",
+      description: "Sessions adapted to the best tools and practices for your company",
       icon: <Target className="w-5 h-5" />,
       color: "text-orange-600",
       bgColor: "bg-orange-50",
@@ -61,7 +61,7 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
     {
       id: 3,
       title: "Connecting Dots",
-      description: "Tailoring workshops which teach your team to connect the dots themselves",
+      description: "Learn to use AI with initiative",
       icon: <Code className="w-5 h-5" />,
       color: "text-purple-600",
       bgColor: "bg-purple-50",
@@ -69,6 +69,22 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
     }
       ];
   
+  // Create random connection when animation completes
+  const createRandomConnection = () => {
+    const availableDots = interactiveDots.map(dot => dot.id);
+    
+    // Pick two random dots
+    const fromIndex = Math.floor(Math.random() * availableDots.length);
+    const fromDot = availableDots[fromIndex];
+    availableDots.splice(fromIndex, 1);
+    
+    const toIndex = Math.floor(Math.random() * availableDots.length);
+    const toDot = availableDots[toIndex];
+    
+    const newConnection = { from: fromDot, to: toDot };
+    setConnections(prev => [...prev, newConnection]);
+  };
+
   // Handle dot interactions
   const handleDotClick = (dotId: number) => {
     console.log('handleDotClick called with:', dotId);
@@ -170,6 +186,17 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
     }
   }, [isPromptComplete, currentStage, learningStages.length, showCompletionMessage, isAnimationSkipped]);
 
+  // Create random connections when animation completes
+  useEffect(() => {
+    if (showCompletionMessage && connections.length === 0) {
+      // Add a slight delay before creating connection
+      const timeout = setTimeout(() => {
+        createRandomConnection();
+      }, 1000);
+      return () => clearTimeout(timeout);
+    }
+  }, [showCompletionMessage, connections.length]);
+
   return (
     <section id="home" className="relative min-h-screen overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50 pt-16 pb-32">
       {/* Background Elements */}
@@ -231,6 +258,9 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
                strokeDasharray="8,4"
                opacity="0.8"
                className="animate-pulse"
+               style={{
+                 animation: 'fadeIn 2s ease-in-out forwards'
+               }}
              />
            );
          })}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Filter, BookOpen, Target } from 'lucide-react';
+import { ArrowLeft, Filter, BookOpen, Target, ArrowUp, MessageSquare, Calendar, ChevronUp } from 'lucide-react';
 import { track } from '../lib/analytics';
 
 interface Workshop {
@@ -17,6 +17,7 @@ interface Workshop {
 
 interface AllWorkshopsProps {
   onBackToHome: () => void;
+  onNavigateToQuestions?: () => void;
   targetWorkshopId?: number;
 }
 
@@ -217,11 +218,13 @@ const allWorkshops: Workshop[] = [
   }
 ];
 
-const AllWorkshops = ({ onBackToHome, targetWorkshopId }: AllWorkshopsProps) => {
+const AllWorkshops = ({ onBackToHome, onNavigateToQuestions, targetWorkshopId }: AllWorkshopsProps) => {
   const [searchTerm] = useState('');
   const [selectedLevel] = useState<string>('all');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [expandedWorkshop, setExpandedWorkshop] = useState<number | null>(targetWorkshopId || null);
+  const [showFloatingActions, setShowFloatingActions] = useState(false);
+  const [isFloatingExpanded, setIsFloatingExpanded] = useState(false);
 
   // Scroll to target workshop when component mounts
   useEffect(() => {
@@ -241,6 +244,36 @@ const AllWorkshops = ({ onBackToHome, targetWorkshopId }: AllWorkshopsProps) => 
       return () => clearTimeout(timer);
     }
   }, [targetWorkshopId]);
+
+  // Floating actions scroll detection
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.pageYOffset;
+      setShowFloatingActions(scrollTop > 200);
+    };
+
+    handleScroll(); // Check initial position
+    window.addEventListener('scroll', handleScroll);
+    
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setIsFloatingExpanded(false);
+  };
+
+  const handleGetQuote = () => {
+    track.consultationRequested('floating-quote');
+    setIsFloatingExpanded(false);
+    onNavigateToQuestions?.();
+  };
+
+  const handleBookCall = () => {
+    track.consultationRequested('floating-call');
+    setIsFloatingExpanded(false);
+    // You can add navigation logic here
+  };
 
   const filteredWorkshops = allWorkshops.filter(workshop => {
     const matchesSearch = workshop.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -270,6 +303,71 @@ const AllWorkshops = ({ onBackToHome, targetWorkshopId }: AllWorkshopsProps) => 
 
   return (
     <div className="min-h-screen bg-neutral-50">
+      {/* Floating Actions */}
+      {showFloatingActions && (
+        <div className="fixed top-6 left-6 z-50">
+          <div className="relative">
+            {/* Main Action Button */}
+            <button
+              onClick={() => setIsFloatingExpanded(!isFloatingExpanded)}
+              className="w-14 h-14 rounded-full shadow-lg transition-all duration-300 flex items-center justify-center text-white hover:shadow-xl"
+              style={{ 
+                backgroundColor: '#e53a42',
+                transform: isFloatingExpanded ? 'rotate(180deg)' : 'rotate(0deg)'
+              }}
+              onMouseEnter={(e) => {
+                if (!isFloatingExpanded) {
+                  e.currentTarget.style.backgroundColor = '#d12c35';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isFloatingExpanded) {
+                  e.currentTarget.style.backgroundColor = '#e53a42';
+                }
+              }}
+            >
+              <ChevronUp className="w-6 h-6" />
+            </button>
+
+            {/* Expanded Actions */}
+            {isFloatingExpanded && (
+              <div className="absolute top-16 left-0 space-y-3 animate-fade-in">
+                <button
+                  onClick={scrollToTop}
+                  className="flex items-center space-x-3 bg-white hover:bg-gray-50 text-gray-700 px-4 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 min-w-max group"
+                >
+                  <ArrowUp className="w-5 h-5 text-gray-600 group-hover:text-gray-800" />
+                  <span className="font-medium">Back to Top</span>
+                </button>
+                
+                <button
+                  onClick={handleGetQuote}
+                  className="flex items-center space-x-3 bg-white hover:bg-gray-50 text-gray-700 px-4 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 min-w-max group"
+                >
+                  <MessageSquare className="w-5 h-5 text-gray-600 group-hover:text-gray-800" />
+                  <span className="font-medium">Get a Quote</span>
+                </button>
+                
+                <button
+                  onClick={handleBookCall}
+                  className="flex items-center space-x-3 text-white px-4 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 min-w-max"
+                  style={{ backgroundColor: '#e53a42' }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#d12c35';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = '#e53a42';
+                  }}
+                >
+                  <Calendar className="w-5 h-5" />
+                  <span className="font-medium">Book a Call</span>
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="pt-16 relative" style={{ backgroundColor: '#e53a42' }}>
         {/* Grid overlay */}

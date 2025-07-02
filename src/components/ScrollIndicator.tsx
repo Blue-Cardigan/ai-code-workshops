@@ -43,7 +43,16 @@ export default function ScrollIndicator({ className = '' }: ScrollIndicatorProps
       {showScrollDown && (
         <button
           onClick={scrollToNext}
-          className="mb-4 p-3 bg-primary-600 hover:bg-primary-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 animate-bounce"
+          className="mb-4 p-3 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 animate-bounce"
+          style={{ 
+            backgroundColor: '#e53a42',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = '#d12c35';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = '#e53a42';
+          }}
           aria-label="Scroll to next section"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

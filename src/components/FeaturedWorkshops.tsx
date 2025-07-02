@@ -9,6 +9,7 @@ interface FeaturedWorkshop {
   level: string;
   image: string;
   badge?: string;
+  software: string[];
 }
 
 interface FeaturedWorkshopsProps {
@@ -23,7 +24,8 @@ const featuredWorkshops: FeaturedWorkshop[] = [
     duration: "4 hours",
     level: "Beginner",
     image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    badge: "Best Seller"
+    badge: "Best Seller",
+    software: ["Cursor", "GitHub", "Vercel", "Lovable"]
   },
   {
     id: 4,
@@ -32,7 +34,8 @@ const featuredWorkshops: FeaturedWorkshop[] = [
     duration: "4 hours", 
     level: "Intermediate",
     image: "https://images.unsplash.com/photo-1515378960530-7c0da6231fb1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    badge: "Staff Pick"
+    badge: "Staff Pick",
+    software: ["Cursor", "Claude Code", "CodeRabbit", "GitHub Actions"]
   },
   {
     id: 8,
@@ -41,7 +44,8 @@ const featuredWorkshops: FeaturedWorkshop[] = [
     duration: "4 hours",
     level: "Advanced", 
     image: "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    badge: ""
+    badge: "",
+    software: ["Cursor (Advanced)", "Claude Code", "CodeRabbit", "Jest"]
   }
 ];
 
@@ -179,6 +183,23 @@ const FeaturedWorkshops = ({ onNavigateToWorkshops }: FeaturedWorkshopsProps) =>
                           <Clock className="w-3 h-3 mr-1" />
                           <span className="font-medium">{workshop.duration}</span>
                         </div>
+                      </div>
+
+                      {/* Software badges */}
+                      <div className="flex flex-wrap gap-1 mb-2">
+                        {workshop.software.slice(0, 3).map((tech, techIndex) => (
+                          <span 
+                            key={techIndex}
+                            className="px-2 py-0.5 text-xs font-medium bg-blue-50 text-blue-700 rounded border border-blue-200"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                        {workshop.software.length > 3 && (
+                          <span className="px-2 py-0.5 text-xs font-medium bg-gray-50 text-gray-600 rounded border border-gray-200">
+                            +{workshop.software.length - 3}
+                          </span>
+                        )}
                       </div>
 
                       <div className="relative h-16 mb-2 overflow-hidden">
