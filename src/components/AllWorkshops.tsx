@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Filter, BookOpen, Target, ArrowUp, MessageSquare, Calendar, ChevronUp, PoundSterling, Download, Users, TrendingUp, CheckCircle, Star } from 'lucide-react';
-import { track } from '../lib/analytics';
+import { ArrowLeft, Filter, BookOpen, Target, ArrowUp, MessageSquare, Calendar, ChevronUp, PoundSterling, Download, CheckCircle, Star } from 'lucide-react';
+import { track, trackConversion } from '../lib/analytics';
 
 interface Workshop {
   id: number;
@@ -308,7 +308,6 @@ const AllWorkshops = ({ onBackToHome, onNavigateToQuestions, targetWorkshopId }:
   const [selectedLevel] = useState<string>('all');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [expandedWorkshop, setExpandedWorkshop] = useState<number | null>(targetWorkshopId || null);
-  const [showFloatingActions, setShowFloatingActions] = useState(false);
   const [isFloatingExpanded, setIsFloatingExpanded] = useState(false);
   const [showFloatingButton, setShowFloatingButton] = useState(false);
 
@@ -336,7 +335,6 @@ const AllWorkshops = ({ onBackToHome, onNavigateToQuestions, targetWorkshopId }:
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.pageYOffset;
-      setShowFloatingActions(scrollTop > 200);
       setShowFloatingButton(scrollTop > 200);
     };
 
@@ -363,7 +361,10 @@ const AllWorkshops = ({ onBackToHome, onNavigateToQuestions, targetWorkshopId }:
   };
 
   const handleDownloadGuide = () => {
-    track.leadMagnetDownloaded('ai-transformation-guide');
+    trackConversion({
+      event: 'Lead Magnet Downloaded',
+      properties: { guide_name: 'ai-transformation-guide', source: 'all-workshops-banner' }
+    });
     // Implement download logic
   };
 
