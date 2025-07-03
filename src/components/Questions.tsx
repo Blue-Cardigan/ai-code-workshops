@@ -58,6 +58,8 @@ interface AssessmentResult {
     additionalCost: number;
     travelSurcharge: number;
     teamSize: number;
+    volumeDiscount?: number;
+    discountPercentage?: number;
   };
 }
 
@@ -136,21 +138,21 @@ const trackResults: Record<string, AssessmentResult> = {
     color: 'green',
     pricing: {
       remote: {
-        basePrice: 5400, // £5,400 for up to 8 people (25% discount for remote)
-        additionalPerPerson: 675, // £675 per additional person
+        basePrice: 3200, // £3,200 for 8 people (20% discount for remote) - £400 per person
+        additionalPerPerson: 400, // £400 per additional person
       },
       ourLocation: {
-        basePrice: 7200, // £7,200 for up to 8 people (base price)
-        additionalPerPerson: 900, // £900 per additional person
+        basePrice: 4000, // £4,000 for 8 people (base price) - £500 per person
+        additionalPerPerson: 500, // £500 per additional person
       },
       theirOffice: {
-        basePrice: 7200, // £7,200 for up to 8 people
-        additionalPerPerson: 900, // £900 per additional person
-        travelSurcharge: 1500, // £1,500 travel surcharge
+        basePrice: 4000, // £4,000 for 8 people
+        additionalPerPerson: 500, // £500 per additional person
+        travelSurcharge: 800, // £800 travel surcharge
       },
       hybrid: {
-        basePrice: 6300, // £6,300 for up to 8 people (blend of remote/in-person)
-        additionalPerPerson: 787, // £787 per additional person
+        basePrice: 3600, // £3,600 for 8 people (blend of remote/in-person) - £450 per person
+        additionalPerPerson: 450, // £450 per additional person
       }
     }
   },
@@ -163,21 +165,21 @@ const trackResults: Record<string, AssessmentResult> = {
     color: 'blue',
     pricing: {
       remote: {
-        basePrice: 8100, // £8,100 for up to 8 people (25% discount for remote)
-        additionalPerPerson: 1012, // £1,012 per additional person
+        basePrice: 4800, // £4,800 for 8 people (20% discount for remote) - £600 per person
+        additionalPerPerson: 600, // £600 per additional person
       },
       ourLocation: {
-        basePrice: 10800, // £10,800 for up to 8 people (base price)
-        additionalPerPerson: 1350, // £1,350 per additional person
+        basePrice: 6000, // £6,000 for 8 people (base price) - £750 per person
+        additionalPerPerson: 750, // £750 per additional person
       },
       theirOffice: {
-        basePrice: 10800, // £10,800 for up to 8 people
-        additionalPerPerson: 1350, // £1,350 per additional person
-        travelSurcharge: 2000, // £2,000 travel surcharge
+        basePrice: 6000, // £6,000 for 8 people
+        additionalPerPerson: 750, // £750 per additional person
+        travelSurcharge: 1200, // £1,200 travel surcharge
       },
       hybrid: {
-        basePrice: 9450, // £9,450 for up to 8 people (blend of remote/in-person)
-        additionalPerPerson: 1181, // £1,181 per additional person
+        basePrice: 5400, // £5,400 for 8 people (blend of remote/in-person) - £675 per person
+        additionalPerPerson: 675, // £675 per additional person
       }
     }
   },
@@ -190,21 +192,21 @@ const trackResults: Record<string, AssessmentResult> = {
     color: 'red',
     pricing: {
       remote: {
-        basePrice: 9900, // £9,900 for up to 8 people (25% discount for remote)
-        additionalPerPerson: 1237, // £1,237 per additional person
+        basePrice: 6400, // £6,400 for 8 people (20% discount for remote) - £800 per person
+        additionalPerPerson: 800, // £800 per additional person
       },
       ourLocation: {
-        basePrice: 13200, // £13,200 for up to 8 people (base price)
-        additionalPerPerson: 1650, // £1,650 per additional person
+        basePrice: 8000, // £8,000 for 8 people (base price) - £1,000 per person
+        additionalPerPerson: 1000, // £1,000 per additional person
       },
       theirOffice: {
-        basePrice: 13200, // £13,200 for up to 8 people
-        additionalPerPerson: 1650, // £1,650 per additional person
-        travelSurcharge: 2500, // £2,500 travel surcharge
+        basePrice: 8000, // £8,000 for 8 people
+        additionalPerPerson: 1000, // £1,000 per additional person
+        travelSurcharge: 1500, // £1,500 travel surcharge
       },
       hybrid: {
-        basePrice: 11550, // £11,550 for up to 8 people (blend of remote/in-person)
-        additionalPerPerson: 1443, // £1,443 per additional person
+        basePrice: 7200, // £7,200 for 8 people (blend of remote/in-person) - £900 per person
+        additionalPerPerson: 900, // £900 per additional person
       }
     }
   }
@@ -314,11 +316,36 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
     
     // Calculate the actual quote value
     const teamSize = parseInt(contactInfo.team_size) || 0;
+    
+    // Enforce minimum team size of 8
+    if (teamSize < 8) {
+      alert('Minimum team size is 8 people to make the workshop viable. Please adjust your team size.');
+      return;
+    }
+    
     const pricingTier = recommendedTrack.pricing[deliveryMode];
     const basePrice = pricingTier.basePrice;
     const additionalCost = teamSize > 8 ? (teamSize - 8) * pricingTier.additionalPerPerson : 0;
     const travelSurcharge = (deliveryMode === 'theirOffice' && 'travelSurcharge' in pricingTier) ? pricingTier.travelSurcharge : 0;
-    const finalQuoteValue = basePrice + additionalCost + travelSurcharge;
+    
+    // Apply volume discounts based on team size
+    let subtotal = basePrice + additionalCost;
+    let volumeDiscount = 0;
+    let discountPercentage = 0;
+    
+    if (teamSize >= 25) {
+      // 25+ participants: 25% discount (multiple teams)
+      discountPercentage = 25;
+      volumeDiscount = subtotal * 0.25;
+      subtotal = subtotal * 0.75;
+    } else if (teamSize >= 11) {
+      // 11-25 participants: 15% discount
+      discountPercentage = 15;
+      volumeDiscount = subtotal * 0.15;
+      subtotal = subtotal * 0.85;
+    }
+    
+    const finalQuoteValue = subtotal + travelSurcharge;
     
     setResult({
       ...recommendedTrack,
@@ -329,7 +356,9 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
         basePrice,
         additionalCost,
         travelSurcharge,
-        teamSize
+        teamSize,
+        volumeDiscount,
+        discountPercentage
       }
     });
 
@@ -512,6 +541,12 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
                       <span className="font-medium">£{result.pricingBreakdown.additionalCost.toLocaleString()}</span>
                     </div>
                   )}
+                  {result.pricingBreakdown.volumeDiscount && result.pricingBreakdown.volumeDiscount > 0 && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-700">Volume discount ({result.pricingBreakdown.discountPercentage}% off):</span>
+                      <span className="font-medium text-green-600">-£{result.pricingBreakdown.volumeDiscount.toLocaleString()}</span>
+                    </div>
+                  )}
                   {result.pricingBreakdown.travelSurcharge > 0 && (
                     <div className="flex justify-between items-center">
                       <span className="text-gray-700">Travel & logistics surcharge:</span>
@@ -527,7 +562,7 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
                     </div>
                   </div>
                   <p className="text-sm text-gray-600 mt-3">
-                    * Includes materials, instructor fees, and follow-up support. Volume discounts available for teams over 20 people.
+                    * Includes materials, instructor fees, and follow-up support. Minimum 8 people required. Volume discounts: 15% off for 11-25 people, 25% off for 25+ people.
                   </p>
                 </div>
               </div>
@@ -657,16 +692,19 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     <Users className="h-4 w-4 inline mr-2" />
-                    Team Size *
+                    Team Size * (minimum 8 people)
                   </label>
                   <input
                     type="number"
                     value={contactInfo.team_size}
                     onChange={(e) => setContactInfo({...contactInfo, team_size: e.target.value})}
                     className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                    placeholder="Number of people attending"
-                    min="1"
+                    placeholder="Number of people attending (min 8)"
+                    min="8"
                   />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Volume discounts: 15% off for 11-25 people, 25% off for 25+ people
+                  </p>
                 </div>
               </div>
               <div>

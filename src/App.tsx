@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Hero from './components/Hero';
+import MarketStats from './components/MarketStats';
 import FeaturedWorkshops from './components/FeaturedWorkshops';
 import { TestimonialCarousel, ClientCarousel, sampleTestimonials } from './components/Carousel';
 import Footer from './components/Footer';
@@ -56,8 +57,9 @@ function App() {
     <div className="min-h-screen bg-neutral-50">
       <Hero onNavigateToQuestions={handleNavigateToQuestions} />
       <FeaturedWorkshops onNavigateToWorkshops={handleNavigateToWorkshops} />
-      <ClientCarousel clients={clientsData.clients} />
       <TestimonialCarousel testimonials={sampleTestimonials} />
+      <MarketStats />
+      <ClientCarousel clients={clientsData.clients} />
       <Footer />
       <ScrollIndicator className="bottom-2" />
     </div>

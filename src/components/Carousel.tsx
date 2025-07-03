@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, Quote, Star } from 'lucide-react';
 
 interface TestimonialCarouselProps {
@@ -20,9 +20,9 @@ interface ClientCarouselProps {
 export const TestimonialCarousel = ({ testimonials }: TestimonialCarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const nextSlide = () => {
+  const nextSlide = useCallback(() => {
     setCurrentIndex((prev) => (prev + 1) % testimonials.length);
-  };
+  }, [testimonials.length]);
 
   const prevSlide = () => {
     setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
@@ -31,12 +31,12 @@ export const TestimonialCarousel = ({ testimonials }: TestimonialCarouselProps) 
   useEffect(() => {
     const interval = setInterval(nextSlide, 5000);
     return () => clearInterval(interval);
-  }, [testimonials.length]);
+  }, [nextSlide]);
 
   return (
-    <section className="section-padding bg-neutral-50">
+    <section className="section-padding bg-neutral-50 mb-32">
       <div className="container-narrow">
-        <div className="text-center my-32">
+        <div className="text-center my-16">
           <h2 className="text-3xl md:text-4xl font-bold text-primary-900 mb-6">
             What Our Students Say
           </h2>
