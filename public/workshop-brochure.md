@@ -77,7 +77,7 @@ This diagram shows each training pathway in the context of specialized learning 
 
 **AI-Augmented Engineer Track** → Workshops 4 → 6 → 8 → 9
 
-**ML Engineer to AI Dev Track** → Workshops 11 → 12 → 13
+**Data Scientist to AI Dev Track** → Workshops 11 → 12 → 13
 
 ## 3. WORKSHOPS
 
@@ -183,7 +183,7 @@ _Targeted at mid-level devs or data scientists moving to full-stack engineering.
 • Security considerations for AI model deployment
 • Pitfalls of LLM misuse in production environments
 
-### AI for Data & ML Engineers
+### AI for Data Scientists & ML Engineers
 
 _Specialized workshops for data science and machine learning professionals._
 

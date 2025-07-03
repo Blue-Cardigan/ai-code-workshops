@@ -42,7 +42,7 @@ A1 --> A2
     subgraph Tracks [" "]
         T1[New to Coding Track<br/>Workshops 1→2→3]
         T2[AI-Augmented Engineer Track<br/>Workshops 4→6→8→9]
-        T3[ML Engineer to AI Dev Track<br/>Workshops 11→12→13]
+        T3[Data Scientist to AI Dev Track<br/>Workshops 11→12→13]
     end
 
     classDef tracks fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px,color:#000

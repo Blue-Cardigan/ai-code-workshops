@@ -245,58 +245,82 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
 
                 {/* Key Benefits */}
                 <div className="grid md:grid-cols-3 gap-4 mt-8">
-                  <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 border border-gray-200 shadow-sm">
-                    <div className="text-2xl font-bold text-green-600">45%</div>
-                    <div className="text-sm text-gray-600">Faster AI tool adoption</div>
+                  <div className="relative bg-white/90 backdrop-blur-sm rounded-lg p-3 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden group">
+                    {/* Sheen effect */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/20 to-transparent transform -skew-y-12 translate-x-full group-hover:translate-x-[-100%] transition-transform duration-700 ease-out"></div>
+                    <div className="relative z-10">
+                      <div className="text-xl font-bold text-green-600">45%</div>
+                      <div className="text-xs text-gray-600 leading-tight">Faster AI tool adoption</div>
+                    </div>
                   </div>
-                  <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 border border-gray-200 shadow-sm">
-                    <div className="text-2xl font-bold text-blue-600">4 hours</div>
-                    <div className="text-sm text-gray-600">Per workshop</div>
+                  <div className="relative bg-white/90 backdrop-blur-sm rounded-lg p-3 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden group">
+                    {/* Sheen effect */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/20 to-transparent transform -skew-y-12 translate-x-full group-hover:translate-x-[-100%] transition-transform duration-700 ease-out"></div>
+                    <div className="relative z-10">
+                      <div className="text-xl font-bold text-blue-600">4 hours</div>
+                      <div className="text-xs text-gray-600 leading-tight">Per workshop</div>
+                    </div>
                   </div>
-                  <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 border border-gray-200 shadow-sm">
-                    <div className="text-2xl font-bold text-purple-600">from £400</div>
-                    <div className="text-sm text-gray-600">Per person</div>
+                  <div className="relative bg-white/90 backdrop-blur-sm rounded-lg p-3 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden group">
+                    {/* Sheen effect */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/20 to-transparent transform -skew-y-12 translate-x-full group-hover:translate-x-[-100%] transition-transform duration-700 ease-out"></div>
+                    <div className="relative z-10">
+                      <div className="text-xl font-bold text-purple-600">from £4000</div>
+                      <div className="text-xs text-gray-600 leading-tight">Per person</div>
+                    </div>
                   </div>
                 </div>
               </div>
 
               {/* AI Prompt Terminal */}
-              <div className={`bg-gray-900 rounded-xl font-mono text-sm shadow-2xl border border-gray-800 text-left transition-all duration-700 ${
-                isTerminalCollapsed ? 'p-3' : 'p-6'
+              <div className={`relative bg-gradient-to-br from-pink-100 via-purple-50 to-blue-100 rounded-xl font-mono text-sm shadow-2xl border-2 border-gradient-to-r from-pink-200 to-purple-200 text-left transition-all duration-700 overflow-hidden group ${
+                isTerminalCollapsed ? 'p-3' : 'p-5'
               }`}>
-                <div className="flex items-center space-x-2 mb-4">
-                  <div className="w-3 h-3 bg-red-500 rounded-full" />
-                  <div className="w-3 h-3 bg-yellow-500 rounded-full" />
-                  <div className="w-3 h-3 bg-green-500 rounded-full" />
-                  <span className="text-gray-400 ml-4 text-xs">Internal Automation Assistant</span>
+                {/* Sheen effect */}
+                <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/30 to-transparent transform -skew-y-12 translate-x-full group-hover:translate-x-[-100%] transition-transform duration-1000 ease-out"></div>
+                
+                {/* Cute background pattern */}
+                <div className="absolute inset-0 opacity-10">
+                  <div className="absolute top-2 left-4 w-8 h-8 bg-yellow-300 rounded-full blur-sm"></div>
+                  <div className="absolute top-8 right-8 w-6 h-6 bg-pink-300 rounded-full blur-sm"></div>
+                  <div className="absolute bottom-4 left-8 w-4 h-4 bg-blue-300 rounded-full blur-sm"></div>
+                  <div className="absolute bottom-8 right-4 w-10 h-10 bg-purple-300 rounded-full blur-sm"></div>
                 </div>
                 
-                <div className="space-y-3">
-                  <div className="text-gray-400">
-                    <span className="text-green-400">user@coefficient:~$</span>{' '}
-                    <span className="text-white">
+                <div className="flex items-center space-x-2 mb-3 relative z-10">
+                  <div className="w-3 h-3 bg-gradient-to-r from-red-400 to-pink-400 rounded-full shadow-sm" />
+                  <div className="w-3 h-3 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full shadow-sm" />
+                  <div className="w-3 h-3 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full shadow-sm" />
+                  <span className="text-purple-600 font-semibold ml-4 text-xs bg-white/60 px-2 py-1 rounded-full shadow-sm">✨ Internal Automation Assistant</span>
+                </div>
+                
+                <div className="space-y-2 relative z-10">
+                  <div className="text-purple-700">
+                    <span className="text-emerald-600 font-bold">user@coefficient:~$</span>{' '}
+                    <span className="text-indigo-800 font-medium">
                       {promptText}
-                      <span className={`bg-white w-2 h-5 inline-block ml-1 transition-opacity duration-75 ${showCursor ? 'opacity-100' : 'opacity-0'}`} />
+                      <span className={`bg-gradient-to-r from-pink-500 to-purple-500 w-2 h-5 inline-block ml-1 transition-opacity duration-75 rounded-sm ${showCursor ? 'opacity-100' : 'opacity-0'}`} />
                     </span>
                   </div>
                   
                   <div className={`transition-all duration-700 overflow-hidden ${
-                    isTerminalCollapsed ? 'max-h-0 opacity-0' : 'max-h-20 opacity-100'
+                    isTerminalCollapsed ? 'max-h-0 opacity-0' : 'max-h-16 opacity-100'
                   }`}>
                     {isPromptComplete && (
-                      <div className="text-green-400 mt-4">
-                        ✓ Prompt received - Analysing requirements...
+                      <div className="text-emerald-600 mt-3 flex items-center space-x-2">
+                        <span className="text-lg">✨</span>
+                        <span className="font-semibold">Prompt received - Analysing requirements...</span>
                       </div>
                     )}
                     
                     {isProcessing && (
-                      <div className="flex items-center space-x-2 text-blue-400">
+                      <div className="flex items-center space-x-2 text-blue-600 mt-2">
                         <div className="flex space-x-1">
-                          <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                          <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                          <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                          <div className="w-2 h-2 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full animate-bounce shadow-sm" style={{ animationDelay: '0ms' }} />
+                          <div className="w-2 h-2 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full animate-bounce shadow-sm" style={{ animationDelay: '150ms' }} />
+                          <div className="w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full animate-bounce shadow-sm" style={{ animationDelay: '300ms' }} />
                         </div>
-                        <span>Processing...</span>
+                        <span className="font-semibold">Processing magic... 🪄</span>
                       </div>
                     )}
                   </div>
