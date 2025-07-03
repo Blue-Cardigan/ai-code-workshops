@@ -9,7 +9,7 @@ This document provides an overview of the proposed framework for AI-Powered Codi
 **Description:** No coding experience, unlikely to be heavy users of code. Goals are for attendees to understand AI-assisted development capabilities and be aware of opportunities for automation and rapid prototyping. The typical attendee would be product managers, business analysts, or innovation team members.
 
 **Courses (4hrs per workshop):**
-• Intro to Vibe Coding: Build & Deploy Your First AI App
+• Intro to Vibe Coding: Apps, Tools, and Automations
 • Git & GitHub for Beginners (w/ AI Helpers)
 • Automations: Build extensions and useful scripts in moments
 
@@ -85,7 +85,7 @@ This diagram shows each training pathway in the context of specialized learning 
 
 _For non-coders, analysts, or non-tech professionals — informal tone, "playful but powerful"._
 
-#### **Intro to Vibe Coding: Build & Deploy Your First AI App**
+#### **Intro to Vibe Coding: Apps, Tools, and Automations**
 
 **Pre-requisites:** None.
 

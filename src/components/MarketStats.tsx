@@ -54,7 +54,7 @@ const MarketStats = () => {
                 </p>
                 
                 <p className="text-white/90 font-medium">
-                  We deliver practical, industry-specific implementation that drives measurable business outcomes.
+                  With us, your teams build their own solutions, clear their biggest blockers, and love getting things done.
                 </p>
               </div>
               
@@ -71,10 +71,10 @@ const MarketStats = () => {
                 
                 <div className="bg-white/15 backdrop-blur-sm rounded-xl p-4 border border-white/20">
                   <div className="text-lg font-bold text-white mb-2">
-                    ✓ Industry-Specific
+                    ✓ Department-Specific
                   </div>
                   <div className="text-white/90 text-sm">
-                    Tailored scenarios for your sector and use cases
+                    Tailored scenarios for your department and use cases
                   </div>
                 </div>
                 
@@ -83,7 +83,7 @@ const MarketStats = () => {
                     ✓ Post-training Support
                   </div>
                   <div className="text-white/90 text-sm">
-                    Post-training guidance for real-world implementation
+                    Post-training guidance for real-world use
                   </div>
                 </div>
                 

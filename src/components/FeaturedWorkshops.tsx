@@ -19,8 +19,8 @@ interface FeaturedWorkshopsProps {
 const featuredWorkshops: FeaturedWorkshop[] = [
   {
     id: 1,
-    title: "Intro to Vibe Coding: Build & Deploy Your First AI App",
-    description: "Scaffold and deploy a simple app with AI-assisted code generation, and write scripts and extensions to automate your workflows. Perfect for beginners who want to do new things.",
+    title: "Intro to Vibe Coding: Apps, Tools, and Automations",
+    description: "Scaffold and deploy a simple app, then generate scripts and extensions to automate your workflows. Perfect for beginners who want to get past the 'I can't code' barrier.",
     duration: "4 hours",
     level: "Beginner",
     image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
@@ -30,7 +30,7 @@ const featuredWorkshops: FeaturedWorkshop[] = [
   {
     id: 4,
     title: "Develop Like a Pro: Clean Code with AI Pairing Tools",
-    description: "Master good practices with LLM copilots like Cursor and Claude Code. Implement ambitious features that adhere to professional code quality standards.",
+    description: "Master good practices with LLM copilots like Cursor and Claude Code. Implement great features that adhere to professional code quality standards.",
     duration: "4 hours", 
     level: "Intermediate",
     image: "https://images.unsplash.com/photo-1515378960530-7c0da6231fb1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",

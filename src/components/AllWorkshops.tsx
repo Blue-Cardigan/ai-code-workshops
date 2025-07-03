@@ -35,7 +35,7 @@ const allWorkshops: Workshop[] = [
   // Zero-to-One: Onboarding New Coders + Vibe Coders
   {
     id: 1,
-    title: "Intro to Vibe Coding: Build & Deploy Your First AI App",
+    title: "Intro to Vibe Coding: Apps, Tools, and Automations",
     description: "Scaffold and deploy a simple app with AI-assisted code generation, and write scripts and extensions to automate your workflows. Perfect for beginners who want to start their AI development journey.",
     outline: [
       "Use Lovable + Cursor + Vercel to scaffold and deploy a simple app with AI-assisted code generation",

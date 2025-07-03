@@ -20,7 +20,16 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
   const [hoveredDot, setHoveredDot] = useState<number | null>(null);
   const dotRefs = useRef<{ [key: number]: HTMLButtonElement | null }>({});
   
-  const fullPrompt = "Use AI to take my team to the next level.";
+  const prompts = [
+    "Use AI to take my team to the next level.",
+    "Automate our department processes without waiting for IT.",
+    "Build custom tools to streamline our workflows.",
+    "Create AI solutions that boost team productivity.",
+    "Transform our team into self-sufficient problem solvers.",
+    "Empower my team with coding and AI skills."
+  ];
+  
+  const fullPrompt = useRef(prompts[Math.floor(Math.random() * prompts.length)]);
   
   // Interactive dots configuration
   const interactiveDots = [
@@ -38,49 +47,6 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
     { id: 11, x: 'right-1/4', y: 'top-1/2', size: 'w-4 h-4', color: 'bg-emerald-400/20', delay: '2.3s' }
   ];
   
-  // Create random connection when animation completes
-  const createRandomConnection = () => {
-    const availableDots = interactiveDots.map(dot => dot.id);
-    
-    // Pick a random starting dot
-    const fromIndex = Math.floor(Math.random() * availableDots.length);
-    const fromDot = availableDots[fromIndex];
-    const fromDotConfig = interactiveDots.find(dot => dot.id === fromDot)!;
-    
-    // Find nearby dots (same side or close vertically)
-    const nearbyDots = availableDots.filter(dotId => {
-      if (dotId === fromDot) return false;
-      
-      const dotConfig = interactiveDots.find(dot => dot.id === dotId)!;
-      
-      // Check if dots are on the same side (both left or both right)
-      const fromSide = fromDotConfig.x.startsWith('left') ? 'left' : 'right';
-      const toSide = dotConfig.x.startsWith('left') ? 'left' : 'right';
-      
-      if (fromSide === toSide) return true;
-      
-      // Allow connections between top and bottom dots on opposite sides (less likely to cross content)
-      const fromVertical = fromDotConfig.y;
-      const toVertical = dotConfig.y;
-      
-      if ((fromVertical.includes('top') && toVertical.includes('top')) ||
-          (fromVertical.includes('bottom') && toVertical.includes('bottom'))) {
-        return true;
-      }
-      
-      return false;
-    });
-    
-    if (nearbyDots.length === 0) return; // No nearby dots found
-    
-    // Pick a random nearby dot
-    const toIndex = Math.floor(Math.random() * nearbyDots.length);
-    const toDot = nearbyDots[toIndex];
-    
-    const newConnection = { from: fromDot, to: toDot };
-    setConnections(prev => [...prev, newConnection]);
-  };
-
   // Handle dot interactions
   const handleDotClick = (dotId: number) => {
     console.log('handleDotClick called with:', dotId);
@@ -121,7 +87,7 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
 
   const skipAnimation = () => {
     setIsAnimationSkipped(true);
-    setPromptText(fullPrompt);
+    setPromptText(fullPrompt.current);
     setIsPromptComplete(true);
     setShowCursor(false);
     setIsProcessing(false);
@@ -132,9 +98,9 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
   // Typing animation for prompt
   useEffect(() => {
     if (isAnimationSkipped) return;
-    if (promptText.length < fullPrompt.length) {
+    if (promptText.length < fullPrompt.current.length) {
       const timeout = setTimeout(() => {
-        setPromptText(fullPrompt.substring(0, promptText.length + 1));
+        setPromptText(fullPrompt.current.substring(0, promptText.length + 1));
       }, 30);
       return () => clearTimeout(timeout);
     } else if (!isPromptComplete) {
@@ -150,7 +116,7 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
         }, 1500);
       }, 500);
     }
-  }, [promptText, fullPrompt, isPromptComplete, isAnimationSkipped]);
+  }, [promptText, isPromptComplete, isAnimationSkipped]);
 
   // Cursor blinking
   useEffect(() => {
@@ -163,17 +129,6 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
     }
   }, [isPromptComplete, isAnimationSkipped]);
 
-  // Create random connections when animation completes
-  useEffect(() => {
-    if (showCompletionMessage && connections.length === 0) {
-      // Add a slight delay before creating connection
-      const timeout = setTimeout(() => {
-        createRandomConnection();
-      }, 1000);
-      return () => clearTimeout(timeout);
-    }
-  }, [showCompletionMessage, connections.length, createRandomConnection]);
-
   return (
     <section id="home" className="relative min-h-screen overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50 pt-16 pb-32">
 
@@ -183,17 +138,17 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
           <div className="flex items-center justify-center space-x-4 text-sm font-medium">
             <div className="flex items-center space-x-1">
               <Award className="w-4 h-4" />
-              <span>Trusted by 50+ London companies</span>
+              <span>Trusted by 50+ London departments</span>
             </div>
             <span className="hidden sm:inline">•</span>
             <div className="flex items-center space-x-1">
               <TrendingUp className="w-4 h-4" />
-              <span>45% faster AI adoption rate</span>
+              <span>80% reduction in IT tickets</span>
             </div>
             <span className="hidden sm:inline">•</span>
             <div className="flex items-center space-x-1">
               <Users className="w-4 h-4" />
-              <span>2,000+ developers trained</span>
+              <span>500+ non-technical staff trained</span>
             </div>
           </div>
         </div>
@@ -277,17 +232,15 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
               <div className="space-y-6">
                 
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
-                  Bridge the AI Skills Gap with{' '}<br/>
+                  Train Pilots for {' '}<br/>
                   <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-teal-600 bg-clip-text text-transparent">
-                    Practical Training{' '}
+                  Self-Service Problem-Solving{' '}
                   </span>
-                  That Actually Works
                 </h1>
 
                 {/* Value Proposition */}
                 <p className="text-xl text-gray-600 leading-relaxed max-w-2xl mx-auto">
-                  Stop losing talent to competitors. Transform your team into AI-powered developers with 
-                  hands-on workshops designed for <span className="font-semibold text-gray-900">real business impact</span>.
+                  Take your team to the next level with hands-on workshops that turn staff into problem-solvers, and builders into gold.
                 </p>
 
                 {/* Key Benefits */}
@@ -315,7 +268,7 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
                   <div className="w-3 h-3 bg-red-500 rounded-full" />
                   <div className="w-3 h-3 bg-yellow-500 rounded-full" />
                   <div className="w-3 h-3 bg-green-500 rounded-full" />
-                  <span className="text-gray-400 ml-4 text-xs">AI Learning Assistant</span>
+                  <span className="text-gray-400 ml-4 text-xs">Internal Automation Assistant</span>
                 </div>
                 
                 <div className="space-y-3">
@@ -374,22 +327,22 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
                 className="btn-primary group flex items-center justify-center relative overflow-hidden"
               >
                 <MessageSquare className="w-4 h-4 mr-2" />
-                Get Free Skills Assessment + Quote
+                Get Free Automation Skills Assessment
                 <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 {/* Urgency indicator */}
-                <div className="absolute top-0 right-0 bg-red-500 text-white text-xs px-2 py-1 rounded-bl-lg">
+                <div className="absolute top-0 right-0 bg-red-500 text-white text-xs px-2 py-0 rounded-bl-lg">
                   FREE
                 </div>
               </button>
               <button className="btn-secondary group flex items-center justify-center">
                 <Calendar className="w-4 h-4 mr-2" />
-                Book 15-min Discovery Call
+                Book 15-min Capability Call
               </button>
             </div>
 
             {/* Trust Indicators */}
             <div className="text-center text-sm text-gray-500 mt-4">
-              <p>✓ No obligation assessment ✓ Custom pricing ✓ Immediate ROI calculation</p>
+              <p>✓ No obligation assessment &nbsp;&nbsp;✓ Custom training plans &nbsp;&nbsp;✓ Immediate productivity gains</p>
             </div>
           </div>
         </div>
