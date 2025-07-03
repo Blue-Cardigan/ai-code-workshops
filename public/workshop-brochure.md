@@ -41,7 +41,7 @@ All training workshops comprise 4 hours of interactive, hands-on content, with p
 ### Profile 1: Non-Coders & Innovation Teams
 
 ```
-Intro to Vibe Coding → Prompt Engineering → Git & GitHub for
+Intro to Vibe Coding → Git & GitHub for
 Build & Deploy        for Power Users     Beginners (w/ AI Helpers)
 Your First AI App
 ```
@@ -97,17 +97,6 @@ _For non-coders, analysts, or non-tech professionals — informal tone, "playful
 • Building confidence in technology experimentation
 
 **Outcome:** Hello World AI app deployed live.
-
-#### **Prompt Engineering for Power Users**
-
-**Pre-requisites:** No coding experience needed.
-
-**Outline:**
-• Tool-agnostic prompting skills using Claude, ChatGPT, Gemini
-• Chain-of-thought prompting and role-based personas
-• Structured output generation and prompt optimization
-• Context management and conversation strategies
-• Optional add-on tracks for legal, HR, finance, product applications
 
 #### **Git & GitHub for Beginners (w/ AI Helpers)**
 
@@ -169,7 +158,7 @@ _Targeted at mid-level devs or data scientists moving to full-stack engineering.
 • End-to-end tour of modern development using AI-powered IDEs
 • Model-assisted code review, testing, and deployment
 • Advanced IDE integrations and productivity techniques
-• Custom workflow optimization for your technology stack
+• Custom workflow optimisation for your technology stack
 • Collaborative development with AI assistance
 
 #### **CI/CD in a Vibe Coding World**
@@ -244,7 +233,6 @@ There may be attendees who wish to attend intermediate workshops who already hav
 **Recommended Preparation Resources:**
 • Kaggle's Python courses for programming fundamentals
 • GitHub's "Git Handbook" for version control basics
-• Interactive tutorials on AI prompt engineering
 • Codecademy's "Command Line" course for terminal skills
 
 **Self-Assessment Guidelines:**

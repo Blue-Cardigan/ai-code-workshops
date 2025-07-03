@@ -163,7 +163,7 @@ Set `VITE_ENABLE_ANALYTICS_DEV=true` to enable real tracking in development.
 - Technical errors in form submissions
 - Unusual traffic patterns
 
-## Optimization Recommendations
+## Optimisation Recommendations
 
 ### A/B Testing Opportunities
 
@@ -172,12 +172,12 @@ Set `VITE_ENABLE_ANALYTICS_DEV=true` to enable real tracking in development.
 - Workshop card layouts and descriptions
 - Quote presentation format
 
-### Conversion Optimization
+### Conversion Optimisation
 
 - Reduce assessment friction
 - Improve workshop value propositions
-- Optimize for mobile experience
-- Personalize recommendations
+- Optimise for mobile experience
+- personalise recommendations
 
 ## Technical Implementation
 

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, ArrowRight, CheckCircle, Code, Database, Users, Target, Lightbulb, Mail, Phone, PoundSterlingIcon, Shield, Award, TrendingUp, Star } from 'lucide-react';
-import Button from './Button';
 import { supabase } from '../lib/supabase';
 import { track } from '../lib/analytics';
 
@@ -133,7 +132,7 @@ const trackResults: Record<string, AssessmentResult> = {
     track: 'beginner',
     title: 'New to Coding Track',
     description: 'Perfect for complete beginners and those new to programming. Start your journey into AI-powered development with foundational skills.',
-    workshops: ['Intro to Vibe Coding', 'Prompt Engineering for Power Users', 'Git & GitHub for Beginners'],
+    workshops: ['Intro to Vibe Coding', 'Git & GitHub for Beginners'],
     icon: <Users className="h-8 w-8" />,
     color: 'green',
     pricing: {
@@ -394,21 +393,21 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
 
   if (showResult && result) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
         {/* Success Banner */}
         <div className="bg-gradient-to-r from-green-500 to-green-600 text-white py-3 px-4">
           <div className="max-w-4xl mx-auto text-center">
             <div className="flex items-center justify-center space-x-2">
               <CheckCircle className="w-5 h-5" />
               <span className="font-medium">
-                🎉 Assessment complete! Your personalized training plan is ready.
+                🎉 Assessment complete! Your personalised training plan is ready.
               </span>
             </div>
           </div>
         </div>
 
         {/* Header */}
-        <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+        <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200/50 sticky top-0 z-10">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <button
               onClick={onBackToHome}
@@ -422,32 +421,8 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
 
         {/* Result */}
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          {/* Social Proof Section */}
-          <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 mb-8 border border-blue-200">
-            <div className="grid md:grid-cols-3 gap-6 text-center">
-              <div className="flex flex-col items-center">
-                <Award className="w-8 h-8 text-blue-600 mb-2" />
-                <div className="text-2xl font-bold text-blue-900">200+</div>
-                <div className="text-sm text-blue-700">London companies trained</div>
-              </div>
-              <div className="flex flex-col items-center">
-                <TrendingUp className="w-8 h-8 text-green-600 mb-2" />
-                <div className="text-2xl font-bold text-green-900">340%</div>
-                <div className="text-sm text-green-700">Average ROI within 6 months</div>
-              </div>
-              <div className="flex flex-col items-center">
-                <Star className="w-8 h-8 text-yellow-600 mb-2" />
-                <div className="text-2xl font-bold text-yellow-900">4.9/5</div>
-                <div className="text-sm text-yellow-700">Average workshop rating</div>
-              </div>
-            </div>
-          </div>
 
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 text-green-600 rounded-full mb-4">
-              <CheckCircle className="h-8 w-8" />
-            </div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Your AI Training Plan is Ready!</h1>
             <p className="text-lg text-gray-600">Based on your team's needs, here's our recommended approach</p>
           </div>
 
@@ -554,6 +529,27 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
             )}
           </div>
 
+          {/* Social Proof Section */}
+          <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 mb-8 border border-blue-200">
+            <div className="grid md:grid-cols-3 gap-6 text-center">
+              <div className="flex flex-col items-center">
+                <Award className="w-8 h-8 text-blue-600 mb-2" />
+                <div className="text-2xl font-bold text-blue-900">200+</div>
+                <div className="text-sm text-blue-700">London companies trained</div>
+              </div>
+              <div className="flex flex-col items-center">
+                <TrendingUp className="w-8 h-8 text-green-600 mb-2" />
+                <div className="text-2xl font-bold text-green-900">340%</div>
+                <div className="text-sm text-green-700">Average ROI within 6 months</div>
+              </div>
+              <div className="flex flex-col items-center">
+                <Star className="w-8 h-8 text-yellow-600 mb-2" />
+                <div className="text-2xl font-bold text-yellow-900">4.9/5</div>
+                <div className="text-sm text-yellow-700">Average workshop rating</div>
+              </div>
+            </div>
+          </div>
+
           {/* Next Steps */}
           <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-8 text-white text-center mb-8">
             <h3 className="text-2xl font-bold mb-4">Ready to Get Started?</h3>
@@ -561,25 +557,30 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
               Book a 15-minute call to discuss your training plan and secure your preferred dates
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors flex items-center justify-center">
+              <button className="btn-primary group flex items-center justify-center">
                 <Phone className="w-5 h-5 mr-2" />
                 Book Discovery Call
+                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </button>
-              <button className="bg-transparent border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-all flex items-center justify-center">
+              <a 
+                href={`mailto:${contactInfo.email}?subject=AI Training Quote - ${result.title}&body=Hello ${contactInfo.contact_name},%0D%0A%0D%0AThank you for completing our AI Training Assessment! Here's your personalized quote:%0D%0A%0D%0ACompany: ${contactInfo.company_name}%0D%0ARecommended Track: ${result.title}%0D%0ATeam Size: ${contactInfo.team_size} people%0D%0ADelivery Method: ${result.deliveryLabel}%0D%0ATotal Investment: £${result.finalQuoteValue?.toLocaleString()}%0D%0A%0D%0AWorkshops Included:%0D%0A${result.workshops.map((workshop, i) => `${i + 1}. ${workshop}`).join('%0D%0A')}%0D%0A%0D%0AThis quote is valid for 30 days. To secure your preferred dates or discuss any questions, please reply to this email or book a discovery call.%0D%0A%0D%0ABest regards,%0D%0AThe Coefficient Team`}
+                className="btn-secondary group flex items-center justify-center"
+              >
                 <Mail className="w-5 h-5 mr-2" />
                 Email This Quote
-              </button>
+              </a>
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button onClick={onBackToHome} className="flex items-center">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+            <button onClick={onBackToHome} className="text-blue-600 hover:text-blue-800 transition-colors font-medium flex items-center group">
               <Target className="h-4 w-4 mr-2" />
               Browse All Workshops
-            </Button>
-            <Button onClick={resetAssessment} variant="secondary">
+              <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+            </button>
+            <button onClick={resetAssessment} className="text-gray-600 hover:text-gray-800 transition-colors font-medium">
               Retake Assessment
-            </Button>
+            </button>
           </div>
         </div>
       </div>
@@ -594,47 +595,56 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
     : currentAnswers.length > 0;
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Value Proposition Banner */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
+      {/* Social Proof Banner */}
+      <div className="bg-gradient-to-r from-green-500 to-green-600 text-white py-2 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <div className="flex items-center justify-center space-x-4 text-sm font-medium">
-            <span>🚀 Free AI Skills Assessment</span>
+            <div className="flex items-center space-x-1">
+              <Award className="w-4 h-4" />
+              <span>Trusted by 50+ London departments</span>
+            </div>
             <span className="hidden sm:inline">•</span>
-            <span>📊 Instant Personalized Quote</span>
+            <div className="flex items-center space-x-1">
+              <TrendingUp className="w-4 h-4" />
+              <span>80% reduction in IT tickets</span>
+            </div>
             <span className="hidden sm:inline">•</span>
-            <span>⏱️ Takes less than 2 minutes</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <button
-              onClick={onBackToHome}
-              className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              <ArrowLeft className="h-5 w-5 mr-2" />
-              Back to Home
-            </button>
-            
-            {/* Progress indicator */}
-            <div className="flex items-center space-x-2">
-              <span className="text-sm text-gray-500">
-                Question {currentQuestion + 1} of {filteredQuestions.length}
-              </span>
-              <div className="w-32 bg-gray-200 rounded-full h-2">
-                <div 
-                  className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${((currentQuestion + 1) / filteredQuestions.length) * 100}%` }}
-                />
-              </div>
+            <div className="flex items-center space-x-1">
+              <Users className="w-4 h-4" />
+              <span>500+ non-technical staff trained</span>
             </div>
           </div>
         </div>
       </div>
+
+              {/* Header */}
+        <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200/50 sticky top-0 z-10">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div className="flex items-center justify-between">
+              <button
+                onClick={onBackToHome}
+                className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                <ArrowLeft className="h-5 w-5 mr-2" />
+                Back to Home
+              </button>
+              
+              {/* Progress indicator */}
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-gray-500">
+                  Question {currentQuestion + 1} of {filteredQuestions.length}
+                </span>
+                <div className="w-32 bg-gray-200 rounded-full h-2">
+                  <div 
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${((currentQuestion + 1) / filteredQuestions.length) * 100}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
       {/* Question Content */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -642,13 +652,15 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 text-blue-600 rounded-full mb-4">
             <Lightbulb className="h-8 w-8" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">AI Training Assessment</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            AI Training <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-teal-600 bg-clip-text text-transparent">Readiness Assessment</span>
+          </h1>
           <p className="text-lg text-gray-600">
             Let's find the perfect training approach for your team
           </p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-8">
           <div className="mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
               {currentQ.title}
@@ -775,10 +787,10 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
             <button
               onClick={prevQuestion}
               disabled={currentQuestion === 0}
-              className={`flex items-center px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+              className={`btn-secondary flex items-center ${
                 currentQuestion === 0
-                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  ? 'opacity-50 cursor-not-allowed'
+                  : ''
               }`}
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
@@ -788,10 +800,10 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
             <button
               onClick={nextQuestion}
               disabled={!hasAnswered || isSubmitting}
-              className={`flex items-center px-8 py-3 rounded-lg font-medium transition-all duration-200 ${
-                hasAnswered && !isSubmitting
-                  ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg hover:shadow-xl'
-                  : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+              className={`btn-primary flex items-center ${
+                !hasAnswered || isSubmitting
+                  ? 'opacity-50 cursor-not-allowed'
+                  : ''
               }`}
             >
               {isSubmitting ? (
@@ -816,7 +828,7 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
 
         {/* Trust indicators at bottom */}
         <div className="text-center mt-8 text-sm text-gray-500">
-          <p>🔒 Your information is secure and will only be used to provide your personalized quote</p>
+          <p>🔒 Your information is secure and will only be used to provide your personalised quote</p>
         </div>
       </div>
     </div>

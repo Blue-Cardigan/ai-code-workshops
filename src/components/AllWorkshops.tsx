@@ -177,7 +177,7 @@ const allWorkshops: Workshop[] = [
       "End-to-end tour of modern development using AI-powered IDEs",
       "Model-assisted code review, testing, and deployment",
       "Advanced IDE integrations and productivity techniques",
-      "Custom workflow optimization for your technology stack",
+      "Custom workflow optimisation for your technology stack",
       "Collaborative development with AI assistance"
     ],
     duration: "4 hours",
@@ -719,7 +719,7 @@ const AllWorkshops = ({ onBackToHome, onNavigateToQuestions, targetWorkshopId }:
         <div className="mt-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white text-center">
           <h3 className="text-2xl font-bold mb-4">Ready to Transform Your Team?</h3>
           <p className="text-lg mb-6 text-white/90">
-            Get a personalized training plan and instant quote based on your team's needs
+            Get a personalised training plan and instant quote based on your team's needs
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button

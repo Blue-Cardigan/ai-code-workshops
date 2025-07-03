@@ -324,10 +324,10 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
             }`}>
               <button 
                 onClick={onNavigateToQuestions}
-                className="btn-primary group flex items-center justify-center relative overflow-hidden"
+                className="btn-primary group flex items-center justify-center relative overflow-hidden border-0"
               >
                 <MessageSquare className="w-4 h-4 mr-2" />
-                Get Free Automation Skills Assessment
+                Readiness Assessment
                 <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 {/* Urgency indicator */}
                 <div className="absolute top-0 right-0 bg-red-500 text-white text-xs px-2 py-0 rounded-bl-lg">
@@ -336,7 +336,7 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
               </button>
               <button className="btn-secondary group flex items-center justify-center">
                 <Calendar className="w-4 h-4 mr-2" />
-                Book 15-min Capability Call
+                Book 15-min Discovery Call
               </button>
             </div>
 

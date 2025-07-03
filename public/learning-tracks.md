@@ -1,15 +1,12 @@
 flowchart TB
 subgraph Profile1 [" "]
 A1["Intro to Vibe Coding: Build &amp; Deploy Your First AI App"]
-A2["Prompt Engineering for Power Users"]
-A3["Git &amp; GitHub for Beginners with AI Helpers"]
+A2["Git &amp; GitHub for Beginners with AI Helpers"]
 end
 A1 --> A2
-A2 --> A3
 
     A1:::profile1
     A2:::profile1
-    A3:::profile1
     classDef profile1 fill:#e8f5e8,stroke:#4caf50,stroke-width:3px,color:#000
 
     subgraph Profile2 [" "]
