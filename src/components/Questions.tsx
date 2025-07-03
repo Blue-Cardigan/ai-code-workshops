@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, ArrowRight, CheckCircle, Code, Database, Users, Target, Clock, Lightbulb, Mail, Phone, Building, PoundSterlingIcon } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CheckCircle, Code, Database, Users, Target, Lightbulb, Mail, Phone, PoundSterlingIcon, Shield, Award, TrendingUp, Star } from 'lucide-react';
 import Button from './Button';
-import { supabase, type AssessmentSubmission } from '../lib/supabase';
+import { supabase } from '../lib/supabase';
 import { track } from '../lib/analytics';
 
 interface AssessmentProps {
@@ -202,7 +202,7 @@ const trackResults: Record<string, AssessmentResult> = {
       theirOffice: {
         basePrice: 8000, // £8,000 for 8 people
         additionalPerPerson: 1000, // £1,000 per additional person
-        travelSurcharge: 1500, // £1,500 travel surcharge
+        travelSurcharge: 1600, // £1,600 travel surcharge
       },
       hybrid: {
         basePrice: 7200, // £7,200 for 8 people (blend of remote/in-person) - £900 per person
@@ -214,189 +214,123 @@ const trackResults: Record<string, AssessmentResult> = {
 
 const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState<Record<number, string[]>>({});
+  const [answers, setAnswers] = useState<{ [key: number]: string[] }>({});
   const [showResult, setShowResult] = useState(false);
   const [result, setResult] = useState<AssessmentResult | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [contactInfo, setContactInfo] = useState({
     company_name: '',
     contact_name: '',
     email: '',
     phone: '',
-    additional_notes: '',
     team_size: ''
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [hasTrackedStart, setHasTrackedStart] = useState(false);
 
   // Track assessment start
   useEffect(() => {
-    if (!hasTrackedStart) {
-      track.assessmentStarted();
-      setHasTrackedStart(true);
-    }
-  }, [hasTrackedStart]);
+    track.assessmentStarted();
+  }, []);
 
   const handleAnswer = (questionId: number, optionId: string, type: 'single' | 'multiple') => {
-    const question = questions.find(q => q.id === questionId);
-    
-    setAnswers(prev => {
-      const newAnswers = type === 'single' 
-        ? { ...prev, [questionId]: [optionId] }
-        : {
-            ...prev, 
-            [questionId]: (prev[questionId] || []).includes(optionId)
-              ? (prev[questionId] || []).filter(id => id !== optionId)
-              : [...(prev[questionId] || []), optionId]
-          };
-
-      // Track the answer
-      if (question) {
-        const answerValue = type === 'single' ? optionId : newAnswers[questionId];
-        track.assessmentQuestionAnswered(questionId, answerValue, question.title);
-      }
-
-      return newAnswers;
-    });
+    if (type === 'single') {
+      setAnswers({ ...answers, [questionId]: [optionId] });
+    } else {
+      const currentAnswers = answers[questionId] || [];
+      const newAnswers = currentAnswers.includes(optionId)
+        ? currentAnswers.filter(id => id !== optionId)
+        : [...currentAnswers, optionId];
+      setAnswers({ ...answers, [questionId]: newAnswers });
+    }
   };
 
   const calculateResult = async () => {
+    setIsSubmitting(true);
+    
     const trackScores = { beginner: 0, engineer: 0, ml: 0 };
     
     Object.entries(answers).forEach(([questionId, selectedOptions]) => {
       const question = questions.find(q => q.id === parseInt(questionId));
-      if (!question) return;
-
-      selectedOptions.forEach(optionId => {
-        const option = question.options?.find(opt => opt.id === optionId);
-        if (option?.track) {
-          if (option.track === 'any') {
-            // Options with 'any' track contribute to all tracks
-            trackScores.beginner += option.value;
-            trackScores.engineer += option.value;
-            trackScores.ml += option.value;
-          } else if (option.track in trackScores) {
-            trackScores[option.track as keyof typeof trackScores] += option.value;
+      if (question?.options) {
+        selectedOptions.forEach(optionId => {
+          const option = question.options?.find(opt => opt.id === optionId);
+          if (option?.track) {
+            if (option.track === 'any') {
+              trackScores.beginner += option.value;
+              trackScores.engineer += option.value;
+              trackScores.ml += option.value;
+            } else {
+              trackScores[option.track] += option.value;
+            }
           }
-        }
-      });
+        });
+      }
     });
 
-    // Determine the best track
     const bestTrack = Object.entries(trackScores).reduce((a, b) => 
       trackScores[a[0] as keyof typeof trackScores] > trackScores[b[0] as keyof typeof trackScores] ? a : b
     )[0] as keyof typeof trackResults;
 
-    const recommendedTrack = trackResults[bestTrack];
-    
-    // Determine delivery mode and pricing
-    const trainingPreference = answers[4]?.[0] || 'remote';
-    const hostingPreference = answers[5]?.[0] || 'our-location';
-    
-    let deliveryMode: keyof typeof recommendedTrack.pricing;
-    let deliveryLabel: string;
-    
-    if (trainingPreference === 'remote') {
-      deliveryMode = 'remote';
-      deliveryLabel = 'Remote/Virtual Training';
-    } else if (trainingPreference === 'hybrid') {
-      deliveryMode = 'hybrid';
-      deliveryLabel = 'Hybrid Training (Remote + In-Person)';
-    } else if (trainingPreference === 'in-person') {
-      if (hostingPreference === 'in-office') {
+    const trackResult = { ...trackResults[bestTrack] };
+
+    // Calculate pricing based on delivery preference and team size
+    const deliveryAnswer = answers[4]?.[0];
+    const locationAnswer = answers[5]?.[0];
+    const teamSize = parseInt(contactInfo.team_size) || 8;
+
+    let deliveryMode: keyof AssessmentResult['pricing'] = 'remote';
+    let deliveryLabel = 'Remote Training';
+
+    if (deliveryAnswer === 'in-person') {
+      if (locationAnswer === 'in-office') {
         deliveryMode = 'theirOffice';
-        deliveryLabel = 'In-Person Training at Your Office';
+        deliveryLabel = 'At Your Office';
       } else {
         deliveryMode = 'ourLocation';
-        deliveryLabel = 'In-Person Training at Our Location';
+        deliveryLabel = 'At Our Location';
       }
-    } else {
-      deliveryMode = 'ourLocation';
-      deliveryLabel = 'In-Person Training at Our Location';
+    } else if (deliveryAnswer === 'hybrid') {
+      deliveryMode = 'hybrid';
+      deliveryLabel = 'Hybrid Training';
     }
-    
-    // Calculate the actual quote value
-    const teamSize = parseInt(contactInfo.team_size) || 0;
-    
-    // Enforce minimum team size of 8
-    if (teamSize < 8) {
-      alert('Minimum team size is 8 people to make the workshop viable. Please adjust your team size.');
-      return;
-    }
-    
-    const pricingTier = recommendedTrack.pricing[deliveryMode];
-    const basePrice = pricingTier.basePrice;
-    const additionalCost = teamSize > 8 ? (teamSize - 8) * pricingTier.additionalPerPerson : 0;
-    const travelSurcharge = (deliveryMode === 'theirOffice' && 'travelSurcharge' in pricingTier) ? pricingTier.travelSurcharge : 0;
-    
-    // Apply volume discounts based on team size
-    let subtotal = basePrice + additionalCost;
+
+    const pricingDetails = trackResult.pricing[deliveryMode];
+    const basePrice = pricingDetails.basePrice;
+    const additionalCost = Math.max(0, teamSize - 8) * pricingDetails.additionalPerPerson;
+    const travelSurcharge = 'travelSurcharge' in pricingDetails ? pricingDetails.travelSurcharge : 0;
+
+    const subtotal = basePrice + additionalCost + travelSurcharge;
     let volumeDiscount = 0;
     let discountPercentage = 0;
-    
+
+    // Volume discounts
     if (teamSize >= 25) {
-      // 25+ participants: 25% discount (multiple teams)
       discountPercentage = 25;
       volumeDiscount = subtotal * 0.25;
-      subtotal = subtotal * 0.75;
     } else if (teamSize >= 11) {
-      // 11-25 participants: 15% discount
       discountPercentage = 15;
       volumeDiscount = subtotal * 0.15;
-      subtotal = subtotal * 0.85;
     }
-    
-    const finalQuoteValue = subtotal + travelSurcharge;
-    
-    setResult({
-      ...recommendedTrack,
-      deliveryMode,
-      deliveryLabel,
-      finalQuoteValue,
-      pricingBreakdown: {
-        basePrice,
-        additionalCost,
-        travelSurcharge,
-        teamSize,
-        volumeDiscount,
-        discountPercentage
-      }
-    });
 
-    // Track assessment completion
-    track.assessmentCompleted(bestTrack, questions.length);
+    const finalQuoteValue = subtotal - volumeDiscount;
 
-    // Track quote generation
-    const companySize = answers[1]?.[0] || '';
-    track.quoteGenerated(bestTrack, teamSize, finalQuoteValue, companySize);
+    trackResult.deliveryMode = deliveryMode;
+    trackResult.deliveryLabel = deliveryLabel;
+    trackResult.finalQuoteValue = finalQuoteValue;
+    trackResult.pricingBreakdown = {
+      basePrice,
+      additionalCost,
+      travelSurcharge,
+      teamSize,
+      volumeDiscount,
+      discountPercentage
+    };
 
-    // Submit to Supabase
+    setResult(trackResult);
+
+    // Submit to database
     try {
-      setIsSubmitting(true);
-      const submission: AssessmentSubmission = {
-        company_size: answers[1]?.[0] || '',
-        interests: answers[2]?.[0] || '',
-        roles: answers[3] || [],
-        training_preference: answers[4]?.[0] || '',
-        in_person_hosting: answers[5]?.[0] || '',
-        company_name: contactInfo.company_name,
-        contact_name: contactInfo.contact_name,
-        email: contactInfo.email,
-        phone: contactInfo.phone,
-        additional_notes: contactInfo.additional_notes,
-        recommended_track: bestTrack,
-        team_size: contactInfo.team_size,
-        quote_value: finalQuoteValue
-      };
-
-      const { error } = await supabase
-        .from('assessment_submissions')
-        .insert([submission]);
-
-      if (error) {
-        console.error('Error submitting assessment:', error);
-      } else {
-        // Track successful contact form submission (main conversion)
-        track.contactFormSubmitted({
+      if (contactInfo.company_name && contactInfo.contact_name && contactInfo.email) {
+        await supabase.from('assessment_submissions').insert({
           company_name: contactInfo.company_name,
           contact_name: contactInfo.contact_name,
           email: contactInfo.email,
@@ -461,6 +395,18 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
   if (showResult && result) {
     return (
       <div className="min-h-screen bg-white">
+        {/* Success Banner */}
+        <div className="bg-gradient-to-r from-green-500 to-green-600 text-white py-3 px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="flex items-center justify-center space-x-2">
+              <CheckCircle className="w-5 h-5" />
+              <span className="font-medium">
+                🎉 Assessment complete! Your personalized training plan is ready.
+              </span>
+            </div>
+          </div>
+        </div>
+
         {/* Header */}
         <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -476,12 +422,33 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
 
         {/* Result */}
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          {/* Social Proof Section */}
+          <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 mb-8 border border-blue-200">
+            <div className="grid md:grid-cols-3 gap-6 text-center">
+              <div className="flex flex-col items-center">
+                <Award className="w-8 h-8 text-blue-600 mb-2" />
+                <div className="text-2xl font-bold text-blue-900">200+</div>
+                <div className="text-sm text-blue-700">London companies trained</div>
+              </div>
+              <div className="flex flex-col items-center">
+                <TrendingUp className="w-8 h-8 text-green-600 mb-2" />
+                <div className="text-2xl font-bold text-green-900">340%</div>
+                <div className="text-sm text-green-700">Average ROI within 6 months</div>
+              </div>
+              <div className="flex flex-col items-center">
+                <Star className="w-8 h-8 text-yellow-600 mb-2" />
+                <div className="text-2xl font-bold text-yellow-900">4.9/5</div>
+                <div className="text-sm text-yellow-700">Average workshop rating</div>
+              </div>
+            </div>
+          </div>
+
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 text-green-600 rounded-full mb-4">
               <CheckCircle className="h-8 w-8" />
             </div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Assessment Complete!</h1>
-            <p className="text-lg text-gray-600">Here's your personalised learning recommendation</p>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Your AI Training Plan is Ready!</h1>
+            <p className="text-lg text-gray-600">Based on your team's needs, here's our recommended approach</p>
           </div>
 
           <div className={`p-8 rounded-2xl border-2 ${getColorClasses(result.color)} mb-8`}>
@@ -521,6 +488,10 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
                 <div className="flex items-center mb-4">
                   <PoundSterlingIcon className="h-6 w-6 text-green-600 mr-2" />
                   <h3 className="text-lg font-semibold text-gray-900">Investment Quote</h3>
+                  {/* Urgency element */}
+                  <div className="ml-auto bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm font-medium">
+                    Valid for 30 days
+                  </div>
                 </div>
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
@@ -561,12 +532,44 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
                       </span>
                     </div>
                   </div>
-                  <p className="text-sm text-gray-600 mt-3">
-                    * Includes materials, instructor fees, and follow-up support. Minimum 8 people required. Volume discounts: 15% off for 11-25 people, 25% off for 25+ people.
+                  <div className="bg-blue-50 rounded-lg p-4 mt-4">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <Shield className="w-5 h-5 text-blue-600" />
+                      <span className="font-semibold text-blue-900">What's Included:</span>
+                    </div>
+                    <ul className="text-sm text-blue-800 space-y-1">
+                      <li>✓ Expert instruction from AI practitioners</li>
+                      <li>✓ All workshop materials and resources</li>
+                      <li>✓ 30-day post-training support</li>
+                      <li>✓ Certificate of completion</li>
+                      <li>✓ Money-back satisfaction guarantee</li>
+                    </ul>
+                  </div>
+                  <p className="text-xs text-gray-600 mt-3">
+                    * Minimum 8 people required. Volume discounts: 15% off for 11-25 people, 25% off for 25+ people.
+                    Quote valid for 30 days from assessment date.
                   </p>
                 </div>
               </div>
             )}
+          </div>
+
+          {/* Next Steps */}
+          <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-8 text-white text-center mb-8">
+            <h3 className="text-2xl font-bold mb-4">Ready to Get Started?</h3>
+            <p className="text-lg mb-6 text-white/90">
+              Book a 15-minute call to discuss your training plan and secure your preferred dates
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors flex items-center justify-center">
+                <Phone className="w-5 h-5 mr-2" />
+                Book Discovery Call
+              </button>
+              <button className="bg-transparent border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-all flex items-center justify-center">
+                <Mail className="w-5 h-5 mr-2" />
+                Email This Quote
+              </button>
+            </div>
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -592,6 +595,19 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
 
   return (
     <div className="min-h-screen bg-white">
+      {/* Value Proposition Banner */}
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="flex items-center justify-center space-x-4 text-sm font-medium">
+            <span>🚀 Free AI Skills Assessment</span>
+            <span className="hidden sm:inline">•</span>
+            <span>📊 Instant Personalized Quote</span>
+            <span className="hidden sm:inline">•</span>
+            <span>⏱️ Takes less than 2 minutes</span>
+          </div>
+        </div>
+      </div>
+
       {/* Header */}
       <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -603,179 +619,204 @@ const Assessment: React.FC<AssessmentProps> = ({ onBackToHome }) => {
               <ArrowLeft className="h-5 w-5 mr-2" />
               Back to Home
             </button>
-            <div className="flex items-center text-sm text-gray-500">
-              <Clock className="h-4 w-4 mr-1" />
-              {currentQuestion + 1} of {filteredQuestions.length}
+            
+            {/* Progress indicator */}
+            <div className="flex items-center space-x-2">
+              <span className="text-sm text-gray-500">
+                Question {currentQuestion + 1} of {filteredQuestions.length}
+              </span>
+              <div className="w-32 bg-gray-200 rounded-full h-2">
+                <div 
+                  className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${((currentQuestion + 1) / filteredQuestions.length) * 100}%` }}
+                />
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Progress Bar */}
-      <div className="bg-gray-200 h-2">
-        <div 
-          className="h-full transition-all duration-300 ease-out"
-          style={{ 
-            width: `${((currentQuestion + 1) / filteredQuestions.length) * 100}%`,
-            backgroundColor: '#ff6f68'
-          }}
-        />
-      </div>
-
-      {/* Question */}
+      {/* Question Content */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-100 text-blue-600 rounded-full mb-4">
-            <Lightbulb className="h-6 w-6" />
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 text-blue-600 rounded-full mb-4">
+            <Lightbulb className="h-8 w-8" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Skills Assessment</h1>
-          <p className="text-lg text-gray-600">Help us recommend the perfect learning track for your team</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">AI Training Assessment</h1>
+          <p className="text-lg text-gray-600">
+            Let's find the perfect training approach for your team
+          </p>
         </div>
 
-        <div className="bg-gray-50 rounded-2xl p-8 mb-8">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-6">{currentQ.title}</h2>
-          
-          {currentQ.type === 'contact' ? (
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <Building className="h-4 w-4 inline mr-2" />
-                    Company Name *
-                  </label>
-                  <input
-                    type="text"
-                    value={contactInfo.company_name}
-                    onChange={(e) => setContactInfo({...contactInfo, company_name: e.target.value})}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                    placeholder="Your company name"
-                  />
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              {currentQ.title}
+            </h2>
+
+            {currentQ.type === 'contact' ? (
+              <div className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Company Name *
+                    </label>
+                    <input
+                      type="text"
+                      value={contactInfo.company_name}
+                      onChange={(e) => setContactInfo({...contactInfo, company_name: e.target.value})}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Enter your company name"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Your Name *
+                    </label>
+                    <input
+                      type="text"
+                      value={contactInfo.contact_name}
+                      onChange={(e) => setContactInfo({...contactInfo, contact_name: e.target.value})}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Enter your full name"
+                    />
+                  </div>
+                </div>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Email Address *
+                    </label>
+                    <input
+                      type="email"
+                      value={contactInfo.email}
+                      onChange={(e) => setContactInfo({...contactInfo, email: e.target.value})}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Enter your work email"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Team Size for Training *
+                    </label>
+                    <input
+                      type="number"
+                      min="8"
+                      value={contactInfo.team_size}
+                      onChange={(e) => setContactInfo({...contactInfo, team_size: e.target.value})}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Minimum 8 people"
+                    />
+                  </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Contact Name *
-                  </label>
-                  <input
-                    type="text"
-                    value={contactInfo.contact_name}
-                    onChange={(e) => setContactInfo({...contactInfo, contact_name: e.target.value})}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                    placeholder="Your full name"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <Mail className="h-4 w-4 inline mr-2" />
-                    Email Address *
-                  </label>
-                  <input
-                    type="email"
-                    value={contactInfo.email}
-                    onChange={(e) => setContactInfo({...contactInfo, email: e.target.value})}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                    placeholder="your.email@company.com"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <Phone className="h-4 w-4 inline mr-2" />
-                    Phone Number
+                    Phone Number (Optional)
                   </label>
                   <input
                     type="tel"
                     value={contactInfo.phone}
                     onChange={(e) => setContactInfo({...contactInfo, phone: e.target.value})}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                    placeholder="(555) 123-4567"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Enter your phone number"
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <Users className="h-4 w-4 inline mr-2" />
-                    Team Size * (minimum 8 people)
-                  </label>
-                  <input
-                    type="number"
-                    value={contactInfo.team_size}
-                    onChange={(e) => setContactInfo({...contactInfo, team_size: e.target.value})}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                    placeholder="Number of people attending (min 8)"
-                    min="8"
-                  />
-                  <p className="text-xs text-gray-500 mt-1">
-                    Volume discounts: 15% off for 11-25 people, 25% off for 25+ people
-                  </p>
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Additional Notes
-                </label>
-                <textarea
-                  value={contactInfo.additional_notes}
-                  onChange={(e) => setContactInfo({...contactInfo, additional_notes: e.target.value})}
-                  rows={4}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                  placeholder="Anything else you'd like us to know?"
-                />
-              </div>
-              <p className="text-sm text-gray-500">* Required fields</p>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {currentQ.options?.map((option) => {
-                const isSelected = currentAnswers.includes(option.id);
                 
-                return (
+                {/* Trust indicators */}
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <div className="flex items-center space-x-4 text-sm text-gray-600">
+                    <div className="flex items-center space-x-1">
+                      <Shield className="w-4 h-4 text-green-600" />
+                      <span>GDPR Compliant</span>
+                    </div>
+                    <span>•</span>
+                    <span>No spam, ever</span>
+                    <span>•</span>
+                    <span>Instant quote delivery</span>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {currentQ.options?.map((option) => (
                   <button
                     key={option.id}
                     onClick={() => handleAnswer(currentQ.id, option.id, currentQ.type as 'single' | 'multiple')}
-                    className={`w-full p-4 text-left rounded-lg border-2 transition-all ${
-                      isSelected
-                        ? 'border-red-300 bg-red-50 text-red-800'
-                        : 'border-gray-200 bg-white hover:border-gray-300 text-gray-700'
+                    className={`w-full text-left p-4 rounded-lg border-2 transition-all duration-200 hover:shadow-md ${
+                      currentAnswers.includes(option.id)
+                        ? 'border-blue-500 bg-blue-50 shadow-md'
+                        : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
                     <div className="flex items-center">
                       <div className={`w-5 h-5 rounded-full border-2 mr-3 flex items-center justify-center ${
-                        isSelected ? 'border-red-500 bg-red-500' : 'border-gray-300'
+                        currentAnswers.includes(option.id)
+                          ? 'border-blue-500 bg-blue-500'
+                          : 'border-gray-300'
                       }`}>
-                        {isSelected && <CheckCircle className="h-3 w-3 text-white" />}
+                        {currentAnswers.includes(option.id) && (
+                          <CheckCircle className="w-3 h-3 text-white" />
+                        )}
                       </div>
-                      <span className="text-base">{option.text}</span>
+                      <span className={`font-medium ${
+                        currentAnswers.includes(option.id) ? 'text-blue-900' : 'text-gray-900'
+                      }`}>
+                        {option.text}
+                      </span>
                     </div>
                   </button>
-                );
-              })}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
+          </div>
 
-          {currentQ.type === 'multiple' && (
-            <p className="text-sm text-gray-500 mt-4">Select all that apply</p>
-          )}
+          {/* Navigation */}
+          <div className="flex items-center justify-between pt-6 border-t border-gray-200">
+            <button
+              onClick={prevQuestion}
+              disabled={currentQuestion === 0}
+              className={`flex items-center px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+                currentQuestion === 0
+                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Previous
+            </button>
+
+            <button
+              onClick={nextQuestion}
+              disabled={!hasAnswered || isSubmitting}
+              className={`flex items-center px-8 py-3 rounded-lg font-medium transition-all duration-200 ${
+                hasAnswered && !isSubmitting
+                  ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg hover:shadow-xl'
+                  : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+              }`}
+            >
+              {isSubmitting ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                  Processing...
+                </>
+              ) : currentQuestion === filteredQuestions.length - 1 ? (
+                <>
+                  Get My Quote
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </>
+              ) : (
+                <>
+                  Next
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </>
+              )}
+            </button>
+          </div>
         </div>
 
-        {/* Navigation */}
-        <div className="flex items-center justify-between">
-          <Button
-            onClick={prevQuestion}
-            variant="secondary"
-            disabled={currentQuestion === 0}
-            className="flex items-center"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Previous
-          </Button>
-
-          <Button
-            onClick={nextQuestion}
-            disabled={!hasAnswered || isSubmitting}
-            className="flex items-center"
-          >
-            {isSubmitting ? 'Submitting...' : 
-             currentQuestion === filteredQuestions.length - 1 ? 'Get Results' : 'Next'}
-            <ArrowRight className="h-4 w-4 ml-2" />
-          </Button>
+        {/* Trust indicators at bottom */}
+        <div className="text-center mt-8 text-sm text-gray-500">
+          <p>🔒 Your information is secure and will only be used to provide your personalized quote</p>
         </div>
       </div>
     </div>

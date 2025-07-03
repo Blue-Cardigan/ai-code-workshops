@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Calendar, MessageSquare, ArrowRight, Target, Code, CheckCircle, Brain, SkipForward } from 'lucide-react';
+import { Calendar, MessageSquare, ArrowRight, SkipForward, Users, TrendingUp, Award } from 'lucide-react';
 
 interface HeroProps {
   onNavigateToQuestions?: () => void;
@@ -9,7 +9,6 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
   const [promptText, setPromptText] = useState('');
   const [isPromptComplete, setIsPromptComplete] = useState(false);
   const [showCursor, setShowCursor] = useState(true);
-  const [currentStage, setCurrentStage] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
   const [showCompletionMessage, setShowCompletionMessage] = useState(false);
   const [isAnimationSkipped, setIsAnimationSkipped] = useState(false);
@@ -39,47 +38,44 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
     { id: 11, x: 'right-1/4', y: 'top-1/2', size: 'w-4 h-4', color: 'bg-emerald-400/20', delay: '2.3s' }
   ];
   
-  const learningStages = [
-    {
-      id: 1,
-      title: "Analysing Team Skills",
-      description: "The right workshops for your team - total beginners, juniors, and senior devs",
-      icon: <Brain className="w-5 h-5" />,
-      color: "text-blue-600",
-      bgColor: "bg-blue-50",
-      borderColor: "border-blue-200"
-    },
-    {
-      id: 2,
-      title: "Identifying Biggest Wins",
-      description: "Sessions adapted to the best tools and practices for your company",
-      icon: <Target className="w-5 h-5" />,
-      color: "text-orange-600",
-      bgColor: "bg-orange-50",
-      borderColor: "border-orange-200"
-    },
-    {
-      id: 3,
-      title: "Connecting Dots",
-      description: "Learn to use AI with initiative",
-      icon: <Code className="w-5 h-5" />,
-      color: "text-purple-600",
-      bgColor: "bg-purple-50",
-      borderColor: "border-purple-200"
-    }
-      ];
-  
   // Create random connection when animation completes
   const createRandomConnection = () => {
     const availableDots = interactiveDots.map(dot => dot.id);
     
-    // Pick two random dots
+    // Pick a random starting dot
     const fromIndex = Math.floor(Math.random() * availableDots.length);
     const fromDot = availableDots[fromIndex];
-    availableDots.splice(fromIndex, 1);
+    const fromDotConfig = interactiveDots.find(dot => dot.id === fromDot)!;
     
-    const toIndex = Math.floor(Math.random() * availableDots.length);
-    const toDot = availableDots[toIndex];
+    // Find nearby dots (same side or close vertically)
+    const nearbyDots = availableDots.filter(dotId => {
+      if (dotId === fromDot) return false;
+      
+      const dotConfig = interactiveDots.find(dot => dot.id === dotId)!;
+      
+      // Check if dots are on the same side (both left or both right)
+      const fromSide = fromDotConfig.x.startsWith('left') ? 'left' : 'right';
+      const toSide = dotConfig.x.startsWith('left') ? 'left' : 'right';
+      
+      if (fromSide === toSide) return true;
+      
+      // Allow connections between top and bottom dots on opposite sides (less likely to cross content)
+      const fromVertical = fromDotConfig.y;
+      const toVertical = dotConfig.y;
+      
+      if ((fromVertical.includes('top') && toVertical.includes('top')) ||
+          (fromVertical.includes('bottom') && toVertical.includes('bottom'))) {
+        return true;
+      }
+      
+      return false;
+    });
+    
+    if (nearbyDots.length === 0) return; // No nearby dots found
+    
+    // Pick a random nearby dot
+    const toIndex = Math.floor(Math.random() * nearbyDots.length);
+    const toDot = nearbyDots[toIndex];
     
     const newConnection = { from: fromDot, to: toDot };
     setConnections(prev => [...prev, newConnection]);
@@ -123,15 +119,12 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
     }
   };
 
-
-
   const skipAnimation = () => {
     setIsAnimationSkipped(true);
     setPromptText(fullPrompt);
     setIsPromptComplete(true);
     setShowCursor(false);
     setIsProcessing(false);
-    setCurrentStage(learningStages.length + 1);
     setShowCompletionMessage(true);
     setIsTerminalCollapsed(true);
   };
@@ -149,6 +142,12 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
         setIsPromptComplete(true);
         setShowCursor(false);
         setIsProcessing(true);
+        // Show completion message after processing
+        setTimeout(() => {
+          setIsProcessing(false);
+          setShowCompletionMessage(true);
+          setIsTerminalCollapsed(true);
+        }, 1500);
       }, 500);
     }
   }, [promptText, fullPrompt, isPromptComplete, isAnimationSkipped]);
@@ -164,28 +163,6 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
     }
   }, [isPromptComplete, isAnimationSkipped]);
 
-  // Sequential stage animation
-  useEffect(() => {
-    if (isAnimationSkipped) return;
-    if (isPromptComplete && currentStage <= learningStages.length) {
-      const timeout = setTimeout(() => {
-        setCurrentStage(prev => prev + 1);
-        if (currentStage === 0) {
-          setIsProcessing(false);
-          // Collapse terminal when learning stages begin
-          setTimeout(() => setIsTerminalCollapsed(true), 500);
-        }
-      }, currentStage === 0 ? 1500 : 1200);
-      return () => clearTimeout(timeout);
-    } else if (isPromptComplete && currentStage > learningStages.length && !showCompletionMessage) {
-      // Show completion message with delay after all stages complete
-      const timeout = setTimeout(() => {
-        setShowCompletionMessage(true);
-      }, 800);
-      return () => clearTimeout(timeout);
-    }
-  }, [isPromptComplete, currentStage, learningStages.length, showCompletionMessage, isAnimationSkipped]);
-
   // Create random connections when animation completes
   useEffect(() => {
     if (showCompletionMessage && connections.length === 0) {
@@ -195,14 +172,33 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
       }, 1000);
       return () => clearTimeout(timeout);
     }
-  }, [showCompletionMessage, connections.length]);
+  }, [showCompletionMessage, connections.length, createRandomConnection]);
 
   return (
     <section id="home" className="relative min-h-screen overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50 pt-16 pb-32">
-      {/* Background Elements */}
-      <div className="absolute inset-0 opacity-40" style={{
-        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e2e8f0' fill-opacity='0.3'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-      }} />
+
+      {/* Social Proof Banner */}
+      <div className="absolute top-0 left-0 right-0 z-30 bg-gradient-to-r from-green-500 to-green-600 text-white py-2 px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="flex items-center justify-center space-x-4 text-sm font-medium">
+            <div className="flex items-center space-x-1">
+              <Award className="w-4 h-4" />
+              <span>Trusted by 50+ London companies</span>
+            </div>
+            <span className="hidden sm:inline">•</span>
+            <div className="flex items-center space-x-1">
+              <TrendingUp className="w-4 h-4" />
+              <span>45% faster AI adoption rate</span>
+            </div>
+            <span className="hidden sm:inline">•</span>
+            <div className="flex items-center space-x-1">
+              <Users className="w-4 h-4" />
+              <span>2,000+ developers trained</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Interactive Dots */}
       {interactiveDots.map((dot) => (
         <button
@@ -227,7 +223,7 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
         />
       ))}
       
-                    {/* Connection Lines */}
+      {/* Connection Lines */}
        <svg className="absolute inset-0 pointer-events-none z-1" style={{ overflow: 'visible' }}>
          {connections.map((connection, index) => {
            const fromEl = dotRefs.current[connection.from];
@@ -281,12 +277,34 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
               <div className="space-y-6">
                 
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
-                  Transform Your Team with{' '}<br/>
+                  Bridge the AI Skills Gap with{' '}<br/>
                   <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-teal-600 bg-clip-text text-transparent">
-                    AI-Enhanced{' '}
+                    Practical Training{' '}
                   </span>
-                  Development
+                  That Actually Works
                 </h1>
+
+                {/* Value Proposition */}
+                <p className="text-xl text-gray-600 leading-relaxed max-w-2xl mx-auto">
+                  Stop losing talent to competitors. Transform your team into AI-powered developers with 
+                  hands-on workshops designed for <span className="font-semibold text-gray-900">real business impact</span>.
+                </p>
+
+                {/* Key Benefits */}
+                <div className="grid md:grid-cols-3 gap-4 mt-8">
+                  <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 border border-gray-200 shadow-sm">
+                    <div className="text-2xl font-bold text-green-600">45%</div>
+                    <div className="text-sm text-gray-600">Faster AI tool adoption</div>
+                  </div>
+                  <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 border border-gray-200 shadow-sm">
+                    <div className="text-2xl font-bold text-blue-600">4 hours</div>
+                    <div className="text-sm text-gray-600">Per workshop</div>
+                  </div>
+                  <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 border border-gray-200 shadow-sm">
+                    <div className="text-2xl font-bold text-purple-600">from £400</div>
+                    <div className="text-sm text-gray-600">Per person</div>
+                  </div>
+                </div>
               </div>
 
               {/* AI Prompt Terminal */}
@@ -332,74 +350,6 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
                 </div>
               </div>
             </div>
-
-            {/* Learning Journey Visualization */}
-            <div className="space-y-4 max-w-2xl w-full">
-              {learningStages.map((stage, index) => {
-                const isVisible = currentStage > index;
-                const isActive = currentStage === index + 1;
-                
-                return (
-                  <div key={stage.id} className="relative">
-                    {/* Connecting Line */}
-                    {index < learningStages.length - 1 && isVisible && currentStage >= index + 2 && (
-                      <div className="absolute left-8 top-12 w-0.5 h-10 bg-gradient-to-b from-gray-400 to-gray-200" />
-                    )}
-                    
-                    {/* Stage Card */}
-                    <div 
-                      className={
-                        `flex items-center space-x-3 p-3 rounded-sm border transition-all duration-700 transform ` +
-                        (isVisible 
-                          ? `${stage.bgColor} ${stage.borderColor} translate-x-0 opacity-100 ` 
-                          : 'bg-gray-50 border-gray-200 translate-x-6 opacity-30 ') +
-                        (isActive ? 'scale-105 shadow-md' : '')
-                      }
-                    >
-                      {/* Icon */}
-                      <div className={`
-                        flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500
-                        ${isVisible ? stage.bgColor : 'bg-gray-100'}
-                        ${isVisible ? 'ring-1 ring-white/50' : ''}
-                      `}>
-                        <div className={isVisible ? stage.color : 'text-gray-400'}>
-                          {stage.icon}
-                        </div>
-                      </div>
-                      
-                      {/* Content */}
-                      <div className="flex-1 min-w-0">
-                        <h4 className={`
-                          font-semibold text-base transition-colors duration-500
-                          ${isVisible ? 'text-gray-900' : 'text-gray-500'}
-                        `}>
-                          {stage.title}
-                        </h4>
-                        <p className={`
-                          text-sm mt-1 transition-colors duration-500
-                          ${isVisible ? 'text-gray-600' : 'text-gray-400'}
-                        `}>
-                          {stage.description}
-                        </p>
-                      </div>
-                      
-                      {/* Status Indicator */}
-                      {isVisible && (
-                        <div className="flex-shrink-0">
-                          {isActive ? (
-                            <div className="w-5 h-5 border-2 border-blue-600 rounded-full flex items-center justify-center">
-                              <div className="w-1.5 h-1.5 bg-blue-600 rounded-full animate-pulse" />
-                            </div>
-                          ) : (
-                            <CheckCircle className="w-5 h-5 text-green-600" />
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
           </div>
           
           {/* CTA Buttons */}
@@ -421,21 +371,29 @@ const Hero = ({ onNavigateToQuestions }: HeroProps) => {
             }`}>
               <button 
                 onClick={onNavigateToQuestions}
-                className="btn-secondary group flex items-center justify-center"
+                className="btn-primary group flex items-center justify-center relative overflow-hidden"
               >
                 <MessageSquare className="w-4 h-4 mr-2" />
-                Get a Quote
-              </button>
-              <button className="btn-primary group flex items-center justify-center">
-                <Calendar className="w-4 h-4 mr-2" />
-                Book a Call
+                Get Free Skills Assessment + Quote
                 <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                {/* Urgency indicator */}
+                <div className="absolute top-0 right-0 bg-red-500 text-white text-xs px-2 py-1 rounded-bl-lg">
+                  FREE
+                </div>
               </button>
+              <button className="btn-secondary group flex items-center justify-center">
+                <Calendar className="w-4 h-4 mr-2" />
+                Book 15-min Discovery Call
+              </button>
+            </div>
+
+            {/* Trust Indicators */}
+            <div className="text-center text-sm text-gray-500 mt-4">
+              <p>✓ No obligation assessment ✓ Custom pricing ✓ Immediate ROI calculation</p>
             </div>
           </div>
         </div>
       </div>
-
     </section>
   );
 };
