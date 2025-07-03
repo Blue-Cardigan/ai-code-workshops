@@ -151,7 +151,7 @@ const FeaturedWorkshops = ({ onNavigateToWorkshops }: FeaturedWorkshopsProps) =>
               <button 
                 key={workshop.id} 
                 onClick={() => handleLearnMore(workshop.id)}
-                className="w-full bg-white/95 backdrop-blur-sm rounded-xl px-4 pt-4 pb-2 group hover:bg-white hover:scale-[1.01] hover:shadow-xl transition-all duration-300 relative overflow-hidden shadow-lg border border-white/20 cursor-pointer text-left"
+                className="w-full bg-white/95 backdrop-blur-sm rounded-md px-4 pt-4 group hover:bg-white hover:scale-[1.01] hover:shadow-xl transition-all duration-300 relative overflow-hidden shadow-lg border border-white/20 cursor-pointer text-left"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 {/* Badge positioned absolutely */}
@@ -221,7 +221,7 @@ const FeaturedWorkshops = ({ onNavigateToWorkshops }: FeaturedWorkshopsProps) =>
                 </div>
 
                 {/* Subtle hover effect overlay */}
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md" />
               </button>
             ))}
 

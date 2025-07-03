@@ -60,7 +60,7 @@ const MarketStats = () => {
               
               {/* Competitive Advantages */}
               <div className="mt-8 grid grid-cols-2 gap-4">
-                <div className="bg-white/15 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                <div className="bg-white/15 backdrop-blur-sm rounded-md p-4 border border-white/20">
                   <div className="text-lg font-bold text-white mb-2">
                     ✓ Hands-On
                   </div>
@@ -69,7 +69,7 @@ const MarketStats = () => {
                   </div>
                 </div>
                 
-                <div className="bg-white/15 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                <div className="bg-white/15 backdrop-blur-sm rounded-md p-4 border border-white/20">
                   <div className="text-lg font-bold text-white mb-2">
                     ✓ Department-Specific
                   </div>
@@ -78,7 +78,7 @@ const MarketStats = () => {
                   </div>
                 </div>
                 
-                <div className="bg-white/15 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                <div className="bg-white/15 backdrop-blur-sm rounded-md p-4 border border-white/20">
                   <div className="text-lg font-bold text-white mb-2">
                     ✓ Post-training Support
                   </div>
@@ -87,7 +87,7 @@ const MarketStats = () => {
                   </div>
                 </div>
                 
-                <div className="bg-white/15 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                <div className="bg-white/15 backdrop-blur-sm rounded-md p-4 border border-white/20">
                   <div className="text-lg font-bold text-white mb-2">
                     ✓ Measurable Outcomes
                   </div>
