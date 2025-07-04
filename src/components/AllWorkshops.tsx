@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Filter, BookOpen, Target, ArrowUp, MessageSquare, Calendar, ChevronUp, PoundSterling, Download, CheckCircle, Star } from 'lucide-react';
-import { track, trackConversion } from '../lib/analytics';
+import { ArrowLeft, Filter, BookOpen, Target, Star, Calendar, MessageSquare, CheckCircle } from 'lucide-react';
+import { track } from '../lib/analytics';
 
 interface Workshop {
   id: number;
@@ -36,7 +36,7 @@ const allWorkshops: Workshop[] = [
   {
     id: 1,
     title: "Intro to Vibe Coding: Apps, Tools, and Automations",
-    description: "Scaffold and deploy a simple app with AI-assisted code generation, and write scripts and extensions to automate your workflows. Perfect for beginners who want to start their AI development journey.",
+    description: "Scaffold and deploy a simple app, then generate scripts and extensions to automate your workflows. Get past the 'I can't code' barrier.",
     outline: [
       "Use Lovable + Cursor + Vercel to scaffold and deploy a simple app with AI-assisted code generation",
       "Learn prompt→code→debug loop and version control basics",
@@ -308,8 +308,7 @@ const AllWorkshops = ({ onBackToHome, onNavigateToQuestions, targetWorkshopId }:
   const [selectedLevel] = useState<string>('all');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [expandedWorkshop, setExpandedWorkshop] = useState<number | null>(targetWorkshopId || null);
-  const [isFloatingExpanded, setIsFloatingExpanded] = useState(false);
-  const [showFloatingButton, setShowFloatingButton] = useState(false);
+  const [, setShowFloatingButton] = useState(false);
 
   // Scroll to target workshop when component mounts
   useEffect(() => {
@@ -344,11 +343,6 @@ const AllWorkshops = ({ onBackToHome, onNavigateToQuestions, targetWorkshopId }:
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    setIsFloatingExpanded(false);
-  };
-
   const handleGetQuote = () => {
     if (onNavigateToQuestions) {
       onNavigateToQuestions();
@@ -358,14 +352,6 @@ const AllWorkshops = ({ onBackToHome, onNavigateToQuestions, targetWorkshopId }:
 
   const handleBookCall = () => {
     track.consultationRequested('all-workshops-floating');
-  };
-
-  const handleDownloadGuide = () => {
-    trackConversion({
-      event: 'Lead Magnet Downloaded',
-      properties: { guide_name: 'ai-transformation-guide', source: 'all-workshops-banner' }
-    });
-    // Implement download logic
   };
 
   const filteredWorkshops = allWorkshops.filter(workshop => {
@@ -418,78 +404,8 @@ const AllWorkshops = ({ onBackToHome, onNavigateToQuestions, targetWorkshopId }:
   const averageROI = 340;
 
   return (
-    <div className="min-h-screen bg-neutral-50 relative">
-      {/* Lead Magnet Banner */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 relative z-30">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <Download className="w-5 h-5" />
-            <span className="font-medium">FREE Guide: "Complete AI Transformation Roadmap for London Businesses"</span>
-          </div>
-          <button 
-            onClick={handleDownloadGuide}
-            className="bg-white text-blue-600 px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors text-sm"
-          >
-            Download Now
-          </button>
-        </div>
-      </div>
-
-      {/* Floating Action Button */}
-      {showFloatingButton && (
-        <div className="fixed bottom-8 right-8 z-50">
-          <div className="relative">
-            <button
-              onClick={() => setIsFloatingExpanded(!isFloatingExpanded)}
-              className="bg-primary-600 hover:bg-primary-700 text-white p-4 rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-110"
-              style={{
-                background: isFloatingExpanded ? '#d12c35' : '#e53a42',
-                transform: isFloatingExpanded ? 'rotate(180deg)' : 'rotate(0deg)'
-              }}
-            >
-              <ChevronUp className="w-6 h-6" />
-            </button>
-
-            {/* Expanded Actions */}
-            {isFloatingExpanded && (
-              <div className="absolute top-16 left-0 space-y-3 animate-fade-in">
-                <button
-                  onClick={scrollToTop}
-                  className="flex items-center space-x-3 bg-white hover:bg-gray-50 text-gray-700 px-4 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 min-w-max group"
-                >
-                  <ArrowUp className="w-5 h-5 text-gray-600 group-hover:text-gray-800" />
-                  <span className="font-medium">Back to Top</span>
-                </button>
-                
-                <button
-                  onClick={handleGetQuote}
-                  className="flex items-center space-x-3 bg-white hover:bg-gray-50 text-gray-700 px-4 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 min-w-max group"
-                >
-                  <MessageSquare className="w-5 h-5 text-gray-600 group-hover:text-gray-800" />
-                  <span className="font-medium">Get a Quote</span>
-                </button>
-                
-                <button
-                  onClick={handleBookCall}
-                  className="flex items-center space-x-3 text-white px-4 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 min-w-max"
-                  style={{ backgroundColor: '#e53a42' }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = '#d12c35';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = '#e53a42';
-                  }}
-                >
-                  <Calendar className="w-5 h-5" />
-                  <span className="font-medium">Book a Call</span>
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Header */}
+    <div className="min-h-screen bg-gray-50">
+      {/* Header Section - Improved responsive design */}
       <div className="pt-16 relative" style={{ backgroundColor: '#e53a42' }}>
         {/* Grid overlay */}
         <div 
@@ -503,40 +419,41 @@ const AllWorkshops = ({ onBackToHome, onNavigateToQuestions, targetWorkshopId }:
           }}
         ></div>
         
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
           <button
             onClick={onBackToHome}
-            className="flex items-center text-white hover:text-white/80 mb-6 group"
+            className="flex items-center text-white hover:text-white/80 mb-4 sm:mb-6 group"
           >
-            <ArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
-            Back to Home
+            <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
+            <span className="text-sm sm:text-base">Back to Home</span>
           </button>
           
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold text-white mb-4">All Workshops</h1>
-            <p className="text-xl text-white/90 max-w-3xl mb-3">
+          <div className="mb-6 sm:mb-8">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-3 sm:mb-4">All Workshops</h1>
+            <p className="text-lg sm:text-xl text-white/90 max-w-3xl mb-3">
               Complete catalog of our AI development training programs. From absolute beginners to expert-level practitioners.
             </p>
             
-            {/* Competitive Differentiation */}
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 mt-6 border border-white/20">
-              <div className="grid md:grid-cols-3 gap-4">
+            {/* Competitive Differentiation - Improved mobile layout */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 sm:p-4 mt-4 sm:mt-6 border border-white/20">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-white">{totalCompaniesServed}+</div>
-                  <div className="text-white/80 text-sm">London companies trained</div>
+                  <div className="text-xl sm:text-2xl font-bold text-white">{totalCompaniesServed}+</div>
+                  <div className="text-white/80 text-xs sm:text-sm">London companies trained</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-white">{averageROI}%</div>
-                  <div className="text-white/80 text-sm">Average ROI within 6 months</div>
+                  <div className="text-xl sm:text-2xl font-bold text-white">{averageROI}%</div>
+                  <div className="text-white/80 text-xs sm:text-sm">Average ROI within 6 months</div>
                 </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-white">4 hrs</div>
-                  <div className="text-white/80 text-sm">Per workshop (vs 5-day courses)</div>
+                <div className="text-center sm:col-span-2 lg:col-span-1">
+                  <div className="text-xl sm:text-2xl font-bold text-white">4 hrs</div>
+                  <div className="text-white/80 text-xs sm:text-sm">Per workshop (vs 5-day courses)</div>
                 </div>
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-4 mt-4 text-sm text-white/70">
+            {/* Trust indicators - Improved mobile layout */}
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 sm:gap-4 mt-3 sm:mt-4 text-xs sm:text-sm text-white/70">
               <span>✓ Hands-on practical training</span>
               <span>✓ Industry-specific customization</span>
               <span>✓ Immediate business application</span>
@@ -544,13 +461,13 @@ const AllWorkshops = ({ onBackToHome, onNavigateToQuestions, targetWorkshopId }:
             </div>
           </div>
 
-          {/* Categories Overview */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          {/* Categories Overview - Improved mobile layout */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
             {categories.map((category, index) => (
               <button
                 key={index}
                 onClick={() => setSelectedCategory(selectedCategory === category.name ? 'all' : category.name)}
-                className={`text-left p-4 rounded-xl border transition-all duration-200 hover:shadow-md ${
+                className={`text-left p-3 sm:p-4 rounded-xl border transition-all duration-200 hover:shadow-md ${
                   selectedCategory === category.name
                     ? 'bg-white border-white/50 shadow-md ring-2 ring-white/30'
                     : 'bg-white/10 border-white/20 hover:bg-white/20 hover:border-white/30'
@@ -558,18 +475,18 @@ const AllWorkshops = ({ onBackToHome, onNavigateToQuestions, targetWorkshopId }:
               >
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center">
-                    <div className={`w-3 h-3 ${category.color} rounded-full mr-2`} />
-                    <h3 className={`font-semibold ${selectedCategory === category.name ? 'text-gray-900' : 'text-white'}`}>
+                    <div className={`w-2.5 h-2.5 sm:w-3 sm:h-3 ${category.color} rounded-full mr-2`} />
+                    <h3 className={`text-sm sm:text-base font-semibold ${selectedCategory === category.name ? 'text-gray-900' : 'text-white'}`}>
                       {category.name}
                     </h3>
                   </div>
-                  <span className={`text-xs px-2 py-1 rounded-full ${
+                  <span className={`text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full ${
                     selectedCategory === category.name ? 'bg-gray-100 text-gray-600' : 'bg-white/20 text-white'
                   }`}>
                     {category.count}
                   </span>
                 </div>
-                <p className={`text-sm ${selectedCategory === category.name ? 'text-gray-600' : 'text-white/80'}`}>
+                <p className={`text-xs sm:text-sm ${selectedCategory === category.name ? 'text-gray-600' : 'text-white/80'}`}>
                   {category.description}
                 </p>
               </button>
@@ -578,82 +495,77 @@ const AllWorkshops = ({ onBackToHome, onNavigateToQuestions, targetWorkshopId }:
         </div>
       </div>
 
-      {/* Workshop Grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid lg:grid-cols-2 gap-8 items-start">
+      {/* Workshop Grid - Improved mobile layout */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 items-start">
           {filteredWorkshops.map((workshop) => (
             <div key={workshop.id} id={`workshop-${workshop.id}`} className="bg-white/95 backdrop-blur-sm rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 h-fit" style={{ borderColor: '#e53a42' }}>
-              <div className="relative h-48 overflow-hidden">
+              <div className="relative h-40 sm:h-48 overflow-hidden">
                 <img 
                   src={workshop.image} 
                   alt={workshop.title}
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                <div className="absolute bottom-4 left-4 flex items-center space-x-2">
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium border ${getLevelColor(workshop.level)}`}>
+                <div className="absolute bottom-3 sm:bottom-4 left-3 sm:left-4 flex flex-wrap items-center gap-2">
+                  <span className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium border ${getLevelColor(workshop.level)}`}>
                     {workshop.level}
                   </span>
                   {workshop.pricing?.popularBadge && (
-                    <span className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-3 py-1 rounded-full text-sm font-medium flex items-center">
+                    <span className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium flex items-center">
                       <Star className="w-3 h-3 mr-1" />
                       Popular
                     </span>
                   )}
                 </div>
               </div>
-
-              <div className="p-6">
-                <div className="mb-3">
-                  <h3 className="text-xl font-bold text-neutral-900">
-                    {workshop.title}
-                  </h3>
+              
+              <div className="p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4 mb-4">
+                  <div className="flex-1">
+                    <h3 className="text-lg sm:text-xl font-bold text-neutral-900 mb-2 leading-tight">
+                      {workshop.title}
+                    </h3>
+                    <p className="text-sm sm:text-base text-neutral-600 mb-3 leading-relaxed">
+                      {workshop.description}
+                    </p>
+                  </div>
+                  
+                  {workshop.pricing && (
+                    <div className="bg-neutral-50 rounded-lg p-3 sm:p-4 flex-shrink-0 w-full sm:w-auto">
+                      <div className="text-center sm:text-right">
+                        <div className="text-2xl sm:text-3xl font-bold text-primary-600">
+                          £{workshop.pricing.basePrice.toLocaleString()}
+                        </div>
+                        <div className="text-xs sm:text-sm text-neutral-500 mb-2">
+                          {workshop.pricing.teamDiscount}
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
-                <p className="text-neutral-600 mb-3">
-                  {workshop.description}
-                </p>
-
-                {/* Pricing Section */}
-                {workshop.pricing && (
-                  <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-4 mb-4 border border-green-200">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center space-x-2">
-                        <PoundSterling className="w-5 h-5 text-green-600" />
-                        <span className="text-2xl font-bold text-green-600">£{workshop.pricing.basePrice}</span>
-                        <span className="text-sm text-gray-600">per person</span>
-                      </div>
-                      <div className="text-xs text-green-700 bg-green-100 px-2 py-1 rounded-full">
-                        {workshop.pricing.teamDiscount}
-                      </div>
-                    </div>
-                    <div className="text-xs text-gray-600">
-                      Volume discounts: 25% off for 25+ people • Minimum 8 participants
-                    </div>
-                  </div>
-                )}
-
-                {/* ROI Metrics */}
+                {/* ROI Metrics - Improved mobile layout */}
                 {workshop.roiMetrics && (
                   <div className="grid grid-cols-3 gap-2 mb-4">
                     <div className="text-center bg-blue-50 rounded-lg p-2">
-                      <div className="text-sm font-semibold text-blue-700">{workshop.roiMetrics.timeToValue}</div>
+                      <div className="text-xs sm:text-sm font-semibold text-blue-700">{workshop.roiMetrics.timeToValue}</div>
                       <div className="text-xs text-blue-600">Time to Value</div>
                     </div>
                     <div className="text-center bg-green-50 rounded-lg p-2">
-                      <div className="text-sm font-semibold text-green-700">{workshop.roiMetrics.productivityGain}</div>
+                      <div className="text-xs sm:text-sm font-semibold text-green-700">{workshop.roiMetrics.productivityGain}</div>
                       <div className="text-xs text-green-600">Productivity Gain</div>
                     </div>
                     <div className="text-center bg-purple-50 rounded-lg p-2">
-                      <div className="text-sm font-semibold text-purple-700">{workshop.roiMetrics.toolAdoption}</div>
+                      <div className="text-xs sm:text-sm font-semibold text-purple-700">{workshop.roiMetrics.toolAdoption}</div>
                       <div className="text-xs text-purple-600">Tool Adoption</div>
                     </div>
                   </div>
                 )}
 
-                <div className="mb-4 text-sm text-neutral-500">
+                <div className="mb-4 text-xs sm:text-sm text-neutral-500">
                   <div className="flex items-center space-x-1">
-                    <Target className="w-4 h-4" />
+                    <Target className="w-3 h-3 sm:w-4 sm:h-4" />
                     <span>Prerequisites: {workshop.prerequisites}</span>
                   </div>
                 </div>

@@ -20,7 +20,7 @@ const featuredWorkshops: FeaturedWorkshop[] = [
   {
     id: 1,
     title: "Intro to Vibe Coding: Apps, Tools, and Automations",
-    description: "Scaffold and deploy a simple app, then generate scripts and extensions to automate your workflows. Perfect for beginners who want to get past the 'I can't code' barrier.",
+    description: "Scaffold and deploy a simple app, then generate scripts and extensions to automate your workflows. Get past the 'I can't code' barrier.",
     duration: "4 hours",
     level: "Beginner",
     image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
@@ -79,22 +79,20 @@ const FeaturedWorkshops = ({ onNavigateToWorkshops }: FeaturedWorkshopsProps) =>
 
   return (
     <div style={{ overflowX: 'clip' }}>
-      <section id="workshops" className="relative">
-        {/* Tilted background container - extended beyond section bounds */}
+      <section id="workshops" className="relative py-6 sm:py-16 lg:py-20">
+        {/* Tilted background container - responsive coverage */}
         <div 
-          className="absolute transform -rotate-3" 
+          className="absolute transform -rotate-3 featured-bg-mobile sm:featured-bg-desktop" 
           style={{ 
             backgroundColor: '#e53a42',
             width: '150%',
-            height: '120%',
-            top: '-15%',
             left: '-25%'
           }}
         ></div>
       
       {/* Straight grid overlay */}
       <div 
-        className="absolute" 
+        className="absolute featured-grid-mobile sm:featured-grid-desktop" 
         style={{ 
           backgroundImage: `
             linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
@@ -102,29 +100,27 @@ const FeaturedWorkshops = ({ onNavigateToWorkshops }: FeaturedWorkshopsProps) =>
           `,
           backgroundSize: '40px 40px',
           width: '100%',
-          height: '130%',
-          top: '-20%',
           left: '0'
         }}
       ></div>
       
       <div className="relative z-10 container-wide">
-        {/* Main heading spanning full width */}
-        <h2 className="text-7xl md:text-8xl font-bold leading-tight text-white mb-12 pt-8 text-left">
+        {/* Main heading spanning full width - Improved responsive scaling */}
+        <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold leading-tight text-white mb-6 sm:mb-12 text-left">
           Made for Humans.
         </h2>
         
-        <div className="grid lg:grid-cols-2 gap-12 items-start min-h-[60vh]">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start min-h-[60vh]">
           
-          {/* Left side - Explanatory text */}
-          <div className="text-white space-y-6">
-            <div className="text-2xl md:text-3xl leading-relaxed font-bold space-y-4 opacity-80">
+          {/* Left side - Explanatory text - Improved mobile layout */}
+          <div className="text-white space-y-4 sm:space-y-6">
+            <div className="text-xl sm:text-2xl lg:text-3xl leading-relaxed font-bold space-y-3 sm:space-y-4 opacity-80">
               <p>
                 Coefficient has been applying AI to business and government since 2017.
               </p>
             </div>
               
-            <div className="text-xl leading-relaxed space-y-4">
+            <div className="text-base sm:text-lg lg:text-xl leading-relaxed space-y-3 sm:space-y-4">
               <p>
                 We created these workshops because we believe in using these tools to amplify, not replace, the workforce.
               </p>
@@ -136,34 +132,34 @@ const FeaturedWorkshops = ({ onNavigateToWorkshops }: FeaturedWorkshopsProps) =>
             </div>
             
             {/* Logo */}
-            <div className="mt-8 flex justify-center">
+            <div className="mt-6 sm:mt-8 flex justify-center">
               <img 
                 src="/coeff-logo-no-text.png" 
                 alt="Coefficient" 
-                className="h-24 w-auto opacity-80"
+                className="h-16 sm:h-20 lg:h-24 w-auto opacity-80"
               />
             </div>
           </div>
 
-          {/* Right side - Workshop cards */}
-          <div className="space-y-4">
+          {/* Right side - Workshop cards - Improved mobile layout */}
+          <div className="space-y-2 sm:space-y-4">
             {featuredWorkshops.map((workshop, index) => (
               <button 
                 key={workshop.id} 
                 onClick={() => handleLearnMore(workshop.id)}
-                className="w-full bg-white/95 backdrop-blur-sm rounded-md px-4 pt-4 group hover:bg-white hover:scale-[1.01] hover:shadow-xl transition-all duration-300 relative overflow-hidden shadow-lg border border-white/20 cursor-pointer text-left"
+                className="w-full bg-white/95 backdrop-blur-sm rounded-md px-3 sm:px-4 pt-3 sm:pt-4 group hover:bg-white hover:scale-[1.01] hover:shadow-xl transition-all duration-300 relative overflow-hidden shadow-lg border border-white/20 cursor-pointer text-left"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                {/* Badge positioned absolutely */}
+                {/* Badge positioned absolutely - Made responsive */}
                 {workshop.badge && (
-                  <div className={`absolute top-3 right-3 ${getBadgeColor(workshop.badge)} text-white px-2 py-1 rounded-full text-xs font-semibold shadow-lg z-10`}>
+                  <div className={`absolute top-2 sm:top-3 right-2 sm:right-3 ${getBadgeColor(workshop.badge)} text-white px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs font-semibold shadow-lg z-10`}>
                     {workshop.badge}
                   </div>
                 )}
 
-                <div className="flex gap-4">
-                  {/* Enhanced image */}
-                  <div className="relative w-20 h-20 flex-shrink-0 overflow-hidden rounded-lg shadow-md">
+                <div className="flex gap-3 sm:gap-4">
+                  {/* Enhanced image - Made responsive */}
+                  <div className="relative w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 overflow-hidden rounded-lg shadow-md">
                     <img 
                       src={workshop.image} 
                       alt={workshop.title}
@@ -172,46 +168,48 @@ const FeaturedWorkshops = ({ onNavigateToWorkshops }: FeaturedWorkshopsProps) =>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
 
-                  {/* Content */}
+                  {/* Content - Improved mobile layout */}
                   <div className="flex-1 min-w-0 flex flex-col justify-between">
                     <div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getLevelColor(workshop.level)}`}>
-                          {workshop.level}
-                        </span>
-                        <div className="flex items-center text-xs text-neutral-500 bg-neutral-100 px-2 py-1 rounded-full">
-                          <Clock className="w-3 h-3 mr-1" />
-                          <span className="font-medium">{workshop.duration}</span>
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-2">
+                        <div className="flex items-center gap-2">
+                          <span className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs font-semibold ${getLevelColor(workshop.level)}`}>
+                            {workshop.level}
+                          </span>
+                          <div className="flex items-center text-xs text-neutral-500 bg-neutral-100 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full">
+                            <Clock className="w-3 h-3 mr-1" />
+                            <span className="font-medium">{workshop.duration}</span>
+                          </div>
                         </div>
                       </div>
 
-                      {/* Software badges */}
+                      {/* Software badges - Improved mobile layout */}
                       <div className="flex flex-wrap gap-1 mb-2">
                         {workshop.software.slice(0, 3).map((tech, techIndex) => (
                           <span 
                             key={techIndex}
-                            className="px-2 py-0.5 text-xs font-medium bg-blue-50 text-blue-700 rounded border border-blue-200"
+                            className="px-1.5 sm:px-2 py-0.5 text-xs font-medium bg-blue-50 text-blue-700 rounded border border-blue-200 text-nowrap"
                           >
                             {tech}
                           </span>
                         ))}
                         {workshop.software.length > 3 && (
-                          <span className="px-2 py-0.5 text-xs font-medium bg-gray-50 text-gray-600 rounded border border-gray-200">
+                          <span className="px-1.5 sm:px-2 py-0.5 text-xs font-medium bg-gray-50 text-gray-600 rounded border border-gray-200">
                             +{workshop.software.length - 3}
                           </span>
                         )}
                       </div>
 
-                      <div className="relative h-16 mb-2 overflow-hidden">
+                      <div className="relative h-12 sm:h-16 mb-2 overflow-hidden">
                         {/* Title - visible by default, hidden on hover */}
                         <div className="absolute inset-0 flex items-start justify-between transition-all duration-300 transform group-hover:opacity-0 group-hover:-translate-y-2">
-                          <h3 className="text-base font-bold text-neutral-900 leading-tight flex-1 pr-2">
+                          <h3 className="text-sm sm:text-base font-bold text-neutral-900 leading-tight flex-1 pr-2 line-clamp-2">
                             {workshop.title}
                           </h3>
                         </div>
 
-                        {/* Description - hidden by default, visible on hover */}
-                        <p className="absolute inset-0 text-xs text-neutral-600 leading-snug opacity-0 translate-y-2 transition-all duration-300 transform group-hover:opacity-100 group-hover:translate-y-0 line-clamp-4">
+                        {/* Description - hidden by default, visible on hover - Mobile optimized */}
+                        <p className="absolute inset-0 text-xs sm:text-sm text-neutral-600 leading-snug opacity-0 translate-y-2 transition-all duration-300 transform group-hover:opacity-100 group-hover:translate-y-0 line-clamp-3 sm:line-clamp-4">
                           {workshop.description}
                         </p>
                       </div>
@@ -225,14 +223,14 @@ const FeaturedWorkshops = ({ onNavigateToWorkshops }: FeaturedWorkshopsProps) =>
               </button>
             ))}
 
-            {/* Browse All Workshops Link */}
-            <div className="flex justify-end pb-6">
+            {/* Browse All Workshops Link - Improved mobile layout */}
+            <div className="flex justify-center sm:justify-end pb-4 sm:pb-6">
               <button 
                 onClick={() => onNavigateToWorkshops?.(undefined)}
-                className="inline-flex items-center text-white hover:text-white/80 transition-colors group"
+                className="inline-flex items-center text-white hover:text-white/80 transition-colors group text-center sm:text-left"
               >
-                <span className="text-lg font-medium">Browse All Workshops</span>
-                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                <span className="text-base sm:text-lg font-medium">Browse All Workshops</span>
+                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2 group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
           </div>

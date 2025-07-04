@@ -131,24 +131,24 @@ export const ClientCarousel = ({ clients }: ClientCarouselProps) => {
         </div>
 
         <div className="relative overflow-hidden py-8">
-          <div className="flex animate-slide-infinite">
+          <div className="flex animate-slide-infinite sm:animate-slide-infinite-slow">
             {/* First set */}
             {clients.map((client, index) => (
-              <div key={`first-${index}`} className="flex-shrink-0 mx-12">
+              <div key={`first-${index}`} className="flex-shrink-0 mx-6 sm:mx-12">
                 <img 
                   src={client} 
                   alt={`Client ${index + 1}`}
-                  className="h-16 w-auto client-logo"
+                  className="h-20 sm:h-16 w-auto client-logo opacity-80 hover:opacity-100 transition-opacity duration-200"
                 />
               </div>
             ))}
             {/* Duplicate for seamless loop */}
             {clients.map((client, index) => (
-              <div key={`second-${index}`} className="flex-shrink-0 mx-12">
+              <div key={`second-${index}`} className="flex-shrink-0 mx-6 sm:mx-12">
                 <img 
                   src={client} 
                   alt={`Client ${index + 1}`}
-                  className="h-16 w-auto client-logo"
+                  className="h-20 sm:h-16 w-auto client-logo opacity-80 hover:opacity-100 transition-opacity duration-200"
                 />
               </div>
             ))}

@@ -56,10 +56,18 @@ function App() {
   return (
     <div className="min-h-screen bg-neutral-50">
       <Hero onNavigateToQuestions={handleNavigateToQuestions} />
-      <FeaturedWorkshops onNavigateToWorkshops={handleNavigateToWorkshops} />
-      <TestimonialCarousel testimonials={sampleTestimonials} />
-      <MarketStats />
-      <ClientCarousel clients={clientsData.clients} />
+      <div className="py-4 sm:py-16 lg:py-20 bg-neutral-50">
+        <FeaturedWorkshops onNavigateToWorkshops={handleNavigateToWorkshops} />
+      </div>
+      <div className="py-64 md:py-0">
+        <TestimonialCarousel testimonials={sampleTestimonials} />
+      </div>
+      <div className="py-8 sm:py-12 lg:py-16">
+        <MarketStats />
+      </div>
+      <div className="py-16 sm:py-12 lg:py-16 bg-white">
+        <ClientCarousel clients={clientsData.clients} />
+      </div>
       <Footer />
       <ScrollIndicator className="bottom-2" />
     </div>

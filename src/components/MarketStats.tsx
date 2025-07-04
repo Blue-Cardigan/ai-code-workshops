@@ -4,21 +4,19 @@ const MarketStats = () => {
   return (
     <div style={{ overflowX: 'clip' }}>
       <section className="relative">
-        {/* Tilted background container - extended beyond section bounds */}
+        {/* Tilted background container - responsive coverage */}
         <div 
-          className="absolute transform -rotate-3" 
+          className="absolute transform -rotate-3 market-bg-mobile sm:market-bg-desktop" 
           style={{ 
             backgroundColor: '#1e40af',
             width: '150%',
-            height: '120%',
-            top: '-15%',
             left: '-25%'
           }}
         ></div>
       
         {/* Straight grid overlay */}
         <div 
-          className="absolute" 
+          className="absolute market-grid-mobile sm:market-grid-desktop" 
           style={{ 
             backgroundImage: `
               linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
@@ -26,8 +24,6 @@ const MarketStats = () => {
             `,
             backgroundSize: '40px 40px',
             width: '100%',
-            height: '130%',
-            top: '-20%',
             left: '0'
           }}
         ></div>

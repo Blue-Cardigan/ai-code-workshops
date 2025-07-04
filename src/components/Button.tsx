@@ -4,10 +4,11 @@ interface ButtonProps {
   children: React.ReactNode;
   onClick?: () => void;
   className?: string;
-  variant?: 'primary' | 'secondary';
+  variant?: 'primary' | 'secondary' | 'outline';
   size?: 'sm' | 'md' | 'lg';
   disabled?: boolean;
   type?: 'button' | 'submit' | 'reset';
+  fullWidth?: boolean;
 }
 
 const Button = ({ 
@@ -17,66 +18,39 @@ const Button = ({
   variant = 'primary',
   size = 'md',
   disabled = false,
-  type = 'button'
+  type = 'button',
+  fullWidth = false
 }: ButtonProps) => {
-  const baseStyles = "inline-block font-medium border-2 rounded-sm transition-all duration-300 hover:text-white";
+  const baseStyles = "inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200 border text-center leading-tight";
   
   const sizeStyles = {
-    sm: "py-2 px-6 text-sm",
-    md: "py-3 px-8 text-lg", 
-    lg: "py-4 px-10 text-xl"
+    sm: "px-3 py-2 text-sm min-h-[36px]",
+    md: "px-4 sm:px-6 py-3 text-sm sm:text-base min-h-[44px]", 
+    lg: "px-5 sm:px-8 py-4 text-base sm:text-lg min-h-[52px]"
   };
 
   const variantStyles = {
-    primary: {
-      borderColor: '#ff6f68',
-      color: '#ff6f68',
-      backgroundColor: 'transparent'
-    },
-    secondary: {
-      borderColor: '#ffc861',
-      color: '#ffc861', 
-      backgroundColor: 'transparent'
-    }
+    primary: "bg-primary-600 hover:bg-primary-700 text-white border-primary-600 hover:border-primary-700 shadow-lg hover:shadow-xl",
+    secondary: "bg-white hover:bg-neutral-50 text-primary-700 border-primary-200 hover:border-primary-300 shadow-md hover:shadow-lg",
+    outline: "bg-transparent hover:bg-primary-600 text-primary-600 hover:text-white border-2 border-primary-600"
   };
 
-  const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (disabled) return;
-    const target = e.target as HTMLButtonElement;
-    if (variant === 'primary') {
-      target.style.backgroundColor = '#ff6f68';
-    } else {
-      target.style.backgroundColor = '#ffc861';
-    }
-    target.style.color = 'white';
-  };
-
-  const handleMouseLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (disabled) return;
-    const target = e.target as HTMLButtonElement;
-    target.style.backgroundColor = 'transparent';
-    if (variant === 'primary') {
-      target.style.color = '#ff6f68';
-    } else {
-      target.style.color = '#ffc861';
-    }
-  };
-
-  const styles = variantStyles[variant];
+  const disabledStyles = "opacity-50 cursor-not-allowed pointer-events-none";
+  const widthStyles = fullWidth ? "w-full" : "w-auto";
 
   return (
     <button
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`${baseStyles} ${sizeStyles[size]} ${className} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
-      style={{
-        borderColor: styles.borderColor,
-        color: styles.color,
-        backgroundColor: styles.backgroundColor
-      }}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      className={`
+        ${baseStyles} 
+        ${sizeStyles[size]} 
+        ${variantStyles[variant]}
+        ${disabled ? disabledStyles : ''} 
+        ${widthStyles}
+        ${className}
+      `.trim()}
     >
       {children}
     </button>
